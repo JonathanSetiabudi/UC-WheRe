@@ -13,10 +13,10 @@ Authors:
  > * What will be the input/output of your project?
  > * What are the features that the project provides? -->
 ## Project Description
-Our project adds a twist to the popular game "Guess Who?"(By Hasbro) by switching out the people with UCR Locations. We hope upon completion of this project, orientation leaders and those who are unfamiliar with UCR's layout can use it as a fun way to teach/learn what's on campus. We also hope to convey school spirit through the UI of this project.
+Our project adds a twist to the popular game "Guess Who?" (By Hasbro) as instead of guessing people, users will be guessing UCR Locations. We want to challenge ourselves by creating a web app that not only pushes us to learn new technologies but also serve a social purpose that can enhance our school spirit. Upon completion of this project, we hope to create a fun social tool for orientation leaders and new students to teach/learn what's on campus while bonding via playing a game together.
 <br/><br/>
 
-Our project uses: <br/>
+The technologies/tools our project will use are: <br/>
 * React Query (frontend)
 * TailwindCSS (frontend)
 * Next.js (backend)
@@ -45,8 +45,17 @@ The input and output of our project will entail the following: <br/>
 <br/>
 
 The features of our project will include: 
-
- > You also need to set up an empty project board using GitHub projects (board view with default columns). Make sure you add the board under your project repository. You should also have a Product Backlog and In testing columns added. All columns should be in the right order.
+* Lobby 
+    * Host Game: User can create a game lobby with customzied game settings that has a distinct four-letter code (can be shared to other users)
+    * Join Game: User can join a game lobby by inputting a four-letter code shared by a host
+* Game Customization Page
+    * Host can personalize the board and difficulty to their desire
+* Gameplay
+     * Card Selection: Before a game starts, both players to pick their UCR location that the other player has to guess 
+     * Messaging: Players can send yes-or-no questions to each other to deduce the other player's location
+     * Flagging: Players use process of elimination by  "flagging" locations that are unlikely to be the target location
+     * Final Guess: Players can make their final guess on the target location to win the game
+     * Game Result: If final guess is correct, victory screen will appear. Else, defeat screen will appear.
 
  > ## Phase II
  > In addition to completing the "User Interface Specification" and "Class Diagram" sections below, you will need to:
