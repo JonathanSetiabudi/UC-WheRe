@@ -1,38 +1,62 @@
- > As you complete each section you **must** remove the prompt text. Every *turnin* of this project includes points for formatting of this README so keep it clean and keep it up to date. 
- > Prompt text is any lines beginning with "\>"
- > Replace anything between \<...\> with your project specifics and remove angle brackets. For example, you need to name your project and replace the header right below this line with that title (no angle brackets). 
-# UC wheRe
- > Your author list below should include links to all members GitHub (remove existing author).
- 
- > Authors:
-> <br/> 
-[Jonathan Setiabudi](https://github.com/JonathanSetiabudi)
-> <br/> 
-[Anita Hakim](https://github.com/anitathakim)
-> <br/> 
-[Adithya Chander](https://github.com/adidi-c)
-> <br/> 
-[Charleen Chen](https://github.com/charleenschen)
+# UC WheRe ? 
+Authors:
+* [Jonathan Setiabudi](https://github.com/JonathanSetiabudi)
+* [Anita Hakim](https://github.com/anitathakim)
+* [Adithya Chander](https://github.com/adidi-c)
+* [Charleen Chen](https://github.com/charleenschen)
 
- > You will be forming a group of **FOUR** students and working on an interesting project. The project has 4 phases, each one with specific requirements. A list of proposed project ideas that have been successful in previous quarters is listed in the project specifications document on Canvas. You can select an idea from the list and start thinking about the features you will implement. If you want to propose your own original idea, you will have to contact your instructor to discuss the project and obtain written permission before you submit your project proposal (Phase 1). The project work should be divided almost equally among team members. You can of course help each other, but it needs to be clear who will be responsible for which features. Additionally, you are expected to follow Scrum patterns, specifically the use of a Scrum (Project) board, Sprints, and Scrum meetings.
 
- > ## Expectations
- > * The backend of your project should be implemented in C++. If you wish to choose another programming language (e.g. Java, Python), please discuss with your lab TA to obtain permission.
- > * You can incorporate additional technologies/tools but they must be approved (in writing) by the instructor or the TA.
- > * Each member of the group **must** be committing code regularly and make sure their code is correctly attributed to them. We will be checking attributions to determine if there was equal contribution to the project.
- > * **Each member of the group must actively participate in the Github Project board, writing unit tests, and reviewing commited code.**
-> * All project phases are to be submitted to this GitHub repository. You should modify this README file to reflect the different phases of the project. In addition, you should regularly hold sprint meetings with your group. You will need to hold two to three scrum/check-in meetings with your lab TA/reader at different times in addition to the final demo.
-
-## Project Description
+<!-- ## Project Description 
  > Your project description should summarize the project you are proposing. Be sure to include:
  > * Why is it important or interesting to you?
  > * What languages/tools/technologies do you plan to use? (This list may change over the course of the project)
  > * What will be the input/output of your project?
- > * What are the features that the project provides?
- > <br/>
- > # Our project adds a twist to the popular game "Guess Who?"(By Hasbro) by switching out the people with UCR Locations. We hope upon completion of this project, orientation leaders and those who are unfamiliar with UCR's layout can use it as a fun way to teach/learn what's on campus. We also hope to convey school spirit through the UI of this project.
+ > * What are the features that the project provides? -->
+## Project Description
+Our project adds a twist to the popular game "Guess Who?" (By Hasbro) as instead of guessing people, users will be guessing UCR Locations. We want to challenge ourselves by creating a web app that not only pushes us to learn new technologies but also serve a social purpose that can enhance our school spirit. Upon completion of this project, we hope to create a fun social tool for orientation leaders and new students to teach/learn what's on campus while bonding via playing a game together.
+<br/><br/>
+
+The technologies/tools our project will use are: <br/>
+* React Query (frontend)
+* TailwindCSS (frontend)
+* Next.js (backend)
+* Typescript (backend)
+* Prettier (VSCode extension)
+* ESLint (VSCode extension)
+
 <br/>
- > You also need to set up an empty project board using GitHub projects (board view with default columns). Make sure you add the board under your project repository. You should also have a Product Backlog and In testing columns added. All columns should be in the right order.
+
+The input and output of our project will entail the following: <br/>
+* Input
+   * Keyboard
+       * Lobby code
+       * Messages (asking questions)
+   * Mouse
+       * Used in Flagging system
+       * Yes/No answers
+* Output
+   * Messaging system
+       *  Yes/No responses to opponent's guesses/questions 
+   * Flagging system
+       * Enable/disable a flag on a specific card to allow user to eliminate locations while playing
+   * Game result screen
+       * Display Victory/Defeat screens for winner and other player respectively
+
+<br/>
+
+The features of our project will include: 
+* Lobby 
+    * Host Game: User can create a game lobby with customzied game settings that has a distinct four-letter code (can be shared to other users)
+    * Join Game: User can join a game lobby by inputting a four-letter code shared by a host
+* Game Customization Page
+    * Host can personalize the board and difficulty to their desire
+* Gameplay
+     * Card Selection: Before a game starts, both players to pick their UCR location that the other player has to guess 
+     * Messaging: Players can send yes-or-no questions to each other to deduce the other player's location
+     * Flagging: Players use process of elimination by  "flagging" locations that are unlikely to be the target location
+     * Final Guess: Players can make their final guess on the target location to win the game
+     * Game Result: If final guess is correct, victory screen will appear. Else, defeat screen will appear.
+
  > ## Phase II
  > In addition to completing the "User Interface Specification" and "Class Diagram" sections below, you will need to:
  > * Create an "Epic" (note) for each feature. Place these epics in the `Product Backlog` column
