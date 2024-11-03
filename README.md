@@ -43,44 +43,65 @@ The input and output of our project will entail the following: <br/>
        * Display Victory/Defeat screens for winner and other player respectively
 
 <br/>
+Game Terminologies:
+* Host: Player who starts and manages a lobby
+* Guest: Player who joins a host's lobby
+* Cards: Objects of focus for the game. Each card displays unique locations scattered around campus. 
+* Hidden Card: Players will each have one "hidden card" that the other player has to guess. They will pick their hidden card in the beginning of each game. The game revolves around the players trying to guess each other's cards and whoever guesses right first wins (if a player guesses wrong, the other player automatically wins). 
+* Board: The visual board that displays the cards (number of cards limited to grid size and cards displayed will align with the board difficulty) via a grid (modifiable).   
+* Flagging Mode: During the game, when the player clicks on a card with the left mouse button, that card will be flagged and unflagged (similar to minesweeper). The player can toggle between Flagging Mode and Guessing Mode, but the former is the default
+* Guessing Mode: When this mode is toggled on, if a player clicks on a card with the left mouse button, that player is instead making their final guess with that card.
+
+<br/>
 
 The features of our project will include: 
 * Lobby 
-    * Host Game: User can create a game lobby with customzied game settings that has a distinct four-letter code (can be shared to other users)
+    * Host Game: User can create a game lobby using a distinct four-letter code that can be shared to other users for them to join
     * Join Game: User can join a game lobby by inputting a four-letter code shared by a host
-* Game Customization Page
-    * Host can personalize the board and difficulty to their desire
-* Gameplay
-     * Card Selection: Before a game starts, both players to pick their UCR location that the other player has to guess 
-     * Messaging: Players can send yes-or-no questions to each other to deduce the other player's location
-     * Flagging: Players use process of elimination by  "flagging" locations that are unlikely to be the target location
-     * Final Guess: Players can make their final guess on the target location to win the game
-     * Game Result: If final guess is correct, victory screen will appear. Else, defeat screen will appear.
+    * Host can customize the board in the lobby
+* Board Customization
+    * Host can modify the board after lobby has been made through board customizations 
+    * Depending on the board customizations set by the Host, the board that the players will play on will be shaped by said customizations (ex. board difficulty, grid size)
+    * The guest can see the board customizations being modified by the host in the lobby in real time
+    * Grid Size: Host can choose between setting the following grid size settings  (bigger grid size = more locations to guess from)
+        * 4x4
+        * 5x5
+    * Board Difficulty: Host can pick difficulty for the game
+        * General (no shared theme)
+        * Easy (recognizable buildings)
+        * Hard (very specific locations on campus)
+     * Guess Count: Host can decide the number of guesses (between 1 to 3) each player can make during the game. 
+* Gameplay (Game Screen)
+     * "Hidden Card" Selection: Before a game starts, both players will be given a preview of the board (and the cards generated on it) and they will have to pick a card that the other player has to guess. This will become each player's Hidden Card. Each player's Hidden Card will be displayed on the top right of each of their screens throughout the game. Both players will need to pick a card and select a "Ready" button before the actual game starts
+     * Messaging: During the game, the players have access to a chatbox to to ask each other questions about the other's hidden card. This is the only aid that they will have to deduce the other player's Hidden Card
+     * Flagging: Using a flagging system similar to Minesweeper, players can visualize their process of elimination by  "flagging" cards that are unlikely to be the target location. These flagged cards can be unflagged. When players click on a card, that card will be flagged/unflagged.
+     * Final Guess: If a player is confident enough to make their guess, they can turn on Guess Mode. This system is the same as the flagging system, only that if the player picks a card, they will be making their final guess with that card. When a player picks a card in Guess Mode, a pop up will appear asking the player if they are sure to proceed with their guess. On this pop up, the player can either cancel their guess or finalize their guess. The latter will affect the Guess Count which will eventually lead to the end of the game
+     * Card Descriptions: In both the Card Selection screen and the Game screen, the player can hover over the different cards displayed on the board which will display a pop up in the corner of the screen displaying a description of the location in the card. This will help students become more familiar with the location
 
- > ## Phase II
- > In addition to completing the "User Interface Specification" and "Class Diagram" sections below, you will need to:
- > * Create an "Epic" (note) for each feature. Place these epics in the `Product Backlog` column
- > * Complete your first *sprint planning* meeting to plan out the next 7 days of work.
- >   * Break down the "Epics" into smaller actionable user stories (i.e. smaller development tasks). Convert them into issues and assign them to team members. Place these in the `TODO` column (aka Sprint Backlog).
- >   * These cards should represent roughly 7 days worth of development time for your team. Then, once the sprint is over you should be repeating these steps to plan a new sprint, taking you until your second scrum meeting with the reader in phase III.
- > * Each team member needs to submit the Individual Contributions Form on Canvas for this phase. In this form, you need to fill in the names of all team members, the percentage of work contributed by each member for phase  II, and a description of their contributions. Remember that each team member should submit the form individually.
- > * Schedule two check-ins using Calendly. Both time slots should be during your lab on week 6. Your entire team must be present for both check-ins.
- >   * The first check-in needs to be scheduled with your lab TA. During that meeting, you will discuss your project design/class diagram from phase II.
- >   * The second check-in should be scheduled with a reader. During that meeting you will discuss:
- >     * The tasks you are planning for the first sprint
- >     * How work will be divided between the team members
-## User Interface Specification
- > Include a navigation diagram for your screens and the layout of each of those screens as desribed below. For all the layouts/diagrams, you can use any tool such as PowerPoint or a drawing program. (Specification requirement is adapted from the User Interface Design Document Template of CMSC 345 at the University of Maryland Global Campus)
+<br/>
 
-### Navigation Diagram
-> Draw a diagram illustrating how the user can navigate from one screen to another. Here is an [example](https://creately.com/diagram/example/ikfqudv82/user-navigation-diagram-classic?r=v). It can be useful to label each symbol that represents a screen so that you can reference the screens in the next section or the rest of the document if necessary. Give a brief description of what the diagram represents.
+Features that are nice to have:
+* Log in (Accounts)
+     * Scoreboard
+     * Game statistics
+* Card Gallery: In the main menu, the players can access a "Card Gallery" that will display all the available cards that can show up in the games along with their descriptions. The player can see these descriptions by hovering over the cards with their mouse
 
-### Screen Layouts
-> Include the layout of each of your screens. The layout should describe the screen’s major components such as menus and prompts for user inputs and expected output, or any graphical user interface components if applicable (e.g. buttons, text boxes, etc). Explain what is on the layout, and the purpose of each menu item, button, etc. If many screens share the same layout, start by describing the general layout and then list the screens that will be using that layout and the differences between each of them.
+<br/>
+
+How to play:
+* After a guest arrives in a host's lobby, the host can start the game
+* When the game first starts, the two players will be brought to a selection screen that previews the board they will be playing on. All cards in the preview board will be displayed in the same position in the actual board. Each player must pick a card to be their Hidden Card -- the card that the other player has to guess. When both players are satisfied with their pick, they must both press the "Ready" button to start the actual game
+* Once the actual game starts, players can now interact with the real grid with Flagging Mode or Guessing Mode (player can toggle between the two using a toggle button). 
+* Player Goal : Each player must guess the other's hidden card
+     * If a player makes a correct guess, they win and the other will lose
+     * If a player makes an incorrect guess and they still have guesses left, that player's guess count will be decremented but the game will keep going
+     * If a player makes an incorrect guess and they are the first to run out of guesses, that player loses and the other will win
+## User Interface Specification(Navigation Diagram & Screen Layouts)
+Our diagram shows all potential screens for the users to experience with explanations and *pointers* for what each screen is and how one reaches each screen.
+![image](https://github.com/user-attachments/assets/a3248f8f-ec36-4620-b52e-acd75c1d7653)
 
 ## Class Diagram
- > Include a **class diagram(s)** for your project and a **description** of the diagram(s). Your class diagram(s) should include all the main classes you plan for the project. This should be in sufficient detail that another group could pick up the project this point and successfully complete it. Use proper UML notation (as discussed in the course slides).
- 
+![image](https://github.com/user-attachments/assets/9e2fc695-0286-4be2-b736-c2a7013e6aeb)
  > ## Phase III
  > You will need to schedule a check-in for the second scrum meeting with the same reader you had your first scrum meeting with (using Calendly). Your entire team must be present. This meeting will occur on week 8 during lab time.
  
@@ -117,4 +138,6 @@ The features of our project will include:
  > Instructions on installing and running your application
  ## Testing
  > How was your project tested/validated? If you used CI, you should have a "build passing" badge in this README.
+>
+> 
  
