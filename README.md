@@ -43,8 +43,9 @@ The input and output of our project will entail the following: <br/>
        * Display Victory/Defeat screens for winner and other player respectively
 
 <br/>
-Game Terminologies:
-* Host: Player who starts and manages a lobby
+
+Game Terminologies: <br/>
+* Host: Player who starts and manages a lobby 
 * Guest: Player who joins a host's lobby
 * Cards: Objects of focus for the game. Each card displays unique locations scattered around campus. 
 * Hidden Card: Players will each have one "hidden card" that the other player has to guess. They will pick their hidden card in the beginning of each game. The game revolves around the players trying to guess each other's cards and whoever guesses right first wins (if a player guesses wrong, the other player automatically wins). 
