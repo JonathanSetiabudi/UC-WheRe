@@ -23,6 +23,9 @@ Our project adds a twist to the popular game "Guess Who?" (By Hasbro) as instead
 * Typescript (backend)
 * Prettier (VSCode extension)
 * ESLint (VSCode extension)
+* Socket.io (server communication)
+* Cypress (frontend testing)
+* (some misc js testing framework)
 
 ### Input/Output of Project
 * Input
