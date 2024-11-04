@@ -14,9 +14,9 @@ Authors:
  > * What are the features that the project provides? -->
 ## Project Description
 Our project adds a twist to the popular game "Guess Who?" (By Hasbro) as instead of guessing people, users will be guessing UCR Locations. We want to challenge ourselves by creating a web app that not only pushes us to learn new technologies but also serve a social purpose that can enhance our school spirit. Upon completion of this project, we hope to create a fun social tool for orientation leaders and new students to teach/learn what's on campus while bonding via playing a game together.
-<br/><br/>
+<br/>
 
-The technologies/tools our project will use are: <br/>
+### Technologies/Tools of Project
 * React Query (frontend)
 * TailwindCSS (frontend)
 * Next.js (backend)
@@ -24,27 +24,23 @@ The technologies/tools our project will use are: <br/>
 * Prettier (VSCode extension)
 * ESLint (VSCode extension)
 
-<br/>
-
-The input and output of our project will entail the following: <br/>
+### Input/Output of Project
 * Input
    * Keyboard
        * Lobby code
-       * Messages (asking questions)
+       * Chatbox messages 
    * Mouse
-       * Used in Flagging system
-       * Yes/No answers
+       * Used in Flagging Mode + Guessing Mode
+       * Used to interact with buttons (and navigation)
 * Output
    * Messaging system
-       *  Yes/No responses to opponent's guesses/questions 
-   * Flagging system
-       * Enable/disable a flag on a specific card to allow user to eliminate locations while playing
+       *  Player inputted messages will be displayed on the chatbox
+   * Flagging Mode + Guessing Mode
+       * Interact with the cards on the grid (we can flag a card, unflag a card, or guess a card)
    * Game result screen
        * Display Victory/Defeat screens for winner and other player respectively
 
-<br/>
-
-Game Terminologies: <br/>
+### Game Terminologies
 * Host: Player who starts and manages a lobby 
 * Guest: Player who joins a host's lobby
 * Cards: Objects of focus for the game. Each card displays unique locations scattered around campus. 
@@ -53,9 +49,7 @@ Game Terminologies: <br/>
 * Flagging Mode: During the game, when the player clicks on a card with the left mouse button, that card will be flagged and unflagged (similar to minesweeper). The player can toggle between Flagging Mode and Guessing Mode, but the former is the default
 * Guessing Mode: When this mode is toggled on, if a player clicks on a card with the left mouse button, that player is instead making their final guess with that card.
 
-<br/>
-
-The features of our project will include: 
+### Project/Game Features 
 * Lobby 
     * Host Game: User can create a game lobby using a distinct four-letter code that can be shared to other users for them to join
     * Join Game: User can join a game lobby by inputting a four-letter code shared by a host
@@ -79,17 +73,13 @@ The features of our project will include:
      * Final Guess: If a player is confident enough to make their guess, they can turn on Guess Mode. This system is the same as the flagging system, only that if the player picks a card, they will be making their final guess with that card. When a player picks a card in Guess Mode, a pop up will appear asking the player if they are sure to proceed with their guess. On this pop up, the player can either cancel their guess or finalize their guess. The latter will affect the Guess Count which will eventually lead to the end of the game
      * Card Descriptions: In both the Card Selection screen and the Game screen, the player can hover over the different cards displayed on the board which will display a pop up in the corner of the screen displaying a description of the location in the card. This will help students become more familiar with the location
 
-<br/>
-
-Features that are nice to have:
+Some nice to have features:
 * Log in (Accounts)
      * Scoreboard
      * Game statistics
 * Card Gallery: In the main menu, the players can access a "Card Gallery" that will display all the available cards that can show up in the games along with their descriptions. The player can see these descriptions by hovering over the cards with their mouse
 
-<br/>
-
-How to play:
+### How to play the game
 * After a guest arrives in a host's lobby, the host can start the game
 * When the game first starts, the two players will be brought to a selection screen that previews the board they will be playing on. All cards in the preview board will be displayed in the same position in the actual board. Each player must pick a card to be their Hidden Card -- the card that the other player has to guess. When both players are satisfied with their pick, they must both press the "Ready" button to start the actual game
 * Once the actual game starts, players can now interact with the real grid with Flagging Mode or Guessing Mode (player can toggle between the two using a toggle button). 
