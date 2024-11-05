@@ -1,41 +1,34 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
-import {socket} from "@/utils/socket"
+import { socket } from "@/utils/socket";
 
 export default function Home() {
-
-  useEffect(() => {    
+  useEffect(() => {
     socket.connect();
 
-    socket.emit("join", 123)
-
+    socket.emit("join", 123);
 
     socket.on("message", (message) => {
-      console.log("RECIEVED FROM SOCKET", message)
-    })
+      console.log("RECIEVED FROM SOCKET", message);
+    });
 
     return () => {
-      socket.emit("leave", 123)
+      socket.emit("leave", 123);
 
-      socket.disconnect()
-    }
+      socket.disconnect();
+    };
+  }, []);
 
+  //   const [message, setMessage] = useState("hello world")
 
-  }, [])
+  //   const onSend = () => {
 
-//   const [message, setMessage] = useState("hello world")
+  //     console.log("CALLED", message, socket)
 
-//   const onSend = () => {
+  //     socket.emit("message", {
+  //         message
+  //     })
+  // }
 
-//     console.log("CALLED", message, socket)
-
-//     socket.emit("message", {
-//         message
-//     })
-// }
-
-
-  return (
-<>   hello</>     
-  );
+  return <> hello</>;
 }

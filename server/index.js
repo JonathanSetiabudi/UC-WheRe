@@ -23,7 +23,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("message", ({ message }) => {
-    console.log("I AM BEING RECIEVED", message)
+    console.log("I AM BEING RECIEVED", message);
     socket.to(123).emit("message", message);
   });
 });
