@@ -39,7 +39,7 @@ io.on("connection", (socket) => {
   //event listener for message
   //on message, logs the message and emits the message to the room
   socket.on("message", ({ message }) => {
-    console.log("I AM BEING RECIEVED", message)
+    console.log("I AM BEING RECIEVED", message);
     socket.to(123).emit("message", message);
   });
 });

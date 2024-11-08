@@ -1,11 +1,11 @@
-"use client"
-import React, { useEffect, useState } from "react";
-import {socket} from "@/utils/socket"
+"use client";
+import { useEffect } from "react";
+import { socket } from "@/utils/socket";
 
 export default function Home() {
-
-  useEffect(() => {    
+  useEffect(() => {
     socket.connect();
+    
     //emit on a join event "123"
     socket.emit("join", 123)
 
@@ -18,27 +18,11 @@ export default function Home() {
     //It prevents memory leaks since this function will call this function before calling the effect again
     //In this case, it prevents joining the same room multiple times or multiple rooms
     return () => {
-      socket.emit("leave", 123)
+      socket.emit("leave", 123);
 
-      socket.disconnect()
-    }
+      socket.disconnect();
+    };
+  }, []);
 
-
-  }, [])
-
-//   const [message, setMessage] = useState("hello world")
-
-//   const onSend = () => {
-
-//     console.log("CALLED", message, socket)
-
-//     socket.emit("message", {
-//         message
-//     })
-// }
-
-
-  return (
-<>   hello</>     
-  );
+  return <> hello</>;
 }
