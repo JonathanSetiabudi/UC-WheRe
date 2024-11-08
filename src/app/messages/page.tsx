@@ -15,6 +15,8 @@ const Messages = () => {
 
   const [message, setMessage] = useState("hello world");
 
+  setMessage("Hello world");
+
   const onSend = () => {
     console.log("NICE", message, socket);
     socket.emit("message", {

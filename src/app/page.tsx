@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { socket } from "@/utils/socket";
 
 export default function Home() {
@@ -18,17 +18,6 @@ export default function Home() {
       socket.disconnect();
     };
   }, []);
-
-  //   const [message, setMessage] = useState("hello world")
-
-  //   const onSend = () => {
-
-  //     console.log("CALLED", message, socket)
-
-  //     socket.emit("message", {
-  //         message
-  //     })
-  // }
 
   return <> hello</>;
 }
