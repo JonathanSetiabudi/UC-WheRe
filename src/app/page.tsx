@@ -25,19 +25,6 @@ export default function Home() {
 
 
   }, [])
-
-//   const [message, setMessage] = useState("hello world")
-
-//   const onSend = () => {
-
-//     console.log("CALLED", message, socket)
-
-//     socket.emit("message", {
-//         message
-//     })
-// }
-
-
   return (
 <>   hello</>     
   );
