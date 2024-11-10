@@ -106,11 +106,8 @@ Our diagram shows all potential screens for the users to experience with explana
 ![image](https://github.com/user-attachments/assets/a3248f8f-ec36-4620-b52e-acd75c1d7653)
 
 ## Class Diagram
-
-![image](https://github.com/user-attachments/assets/9e2fc695-0286-4be2-b736-c2a7013e6aeb)
-
+![image](https://github.com/user-attachments/assets/476c8125-042e-49c9-9fbb-a6d82676a293)
 > ## Phase III
->
 > You will need to schedule a check-in for the second scrum meeting with the same reader you had your first scrum meeting with (using Calendly). Your entire team must be present. This meeting will occur on week 8 during lab time.
 
 > BEFORE the meeting you should do the following:
