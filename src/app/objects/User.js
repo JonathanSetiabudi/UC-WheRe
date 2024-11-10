@@ -1,4 +1,4 @@
-// convert to react
+// include tests
 
 class User{
     constructor(id) {
