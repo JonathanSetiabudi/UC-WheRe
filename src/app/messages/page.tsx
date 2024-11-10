@@ -3,6 +3,10 @@ import { socket } from "@/utils/socket";
 import { useEffect, useState } from "react";
 
 const Messages = () => {
+
+  const [message, setMessage] = useState("");
+  const [messageLog, setMessageLog] = useState([]);
+
   useEffect(() => {
     socket.connect();
     socket.emit("join", 123);
@@ -13,8 +17,6 @@ const Messages = () => {
     };
   }, []);
 
-  const [message, setMessage] = useState("");
-  const [messageLog, setMessageLog] = useState(["Welcome to the game!"]);
   // @ts-expect-error - TS complains about the type of e, but we don't use it
   const onChange = (e) => {
     setMessage(e.target.value);
@@ -28,6 +30,7 @@ const Messages = () => {
     //Emits message to server
     socket.emit("message", message);
     //Adds message to messageLog
+    // @ts-expect-error - TS complains about the type of message, but we know it's a string
     setMessageLog([...messageLog, message]);
     //Clears input field
     setMessage("");
@@ -47,9 +50,16 @@ const Messages = () => {
       <ul>
         {messageLog.map((message, index) => {
           return (
-            <li key={index}>
+            <form key={index}>
               {`${socket.id?.substring(0, 5)}`}:{message}
-            </li>
+              <p>Yes
+                <input type="radio" name={`yes_no${index}`} />
+              </p>
+              <p>
+                No
+                <input type="radio" name={`yes_no${index}`} />
+              </p>
+            </form>
           );
         })}
       </ul>

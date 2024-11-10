@@ -9,9 +9,9 @@ export default function Home() {
 
     socket.emit("join", 123);
 
-    socket.on("message", (message) => {
-      console.log("RECIEVED FROM SOCKET", message);
-    });
+    // socket.on("message", (message) => {
+    //   console.log("RECIEVED FROM SOCKET", message);
+    // });
 
     return () => {
       socket.emit("leave", 123);
