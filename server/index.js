@@ -22,8 +22,8 @@ io.on("connection", (socket) => {
     socket.leave(room);
   });
 
-  socket.on("message", ({ message }) => {
-    console.log("I AM BEING RECIEVED", message)
+  socket.on("message", (message) => {
+    console.log("I AM BEING RECIEVED", message);
     socket.to(123).emit("message", message);
   });
 });

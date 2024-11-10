@@ -7,12 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "server": "nodemon server/index.js"
+    "server": "nodemon server/index.js",
+    "format": "npx prettier --write ."
   },
   "dependencies": {
     "express": "^4.21.1",
     "final-project-jaac-of-all-trades": "file:",
     "next": "15.0.2",
+    "prettier": "^3.3.3",
     "react": "19.0.0-rc-02c0e824-20241028",
     "react-dom": "19.0.0-rc-02c0e824-20241028",
     "socket.io": "^4.8.1",
