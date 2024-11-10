@@ -71,10 +71,15 @@ Our project adds a twist to the popular game "Guess Who?" (By Hasbro) as instead
   - Grid Size: Host can choose between setting the following grid size settings (bigger grid size = more locations to guess from)
     - 4x4
     - 5x5
-  - Board Difficulty: Host can pick difficulty for the game
-    - General (no shared theme)
+  - Board Difficulty / Themes: Host can pick difficulty for the game
     - Easy (recognizable buildings)
+    - Medium (less recognizable buildings)
     - Hard (very specific locations on campus)
+    - Residential and Dining 
+    - Campus Landmarks
+    - Study Spots
+    - Bike Racks
+    - Streets and Parking Lots
   - Guess Count: Host can decide the number of guesses (between 1 to 3) each player can make during the game.
 - Gameplay (Game Screen)
   - "Hidden Card" Selection: Before a game starts, both players will be given a preview of the board (and the cards generated on it) and they will have to pick a card that the other player has to guess. This will become each player's Hidden Card. Each player's Hidden Card will be displayed on the top right of each of their screens throughout the game. Both players will need to pick a card and select a "Ready" button before the actual game starts
@@ -101,12 +106,13 @@ Some nice to have features:
   - If a player makes an incorrect guess and they are the first to run out of guesses, that player loses and the other will win
 
 ## User Interface Specification(Navigation Diagram & Screen Layouts)
-
-Our diagram shows all potential screens for the users to experience with explanations and _pointers_ for what each screen is and how one reaches each screen.
-![image](https://github.com/user-attachments/assets/a3248f8f-ec36-4620-b52e-acd75c1d7653)
+<img width="838" alt="image" src="https://github.com/user-attachments/assets/3d244cf0-392e-48ea-b9b9-bc9d16f016bb">
+</br>
+This diagram illustrates the navigation between all screens for the users to experience. Main features are accompanied by explanations.
 
 ## Class Diagram
 ![image](https://github.com/user-attachments/assets/476c8125-042e-49c9-9fbb-a6d82676a293)
+
 > ## Phase III
 > You will need to schedule a check-in for the second scrum meeting with the same reader you had your first scrum meeting with (using Calendly). Your entire team must be present. This meeting will occur on week 8 during lab time.
 
