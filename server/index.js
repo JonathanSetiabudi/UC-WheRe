@@ -16,13 +16,16 @@ const server = http.createServer(app);
 
 //creates an instance of the Server class from the socket.io module and assigns it to the variable io
 const io = new Server(server, {
+  //cors configuration
+  //origin is set to false if the NODE_ENV is production
   cors: {
-    origin: "*",
+    origin: process.env.NODE_ENV === 'production' ? false : ['http://127.0.0.1:5500'],
     methods: ["GET", "POST"],
     credentials: true,
     transports: ["websocket", "polling"],
   },
 });
+
 
 //on connection, logs the message "User connected" and the socket id
 //this is basically a list of event listeners
@@ -36,6 +39,7 @@ io.on("connection", (socket) => {
   });
 
   //on leaving the room, logs the message "User disconnected from room" and the room id
+
   socket.on("leave", (room) => {
     console.log(`User(${socket.id}) disconnected from room: ${room}`);
     socket.leave(room);

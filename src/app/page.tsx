@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { socket } from "@/utils/socket";
 import Messages from "./messages/page";
@@ -38,6 +39,10 @@ export default function Home() {
     };
   }, []);
 
+      socket.disconnect();
+    };
+  }, []);
+  
   return (
     <div className="Home">
       {!showChat ? (
@@ -61,3 +66,4 @@ export default function Home() {
     </div>
   );
 }
+ 
