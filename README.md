@@ -81,6 +81,7 @@ Our project adds a twist to the popular game "Guess Who?" (By Hasbro) as instead
     - Bike Racks
     - Streets and Parking Lots
   - Guess Count: Host can decide the number of guesses (between 1 to 3) each player can make during the game.
+ 
 - Gameplay (Game Screen)
   - "Hidden Card" Selection: Before a game starts, both players will be given a preview of the board (and the cards generated on it) and they will have to pick a card that the other player has to guess. This will become each player's Hidden Card. Each player's Hidden Card will be displayed on the top right of each of their screens throughout the game. Both players will need to pick a card and select a "Ready" button before the actual game starts
   - Messaging: During the game, the players have access to a chatbox to to ask each other questions about the other's hidden card. This is the only aid that they will have to deduce the other player's Hidden Card
@@ -106,6 +107,7 @@ Some nice to have features:
   - If a player makes an incorrect guess and they are the first to run out of guesses, that player loses and the other will win
 
 ## User Interface Specification(Navigation Diagram & Screen Layouts)
+
 <img width="838" alt="image" src="https://github.com/user-attachments/assets/3d244cf0-392e-48ea-b9b9-bc9d16f016bb">
 </br>
 This diagram illustrates the navigation between all screens for the users to experience. Main features are accompanied by explanations.
@@ -141,6 +143,7 @@ This diagram illustrates the navigation between all screens for the users to exp
 > All group members will give a demo to the reader during lab time. ou should schedule your demo on Calendly with the same reader who took your second scrum meeting. The reader will check the demo and the project GitHub repository and ask a few questions to all the team members.
 > Before the demo, you should do the following:
 >
+
 > - Complete the sections below (i.e. Screenshots, Installation/Usage, Testing)
 > - Plan one more sprint (that you will not necessarily complete before the end of the quarter). Your In-progress and In-testing columns should be empty (you are not doing more work currently) but your TODO column should have a full sprint plan in it as you have done before. This should include any known bugs (there should be some) or new features you would like to add. These should appear as issues/cards on your Project board.
 > - Make sure your README file and Project board are up-to-date reflecting the current status of your project (e.g. any changes that you have made during the project such as changes to your class diagram). Previous versions should still be visible through your commit history.

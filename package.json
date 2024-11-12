@@ -11,10 +11,14 @@
     "format": "npx prettier --write .",
     "check": "npx prettier --check .",
     "prepare": "husky"
+
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.21.1",
+    "final-project-jaac-of-all-trades": "file:",
     "next": "15.0.2",
+    "prettier": "^3.3.3",
     "react": "19.0.0-rc-02c0e824-20241028",
     "react-dom": "19.0.0-rc-02c0e824-20241028",
     "socket.io": "^4.8.1",

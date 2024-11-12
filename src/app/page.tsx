@@ -1,31 +1,69 @@
 "use client";
-import { useEffect } from "react";
+
+import { useEffect, useState } from "react";
 import { socket } from "@/utils/socket";
+import Messages from "./messages/page";
 
 export default function Home() {
+  socket.connect();
+
+  //react states for username and room
+  const [username, setUsername] = useState("");
+  const [room, setRoom] = useState("");
+  const [showChat, setShowChat] = useState(false);
+
+  // @ts-expect-error - TS complains about the type of e, but we don't use it
+  const onUsernameChange = (e) => {
+    setUsername(e.target.value);
+  };
+
+  // @ts-expect-error - TS complains about the type of e, but we don't use it
+  const onRoomChange = (e) => {
+    setRoom(e.target.value);
+  };
+
+  const joinLobby = () => {
+    if (username !== "" && room !== "") {
+      socket.emit("join_lobby", room);
+      setShowChat(true);
+    }
+  };
+
   useEffect(() => {
     socket.connect();
-    
-    //emit on a join event "123"
-    socket.emit("join", 123)
 
-    //on a message event, console log the message
-    socket.on("message", (message: string) => {
-      console.log("RECIEVED FROM SOCKET", message)
-    })
-
-    //This is an effect clean up function
-    //It prevents memory leaks since this function will call this function before calling the effect again
-    //In this case, it prevents joining the same room multiple times or multiple rooms
     return () => {
       socket.emit("leave", 123);
 
       socket.disconnect();
     };
   }, []);
+
+      socket.disconnect();
+    };
+  }, []);
   
   return (
-<>   hello</>     
+    <div className="Home">
+      {!showChat ? (
+        <div>
+          <h3>Join a Lobby</h3>
+          <input
+            type="text"
+            placeholder="Username"
+            onChange={onUsernameChange}
+          />
+          <input
+            type="text"
+            placeholder="Enter Lobby ID"
+            onChange={onRoomChange}
+          />
+          <button onClick={joinLobby}>Join</button>
+        </div>
+      ) : (
+        <Messages username={username} room={room} />
+      )}
+    </div>
   );
 }
  
