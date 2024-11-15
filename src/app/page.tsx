@@ -19,51 +19,74 @@ export default function Home() {
 
   // @ts-expect-error - TS complains about the type of e, but we don't use it
   const onRoomChange = (e) => {
-    setRoom(e.target.value);
+    setRoom(e.target.value.toUpperCase());
   };
 
   const joinLobby = () => {
     if (username !== "" && room !== "") {
       socket.emit("join_lobby", room);
-      setShowChat(true);
     }
+  };
+
+  const createLobby = () => {
+    socket.emit("create_lobby");
+    setShowChat(true);
   };
 
   useEffect(() => {
     socket.connect();
 
+    socket.on("createdLobby", (data) => {
+      setRoom(data);
+    });
+
+    socket.on("joinedLobby", (data) => {
+      setRoom(data);
+      setShowChat(true);
+    });
+
+    socket.on("lobbyFull", () => {
+      alert("Lobby is full");
+    });
+
+    socket.on("lobbyNonExistent", () => {
+      alert("Lobby does not exist");
+    });
+
     return () => {
-      socket.emit("leave", 123);
+      socket.emit("leave", room);
 
       socket.disconnect();
     };
+    
   }, []);
 
-      socket.disconnect();
-    };
-  }, []);
-  
   return (
     <div className="Home">
       {!showChat ? (
         <div>
-          <h3>Join a Lobby</h3>
           <input
             type="text"
             placeholder="Username"
             onChange={onUsernameChange}
           />
+          <br />
+          <button onClick={createLobby}>Create a Lobby</button>
+          <br />
           <input
             type="text"
             placeholder="Enter Lobby ID"
             onChange={onRoomChange}
           />
-          <button onClick={joinLobby}>Join</button>
+          <br />
+          <button onClick={joinLobby}>Join a Lobby</button>
         </div>
       ) : (
-        <Messages username={username} room={room} />
+        <div>
+          <h2>Room:{room}</h2>
+          <Messages username={username} room={room} />
+        </div>
       )}
     </div>
   );
 }
- 

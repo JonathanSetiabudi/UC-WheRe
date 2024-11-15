@@ -65,6 +65,7 @@ Our project adds a twist to the popular game "Guess Who?" (By Hasbro) as instead
   - Join Game: User can join a game lobby by inputting a four-letter code shared by a host
   - Host can customize the board in the lobby
 - Board Customization
+
   - Host can modify the board after lobby has been made through board customizations
   - Depending on the board customizations set by the Host, the board that the players will play on will be shaped by said customizations (ex. board difficulty, grid size)
   - The guest can see the board customizations being modified by the host in the lobby in real time
@@ -75,13 +76,13 @@ Our project adds a twist to the popular game "Guess Who?" (By Hasbro) as instead
     - Easy (recognizable buildings)
     - Medium (less recognizable buildings)
     - Hard (very specific locations on campus)
-    - Residential and Dining 
+    - Residential and Dining
     - Campus Landmarks
     - Study Spots
     - Bike Racks
     - Streets and Parking Lots
   - Guess Count: Host can decide the number of guesses (between 1 to 3) each player can make during the game.
- 
+
 - Gameplay (Game Screen)
   - "Hidden Card" Selection: Before a game starts, both players will be given a preview of the board (and the cards generated on it) and they will have to pick a card that the other player has to guess. This will become each player's Hidden Card. Each player's Hidden Card will be displayed on the top right of each of their screens throughout the game. Both players will need to pick a card and select a "Ready" button before the actual game starts
   - Messaging: During the game, the players have access to a chatbox to to ask each other questions about the other's hidden card. This is the only aid that they will have to deduce the other player's Hidden Card
@@ -113,9 +114,11 @@ Some nice to have features:
 This diagram illustrates the navigation between all screens for the users to experience. Main features are accompanied by explanations.
 
 ## Class Diagram
+
 ![image](https://github.com/user-attachments/assets/476c8125-042e-49c9-9fbb-a6d82676a293)
 
 > ## Phase III
+>
 > You will need to schedule a check-in for the second scrum meeting with the same reader you had your first scrum meeting with (using Calendly). Your entire team must be present. This meeting will occur on week 8 during lab time.
 
 > BEFORE the meeting you should do the following:
@@ -142,7 +145,6 @@ This diagram illustrates the navigation between all screens for the users to exp
 >
 > All group members will give a demo to the reader during lab time. ou should schedule your demo on Calendly with the same reader who took your second scrum meeting. The reader will check the demo and the project GitHub repository and ask a few questions to all the team members.
 > Before the demo, you should do the following:
->
 
 > - Complete the sections below (i.e. Screenshots, Installation/Usage, Testing)
 > - Plan one more sprint (that you will not necessarily complete before the end of the quarter). Your In-progress and In-testing columns should be empty (you are not doing more work currently) but your TODO column should have a full sprint plan in it as you have done before. This should include any known bugs (there should be some) or new features you would like to add. These should appear as issues/cards on your Project board.
