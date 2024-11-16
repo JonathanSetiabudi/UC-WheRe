@@ -16,7 +16,7 @@ interface GameProps {
 
 const Game = ({ locations } : GameProps) => {
   const [cardsList, setCardsList] = useState<Location[]>(locations.slice(0, 16));
-  const [cardsTheme, setCardsTheme] = useState<string>("Residential&Dining");
+  const [cardsTheme, setCardsTheme] = useState<string>("CampusLandmarks");
 
   const setSize4x4 = () => {
     if (cardsList.length != 16) {
@@ -31,6 +31,7 @@ const Game = ({ locations } : GameProps) => {
     }
   };
 
+  // check
   const filterTheme = (theme: string) => {
     setCardsTheme(theme);
     const filteredLocations = locations.filter(location => location.locationType === theme);
@@ -45,8 +46,8 @@ const Game = ({ locations } : GameProps) => {
 
     {/* Location theme dropdown menu */}
     <select onChange={(e) => filterTheme(e.target.value)} value={cardsTheme}>
-      <option value="Residential&Dining">Residential & Dining</option>
       <option value="CampusLandmarks">Campus Landmarks</option>
+      <option value="Residential&Dining">Residential & Dining</option>
       <option value="StudySpots">Study Spots</option>
       <option value="BikeRacks">Bike Racks</option>
       <option value="Streets&ParkingLots">Streets and Parking Lots</option>
