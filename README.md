@@ -109,6 +109,9 @@ Some nice to have features:
 <img width="838" alt="image" src="https://github.com/user-attachments/assets/3d244cf0-392e-48ea-b9b9-bc9d16f016bb">
 </br>
 This diagram illustrates the navigation between all screens for the users to experience. Main features are accompanied by explanations.
+</br>
+</br>
+Figma: https://www.figma.com/design/VmG7uA7jlvptvLS0uReVXZ/cs100?node-id=0-1&t=XrUsxLECUcbLSxdd-1
 
 ## Class Diagram
 ![image](https://github.com/user-attachments/assets/476c8125-042e-49c9-9fbb-a6d82676a293)
