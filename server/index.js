@@ -158,13 +158,11 @@ io.on("connection", (socket) => {
   socket.on("settingNumberOfGuesses", (numGuess) => {
     console.log("updating number of guesses to ", numGuess);
   });
-  
+
   socket.on("settingGridSize", (gridSize) => {
     console.log("updating gridSize to ", gridSize);
   });
-
 });
-
 
 server.listen(8080, () => {
   console.log("listening on 8080");
