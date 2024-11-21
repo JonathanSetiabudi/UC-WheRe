@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { socket } from "@/utils/socket";
 import Messages from "./messages/page";
+import Lobby from "./Lobby/page"
 
 export default function Home() {
   socket.connect();
@@ -85,6 +86,7 @@ export default function Home() {
         <div>
           <h2>Room:{room}</h2>
           <Messages username={username} room={room} />
+          <Lobby code ={room}/>
         </div>
       )}
     </div>
