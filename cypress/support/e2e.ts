@@ -1,4 +1,4 @@
-import '@cypress/puppeteer/support';
+import "@cypress/puppeteer/support";
 // ***********************************************************
 // This example support/e2e.ts is processed and
 // loaded automatically before your test files.
@@ -15,7 +15,7 @@ import '@cypress/puppeteer/support';
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import "./commands";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

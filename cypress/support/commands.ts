@@ -25,20 +25,27 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 //
-import { Chainable, CommandOriginalFn, VisitOptions } from 'cypress';
+import { Chainable, CommandOriginalFn, VisitOptions } from "cypress";
 
 declare global {
   namespace Cypress {
     interface Chainable {
-      login(email: string, password: string): Chainable
-      drag(subject: string, options?: Partial<Cypress.TypeOptions>): Chainable
-      dismiss(subject: string, options?: Partial<Cypress.TypeOptions>): Chainable
-      visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable
-      getDataTest(dataTestSelector: string): Chainable
+      login(email: string, password: string): Chainable;
+      drag(subject: string, options?: Partial<Cypress.TypeOptions>): Chainable;
+      dismiss(
+        subject: string,
+        options?: Partial<Cypress.TypeOptions>,
+      ): Chainable;
+      visit(
+        originalFn: CommandOriginalFn,
+        url: string,
+        options: Partial<VisitOptions>,
+      ): Chainable;
+      getDataTest(dataTestSelector: string): Chainable;
     }
   }
 }
 
-Cypress.Commands.add('getDataTest', (dataTestSelector: string) => { 
-    return cy.get(`[data-test="${dataTestSelector}"]`) 
-})
+Cypress.Commands.add("getDataTest", (dataTestSelector: string) => {
+  return cy.get(`[data-test="${dataTestSelector}"]`);
+});

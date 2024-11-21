@@ -39,9 +39,9 @@ function generateLobbyCode() {
   } else {
     return lobbyCode;
   }
-};
+}
 
-currLobbies = [{ roomCode: "TEST", numOfUsers: 0, }];
+currLobbies = [{ roomCode: "TEST", numOfUsers: 0 }];
 userRooms = [];
 
 //on connection, logs the message "User connected" and the socket id
@@ -106,7 +106,8 @@ io.on("connection", (socket) => {
       userRooms = userRooms.filter((user) => user.socketId !== socket.id);
       if (
         currLobbies.find((lobby) => lobby.roomCode === roomToDecrement)
-          .numOfUsers === 0 && roomToDecrement !== "TEST"
+          .numOfUsers === 0 &&
+        roomToDecrement !== "TEST"
       ) {
         currLobbies = currLobbies.filter(
           (lobby) => lobby.roomCode !== roomToDecrement,
@@ -127,7 +128,8 @@ io.on("connection", (socket) => {
       userRooms = userRooms.filter((user) => user.socketId !== socket.id);
       if (
         currLobbies.find((lobby) => lobby.roomCode === roomToDecrement)
-          .numOfUsers === 0 && roomToDecrement !== "TEST"
+          .numOfUsers === 0 &&
+        roomToDecrement !== "TEST"
       ) {
         currLobbies = currLobbies.filter(
           (lobby) => lobby.roomCode !== roomToDecrement,

@@ -75,7 +75,9 @@ const Messages = ({ username, room }) => {
       </div>
       <div className="chat-footer">
         <form>
-          <button onClick={sendMessage} data-test="send-message-button">&#9658;</button>
+          <button onClick={sendMessage} data-test="send-message-button">
+            &#9658;
+          </button>
           <input
             onChange={onChange}
             value={message}
@@ -84,7 +86,9 @@ const Messages = ({ username, room }) => {
             data-test="message-input"
           ></input>
           <br />
-          <button onClick={leave} data-test="leave-button">Leave</button>
+          <button onClick={leave} data-test="leave-button">
+            Leave
+          </button>
         </form>
       </div>
     </div>
