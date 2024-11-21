@@ -65,26 +65,31 @@ export default function Home() {
     <div className="Home">
       {!showChat ? (
         <div>
+          <a href="http://localhost:3000" target="_blank" data-test="new-tab-button">New Tab for Testing</a>
+          <br />
           <input
             type="text"
             placeholder="Username"
             onChange={onUsernameChange}
+            data-test="username-input"
           />
           <br />
-          <button onClick={createLobby}>Create a Lobby</button>
+          <button onClick={createLobby} data-test="create-lobby-button">Create a Lobby</button>
           <br />
           <input
             type="text"
             placeholder="Enter Lobby ID"
             onChange={onRoomChange}
+            data-test="lobby-input"
           />
           <br />
-          <button onClick={joinLobby}>Join a Lobby</button>
+          <button onClick={joinLobby} data-test="join-lobby-button">Join a Lobby</button>
         </div>
       ) : (
         <div>
-          <h2>Room:{room}</h2>
-          <Messages username={username} room={room} />
+          <h2 data-test="room-code">Room:{room}</h2>
+          <a href="http://localhost:3000" target="_blank" data-test="new-tab-button">New Tab for Testing</a>
+          <Messages data-test="messaging-component" username={username} room={room} />
         </div>
       )}
     </div>

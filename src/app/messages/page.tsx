@@ -51,7 +51,7 @@ const Messages = ({ username, room }) => {
   return (
     <div>
       <div className="chat-header"></div>
-      <p>Message Log</p>
+      <p data-test="message-log-header">Message Log</p>
       <div className="chat-body">
         <ul>
           {messageLog.map((message, index) => {
@@ -75,15 +75,16 @@ const Messages = ({ username, room }) => {
       </div>
       <div className="chat-footer">
         <form>
-          <button onClick={sendMessage}>&#9658;</button>
+          <button onClick={sendMessage} data-test="send-message-button">&#9658;</button>
           <input
             onChange={onChange}
             value={message}
             type="text"
             placeholder="Your message"
+            data-test="message-input"
           ></input>
           <br />
-          <button onClick={leave}>Leave</button>
+          <button onClick={leave} data-test="leave-button">Leave</button>
         </form>
       </div>
     </div>
