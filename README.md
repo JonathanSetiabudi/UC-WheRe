@@ -89,10 +89,6 @@ Our project adds a twist to the popular game "Guess Who?" (By Hasbro) as instead
   - Card Descriptions: In both the Card Selection screen and the Game screen, the player can hover over the different cards displayed on the board which will display a pop up in the corner of the screen displaying a description of the location in the card. This will help students become more familiar with the location
 
 Some nice to have features:
-
-- Log in (Accounts)
-  - Scoreboard
-  - Game statistics
 - Card Gallery: In the main menu, the players can access a "Card Gallery" that will display all the available cards that can show up in the games along with their descriptions. The player can see these descriptions by hovering over the cards with their mouse
 
 ### How to play the game
@@ -100,7 +96,7 @@ Some nice to have features:
 - After a guest arrives in a host's lobby, the host can start the game
 - When the game first starts, the two players will be brought to a selection screen that previews the board they will be playing on. All cards in the preview board will be displayed in the same position in the actual board. Each player must pick a card to be their Hidden Card -- the card that the other player has to guess. When both players are satisfied with their pick, they must both press the "Ready" button to start the actual game
 - Once the actual game starts, players can now interact with the real grid with Flagging Mode or Guessing Mode (player can toggle between the two using a toggle button).
-- Player Goal : Each player must guess the other's hidden card
+- Player Goal: Each player must guess the other's hidden card
   - If a player makes a correct guess, they win and the other will lose
   - If a player makes an incorrect guess and they still have guesses left, that player's guess count will be decremented but the game will keep going
   - If a player makes an incorrect guess and they are the first to run out of guesses, that player loses and the other will win
@@ -114,34 +110,17 @@ This diagram illustrates the navigation between all screens for the users to exp
 Figma: https://www.figma.com/design/VmG7uA7jlvptvLS0uReVXZ/cs100?node-id=0-1&t=XrUsxLECUcbLSxdd-1
 
 ## Class Diagram
+### Before ###
 ![image](https://github.com/user-attachments/assets/476c8125-042e-49c9-9fbb-a6d82676a293)
-
-> ## Phase III
-> You will need to schedule a check-in for the second scrum meeting with the same reader you had your first scrum meeting with (using Calendly). Your entire team must be present. This meeting will occur on week 8 during lab time.
-
-> BEFORE the meeting you should do the following:
->
-> - Update your class diagram from Phase II to include any feedback you received from your TA/grader.
-> - Considering the SOLID design principles, reflect back on your class diagram and think about how you can use the SOLID principles to improve your design. You should then update the README.md file by adding the following:
->   - A new class diagram incorporating your changes after considering the SOLID principles.
->   - For each update in your class diagram, you must explain in 3-4 sentences:
->     - What SOLID principle(s) did you apply?
->     - How did you apply it? i.e. describe the change.
->     - How did this change help you write better code?
-> - Perform a new sprint plan like you did in Phase II.
-> - Make sure that your README file (and Project board) are up-to-date reflecting the current status of your project and the most recent class diagram. Previous versions of the README file should still be visible through your commit history.
-> - Each team member should also submit the Individual Contributions Form on Canvas for phase III. In this form, you need to fill in the names of all team members, the percentage of work contributed by each member for phase III, and a description of their contributions. Remember that each team member should submit the form individually.
-
-> During the meeting with your reader you will discuss:
->
-> - How effective your last sprint was (each member should talk about what they did)
-> - Any tasks that did not get completed last sprint, and how you took them into consideration for this sprint
-> - Any bugs you've identified and created issues for during the sprint. Do you plan on fixing them in the next sprint or are they lower priority?
-> - What tasks you are planning for this next sprint.
+### After ###
+![image](https://github.com/user-attachments/assets/39ec36a1-9488-4700-8b16-68bdaad872ef)
+</br>
+</br>
+The changes include removing the User class, creating a Home class, removing the Guess class, and placing the functions/responsibilities inside the game class. Our reasoning for removing the user class was that the User was an "up in the air" idea, and after careful consideration, we felt there was no need for it. Replacing its user class was the Home/Start Screen class. This was to follow the _Single Responsibility Principle_ better. This way, the lobby won't have two responsibilities: creating/joining a lobby and configuring the game settings for the lobby. We put the create/joining lobby responsibilities inside the Home class while leaving the remaining stuff inside the Lobby class. This will help us separate the code better as Lobby seemed saturated with too many responsibilities so spreading some of the code to the Home component helps with that. Another change we made was just to move the Guess class functionality to within the Game class. It seemed unnecessary to create such a small class for something that wouldn't violate the _Single Responsibility Principle_. This way we also would better follow _SOLID_ Principles as the two classes wouldn't have similar responsibilities.
 
 > ## Final deliverable
 >
-> All group members will give a demo to the reader during lab time. ou should schedule your demo on Calendly with the same reader who took your second scrum meeting. The reader will check the demo and the project GitHub repository and ask a few questions to all the team members.
+> All group members will give a demo to the reader during lab time. You should schedule your demo on Calendly with the same reader who took your second scrum meeting. The reader will check the demo and the project GitHub repository and ask a few questions to all the team members.
 > Before the demo, you should do the following:
 >
 > - Complete the sections below (i.e. Screenshots, Installation/Usage, Testing)
