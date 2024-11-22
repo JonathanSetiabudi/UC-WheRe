@@ -7,26 +7,28 @@ import Location from "../objects/Location";
 
 const Game = () => {
   // initialize gameCards
-  const gameCards: Location[] = Array.from({ length: 16 }, (_, i) => {
-    return new Location(
-      `Location ${i + 1}`,
-      `Description ${i + 1}`,
-      `image${i + 1}.jpg`,
-      "Easy",
-      "Default"
-    );
-  }); 
+  // const gameCards: Location[] = Array.from({ length: 16 }, (_, i) => {
+  //   return new Location(
+  //     `Location ${i + 1}`,
+  //     `Description ${i + 1}`,
+  //     `image${i + 1}.jpg`,
+  //     1,
+  //     "Default"
+  //   );
+  // }); 
+
+  // take gameCards from selectCard
 
   const [normHiddenCard, setNormHiddenCard] = useState<Location | null>(null); // host hidden card
   const [scottHiddenCard, setScottHiddenCard] = useState<Location | null>(null);  // guest hiddenCard
   const [locations, setLocations] = useState<Location[]>(gameCards); // re-render gameCards
+  const [numGuesses, setNumGuesses] = useState<number>(1); // num. guesses a player can make
   const [isFlaggingMode, setIsFlaggingMode] = useState<boolean>(true); // flagging mode is true on default
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null); 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // pop up screen is not open (false) on default
 
   // make selection page
   // set norm and scot hidden card
-  
   
   const toggleFlag = (index: number) => {
     const updatedCard = [...locations];
@@ -51,7 +53,13 @@ const Game = () => {
   const finalizeGuess = () => {
     setIsModalOpen(false); // close pop up after finalizing guess
     socket.emit("finalizedGuess");
-    // guess--... other stuff (go to result screen)
+    setNumGuesses(numGuesses - 1);
+    
+    // useEffect() => {
+    //   if (numGuesses == 0) {
+    //     // game over
+    //   }
+    // }
   }
 
   const cancelGuess = () => {
@@ -62,28 +70,6 @@ const Game = () => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-
-      {/* display mode status */}
-      { !isFlaggingMode ? (
-        <h1>Currently in Guessing Mode</h1>
-      ) : (
-        <h1>Currently in Flagging Mode</h1>
-      )}
-
-      {/* toggle button between modes*/}
-      <button
-        onClick={() => setIsFlaggingMode(!isFlaggingMode)}
-        style={{
-          marginBottom: "20px",
-          padding: "10px 20px",
-          backgroundColor: isFlaggingMode ? "#bf4240" : "#008080",
-          border: "1px solid black",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        Switch to {isFlaggingMode ? "Guessing" : "Flagging"} Mode
-      </button>
 
       {/* board display */}
       <div
@@ -113,6 +99,28 @@ const Game = () => {
         ))}
       </div>
 
+      {/* display mode status */}
+      { !isFlaggingMode ? (
+        <h1>Currently in Guessing Mode</h1>
+      ) : (
+        <h1>Currently in Flagging Mode</h1>
+      )}
+
+      {/* toggle button between modes*/}
+      <button
+        onClick={() => setIsFlaggingMode(!isFlaggingMode)}
+        style={{
+          marginBottom: "20px",
+          padding: "10px 20px",
+          backgroundColor: isFlaggingMode ? "#bf4240" : "#008080",
+          border: "1px solid black",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        Switch to {isFlaggingMode ? "Guessing" : "Flagging"} Mode
+      </button>
+
       {/* pop-up (modal) to confirm guess */}
       {isModalOpen && (
         <div
@@ -131,6 +139,7 @@ const Game = () => {
         >
           <h3>Confirm Your Selection</h3>
           <p>Are you sure you want to select: {selectedLocation?.name}?</p>
+          <p>Guesses Left: {numGuesses} </p>
           <div style={{ display: "flex", justifyContent: "space-around", marginTop: "20px" }}>
             <button
               onClick={cancelGuess}
