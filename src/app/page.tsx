@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { socket } from "@/utils/socket";
+import Game from "./app/game/page";
 
 export default function Home() {
   useEffect(() => {
