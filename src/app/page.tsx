@@ -14,7 +14,8 @@ export default function Home() {
   //react states for username and room
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
-  const [showChat, setShowChat] = useState(false);
+  const [showLobby, setShowLobby] = useState(false);
+  const [showGame, setShowGame] = useState(false);
 
   // @ts-expect-error - TS complains about the type of e, but we don't use it
   const onUsernameChange = (e) => {
@@ -34,8 +35,12 @@ export default function Home() {
 
   const createLobby = () => {
     socket.emit("create_lobby");
-    setShowChat(true);
+    setShowLobby(true);
   };
+
+  const startGame = () => {
+    setShowGame(true);
+  }
 
   useEffect(() => {
     socket.connect();
@@ -46,7 +51,7 @@ export default function Home() {
 
     socket.on("joinedLobby", (data) => {
       setRoom(data);
-      setShowChat(true);
+      setShowLobby(true);
     });
 
     socket.on("lobbyFull", () => {
@@ -69,7 +74,7 @@ export default function Home() {
 
   return (
     <div className="Home">
-      {!showChat ? (
+      {!showLobby ? (
         <div className="flex flex-col items-center font-jersey">
           <div className="text-7xl text-ucwhere-blue text-center mb-7">
             UC WheRe?
@@ -111,11 +116,20 @@ export default function Home() {
           >
             New Tab for Testing
           </a>
-          <Messages data-test="messaging-component" username={username} room={room} />
-          <Lobby code={room} />
-          <Game/>
+          {showGame ? (
+            <div>
+              <Messages data-test="messaging-component" username={username} room={room} />
+              <Game/>
+            </div>
+          ) : 
+            <Lobby code={room} />
+          }
+          <button className = "text-xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue" onClick={startGame}>Start Game</button>
+          
         </div>
+
       )}
+      
     </div>
   );
 }   

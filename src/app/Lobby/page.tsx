@@ -7,7 +7,7 @@ import { socket } from "@/utils/socket";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import userRooms from ".../server/index.js";
 
-const Lobby = ({}) => {
+const Lobby = ({code}) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [playersInLobby, setPlayerCount] = useState(0);
   const [boardDifficulty, setDifficulty] = useState(0);
