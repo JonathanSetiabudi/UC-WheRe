@@ -145,6 +145,25 @@ io.on("connection", (socket) => {
     console.log("I AM BEING RECIEVED", data);
     socket.to(data.room).emit("receivedMessage", data);
   });
+
+  //upon receiving a settingDifficulty, settingTheme, settingNumGuesses, or settingGridSize
+  // event, log "updating ____ setting" and the new difficulty setting
+
+  socket.on("settingDifficulty", (boardDifficulty) => {
+    console.log("updating difficulty setting to ", boardDifficulty);
+  });
+
+  socket.on("settingTheme", (boardTheme) => {
+    console.log("updating theme setting to ", boardTheme);
+  });
+
+  socket.on("settingNumberOfGuesses", (numGuess) => {
+    console.log("updating number of guesses to ", numGuess);
+  });
+
+  socket.on("settingGridSize", (gridSize) => {
+    console.log("updating gridSize to ", gridSize);
+  });
 });
 
 server.listen(8080, () => {
