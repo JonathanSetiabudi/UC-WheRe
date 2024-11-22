@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { socket } from "@/utils/socket";
 import Messages from "./messages/page";
+import Image from "next/image";
+import Orange from "../../public/assets/orange.svg";
 
 export default function Home() {
   socket.connect();
@@ -64,22 +66,24 @@ export default function Home() {
   return (
     <div className="Home">
       {!showChat ? (
-        <div>
-          <input
+        <div className="flex flex-col items-center font-jersey">
+          <div className="text-7xl text-white text-center mb-5">
+            UC WheRe?
+            <br/>
+          </div>
+          <input className="p-2 mb-1 text-black"
             type="text"
             placeholder="Username"
             onChange={onUsernameChange}
           />
-          <br />
-          <button onClick={createLobby}>Create a Lobby</button>
-          <br />
-          <input
+          <button className = "mb-3 text-lg" onClick={createLobby}>Create a Lobby</button>
+          <input className="p-2 mb-1 text-black"
             type="text"
             placeholder="Enter Lobby ID"
             onChange={onRoomChange}
           />
-          <br />
-          <button onClick={joinLobby}>Join a Lobby</button>
+          <button className = "mb-3 text-lg" onClick={joinLobby}>Join a Lobby</button>
+          <Image src={Orange} alt="Orange"/>
         </div>
       ) : (
         <div>
@@ -89,4 +93,4 @@ export default function Home() {
       )}
     </div>
   );
-}
+}   
