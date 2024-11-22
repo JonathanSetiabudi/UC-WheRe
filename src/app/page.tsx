@@ -88,7 +88,7 @@ export default function Home() {
           <Image src={Orange} alt="Orange"/>
         </div>
       ) : (
-        <div className = "bg-ucwhere-blue p-5 font-jersey">
+        <div className = "bg-ucwhere-orange p-5 font-jersey text-white">
           <div className = "text-2xl">Room:{room}</div>
           <Messages username={username} room={room} />
         </div>
