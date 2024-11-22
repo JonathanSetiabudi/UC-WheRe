@@ -63,31 +63,33 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => { document.body.style.backgroundColor = "#FFF8D2" }, [])
+
   return (
     <div className="Home">
       {!showChat ? (
         <div className="flex flex-col items-center font-jersey">
-          <div className="text-7xl text-white text-center mb-5">
+          <div className="text-7xl text-ucwhere-blue text-center mb-7">
             UC WheRe?
             <br/>
           </div>
-          <input className="p-2 mb-1 text-black"
+          <input className="p-2 mb-1 text-black rounded-md"
             type="text"
             placeholder="Username"
             onChange={onUsernameChange}
           />
-          <button className = "mb-3 text-lg" onClick={createLobby}>Create a Lobby</button>
-          <input className="p-2 mb-1 text-black"
+          <button className = "mb-5 text-xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue" onClick={createLobby}>Create a Lobby</button>
+          <input className="p-2 mb-1 text-black rounded-md"
             type="text"
             placeholder="Enter Lobby ID"
             onChange={onRoomChange}
           />
-          <button className = "mb-3 text-lg" onClick={joinLobby}>Join a Lobby</button>
+          <button className = "mb-3 text-xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue" onClick={joinLobby}>Join a Lobby</button>
           <Image src={Orange} alt="Orange"/>
         </div>
       ) : (
-        <div>
-          <h2>Room:{room}</h2>
+        <div className = "bg-ucwhere-blue p-5 font-jersey">
+          <div className = "text-2xl">Room:{room}</div>
           <Messages username={username} room={room} />
         </div>
       )}
