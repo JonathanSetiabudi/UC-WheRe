@@ -1,5 +1,5 @@
 // had to rename class from "class Location" to "LocationClass" since "Location" is already defined within TypeScript library
-export class LocationClass{
+export default class LocationClass{
         
     // CHANGE imageInput type to whatever filepath we're using for images
     // CHANGE imageInput type to whatever filepath we're using for images
@@ -25,6 +25,15 @@ export class LocationClass{
 
     toggleFlag(){
         this.isFlagged = !this.isFlagged;
+    }
+
+    checkFlag() {
+        if (this.isFlagged == true) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 }

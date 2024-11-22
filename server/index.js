@@ -146,6 +146,33 @@ io.on("connection", (socket) => {
     socket.to(data.room).emit("receivedMessage", data);
   });
 
+  // on receiving a flagToggled event, logs the message "(insert location here later)'s flag
+  // toggled ON" when toggleState is true and "(insert location here later)'s flag toggled OFF"
+  // when toggleState is off
+  socket.on("flagToggled", (toggleState) => {
+    if (toggleState) {
+      console.log("(insert location here later)'s flag toggled ON");  
+    }
+    else {
+      console.log("(insert location here later)'s flag toggled OFF");  
+    }
+  });
+
+  socket.on("cardClickedWithFlag", (isFlaggingMode) => {
+    if (isFlaggingMode) {
+      console.log("(insert location here later) was clicked with flag");
+    }
+    else {
+      console.log("(insert location here later) was clicked with guess");
+    }
+  });
+
+  socket.on("finalizedGuess", () => {
+    console.log("(player) finalized their guess");
+  });
+
+  socket.on("cancelledGuess", () => {
+    console.log("(player) cancelled their guess");
   //upon receiving a settingDifficulty, settingTheme, settingNumGuesses, or settingGridSize
   // event, log "updating ____ setting" and the new difficulty setting
 
