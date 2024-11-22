@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import { socket } from "@/utils/socket";
 import Messages from "./messages/page";
+import Image from "next/image";
+import Orange from "../../public/assets/orange.svg";
 import Game from "../app/game/page";
 import Lobby from "./Lobby/page";
-
 
 export default function Home() {
   socket.connect();
@@ -64,10 +65,16 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => { document.body.style.backgroundColor = "#FFF8D2" }, [])
+
   return (
     <div className="Home">
       {!showChat ? (
-        <div>
+        <div className="flex flex-col items-center font-jersey">
+          <div className="text-7xl text-ucwhere-blue text-center mb-7">
+            UC WheRe?
+            <br/>
+          </div>
           <a
             href="http://localhost:3000"
             target="_blank"
@@ -76,31 +83,27 @@ export default function Home() {
             New Tab for Testing
           </a>
           <br />
-          <input
+          <input className="p-2 mb-1 text-black rounded-md"
             type="text"
             placeholder="Username"
             onChange={onUsernameChange}
             data-test="username-input"
           />
-          <br />
-          <button onClick={createLobby} data-test="create-lobby-button">
-            Create a Lobby
-          </button>
-          <br />
-          <input
+            
+          <button className = "mb-5 text-xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue" onClick={createLobby}>Create a Lobby</button>
+          <input className="p-2 mb-1 text-black rounded-md"
             type="text"
             placeholder="Enter Lobby ID"
             onChange={onRoomChange}
             data-test="lobby-input"
           />
-          <br />
-          <button onClick={joinLobby} data-test="join-lobby-button">
-            Join a Lobby
-          </button>
+            
+          <button className = "mb-3 text-xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue" data-test="join-lobby-button" onClick={joinLobby}>Join a Lobby</button>
+          <Image src={Orange} alt="Orange"/>
         </div>
       ) : (
-        <div>
-          <h2 data-test="room-code">Room:{room}</h2>
+        <div className = "bg-ucwhere-orange p-5 font-jersey text-white">
+          <div className = "text-2xl">Room:{room}</div>
           <a
             href="http://localhost:3000"
             target="_blank"
@@ -108,15 +111,11 @@ export default function Home() {
           >
             New Tab for Testing
           </a>
-          <Messages
-            data-test="messaging-component"
-            username={username}
-            room={room}
-          />
+          <Messages data-test="messaging-component" username={username} room={room} />
           <Lobby code={room} />
           <Game/>
         </div>
       )}
     </div>
   );
-}
+}   
