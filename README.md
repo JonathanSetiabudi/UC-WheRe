@@ -65,17 +65,24 @@ Our project adds a twist to the popular game "Guess Who?" (By Hasbro) as instead
   - Join Game: User can join a game lobby by inputting a four-letter code shared by a host
   - Host can customize the board in the lobby
 - Board Customization
+
   - Host can modify the board after lobby has been made through board customizations
   - Depending on the board customizations set by the Host, the board that the players will play on will be shaped by said customizations (ex. board difficulty, grid size)
   - The guest can see the board customizations being modified by the host in the lobby in real time
   - Grid Size: Host can choose between setting the following grid size settings (bigger grid size = more locations to guess from)
     - 4x4
     - 5x5
-  - Board Difficulty: Host can pick difficulty for the game
-    - General (no shared theme)
+  - Board Difficulty / Themes: Host can pick difficulty for the game
     - Easy (recognizable buildings)
+    - Medium (less recognizable buildings)
     - Hard (very specific locations on campus)
+    - Residential and Dining
+    - Campus Landmarks
+    - Study Spots
+    - Bike Racks
+    - Streets and Parking Lots
   - Guess Count: Host can decide the number of guesses (between 1 to 3) each player can make during the game.
+
 - Gameplay (Game Screen)
   - "Hidden Card" Selection: Before a game starts, both players will be given a preview of the board (and the cards generated on it) and they will have to pick a card that the other player has to guess. This will become each player's Hidden Card. Each player's Hidden Card will be displayed on the top right of each of their screens throughout the game. Both players will need to pick a card and select a "Ready" button before the actual game starts
   - Messaging: During the game, the players have access to a chatbox to to ask each other questions about the other's hidden card. This is the only aid that they will have to deduce the other player's Hidden Card
@@ -84,10 +91,6 @@ Our project adds a twist to the popular game "Guess Who?" (By Hasbro) as instead
   - Card Descriptions: In both the Card Selection screen and the Game screen, the player can hover over the different cards displayed on the board which will display a pop up in the corner of the screen displaying a description of the location in the card. This will help students become more familiar with the location
 
 Some nice to have features:
-
-- Log in (Accounts)
-  - Scoreboard
-  - Game statistics
 - Card Gallery: In the main menu, the players can access a "Card Gallery" that will display all the available cards that can show up in the games along with their descriptions. The player can see these descriptions by hovering over the cards with their mouse
 
 ### How to play the game
@@ -95,49 +98,35 @@ Some nice to have features:
 - After a guest arrives in a host's lobby, the host can start the game
 - When the game first starts, the two players will be brought to a selection screen that previews the board they will be playing on. All cards in the preview board will be displayed in the same position in the actual board. Each player must pick a card to be their Hidden Card -- the card that the other player has to guess. When both players are satisfied with their pick, they must both press the "Ready" button to start the actual game
 - Once the actual game starts, players can now interact with the real grid with Flagging Mode or Guessing Mode (player can toggle between the two using a toggle button).
-- Player Goal : Each player must guess the other's hidden card
+- Player Goal: Each player must guess the other's hidden card
   - If a player makes a correct guess, they win and the other will lose
   - If a player makes an incorrect guess and they still have guesses left, that player's guess count will be decremented but the game will keep going
   - If a player makes an incorrect guess and they are the first to run out of guesses, that player loses and the other will win
 
 ## User Interface Specification(Navigation Diagram & Screen Layouts)
 
-Our diagram shows all potential screens for the users to experience with explanations and _pointers_ for what each screen is and how one reaches each screen.
-![image](https://github.com/user-attachments/assets/a3248f8f-ec36-4620-b52e-acd75c1d7653)
+<img width="838" alt="image" src="https://github.com/user-attachments/assets/3d244cf0-392e-48ea-b9b9-bc9d16f016bb">
+</br>
+This diagram illustrates the navigation between all screens for the users to experience. Main features are accompanied by explanations.
+</br>
+</br>
+Figma: https://www.figma.com/design/VmG7uA7jlvptvLS0uReVXZ/cs100?node-id=0-1&t=XrUsxLECUcbLSxdd-1
 
 ## Class Diagram
+### Before ###
+![image](https://github.com/user-attachments/assets/476c8125-042e-49c9-9fbb-a6d82676a293)
+### After ###
+![image](https://github.com/user-attachments/assets/39ec36a1-9488-4700-8b16-68bdaad872ef)
+</br>
+</br>
+The changes include removing the User class, creating a Home class, removing the Guess class, and placing the functions/responsibilities inside the game class. Our reasoning for removing the user class was that the User was an "up in the air" idea, and after careful consideration, we felt there was no need for it. Replacing its user class was the Home/Start Screen class. This was to follow the _Single Responsibility Principle_ better. This way, the lobby won't have two responsibilities: creating/joining a lobby and configuring the game settings for the lobby. We put the create/joining lobby responsibilities inside the Home class while leaving the remaining stuff inside the Lobby class. This will help us separate the code better as Lobby seemed saturated with too many responsibilities so spreading some of the code to the Home component helps with that. Another change we made was just to move the Guess class functionality to within the Game class. It seemed unnecessary to create such a small class for something that wouldn't violate the _Single Responsibility Principle_. This way we also would better follow _SOLID_ Principles as the two classes wouldn't have similar responsibilities.
 
-![image](https://github.com/user-attachments/assets/9e2fc695-0286-4be2-b736-c2a7013e6aeb)
-
-> ## Phase III
->
-> You will need to schedule a check-in for the second scrum meeting with the same reader you had your first scrum meeting with (using Calendly). Your entire team must be present. This meeting will occur on week 8 during lab time.
-
-> BEFORE the meeting you should do the following:
->
-> - Update your class diagram from Phase II to include any feedback you received from your TA/grader.
-> - Considering the SOLID design principles, reflect back on your class diagram and think about how you can use the SOLID principles to improve your design. You should then update the README.md file by adding the following:
->   - A new class diagram incorporating your changes after considering the SOLID principles.
->   - For each update in your class diagram, you must explain in 3-4 sentences:
->     - What SOLID principle(s) did you apply?
->     - How did you apply it? i.e. describe the change.
->     - How did this change help you write better code?
-> - Perform a new sprint plan like you did in Phase II.
-> - Make sure that your README file (and Project board) are up-to-date reflecting the current status of your project and the most recent class diagram. Previous versions of the README file should still be visible through your commit history.
-> - Each team member should also submit the Individual Contributions Form on Canvas for phase III. In this form, you need to fill in the names of all team members, the percentage of work contributed by each member for phase III, and a description of their contributions. Remember that each team member should submit the form individually.
-
-> During the meeting with your reader you will discuss:
->
-> - How effective your last sprint was (each member should talk about what they did)
-> - Any tasks that did not get completed last sprint, and how you took them into consideration for this sprint
-> - Any bugs you've identified and created issues for during the sprint. Do you plan on fixing them in the next sprint or are they lower priority?
-> - What tasks you are planning for this next sprint.
 
 > ## Final deliverable
 >
-> All group members will give a demo to the reader during lab time. ou should schedule your demo on Calendly with the same reader who took your second scrum meeting. The reader will check the demo and the project GitHub repository and ask a few questions to all the team members.
+> All group members will give a demo to the reader during lab time. You should schedule your demo on Calendly with the same reader who took your second scrum meeting. The reader will check the demo and the project GitHub repository and ask a few questions to all the team members.
 > Before the demo, you should do the following:
->
+
 > - Complete the sections below (i.e. Screenshots, Installation/Usage, Testing)
 > - Plan one more sprint (that you will not necessarily complete before the end of the quarter). Your In-progress and In-testing columns should be empty (you are not doing more work currently) but your TODO column should have a full sprint plan in it as you have done before. This should include any known bugs (there should be some) or new features you would like to add. These should appear as issues/cards on your Project board.
 > - Make sure your README file and Project board are up-to-date reflecting the current status of your project (e.g. any changes that you have made during the project such as changes to your class diagram). Previous versions should still be visible through your commit history.
