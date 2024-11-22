@@ -41,7 +41,7 @@ function generateLobbyCode() {
   }
 }
 
-currLobbies = [];
+currLobbies = [{ roomCode: "TEST", numOfUsers: 0 }];
 userRooms = [];
 
 //on connection, logs the message "User connected" and the socket id
@@ -106,7 +106,8 @@ io.on("connection", (socket) => {
       userRooms = userRooms.filter((user) => user.socketId !== socket.id);
       if (
         currLobbies.find((lobby) => lobby.roomCode === roomToDecrement)
-          .numOfUsers === 0
+          .numOfUsers === 0 &&
+        roomToDecrement !== "TEST"
       ) {
         currLobbies = currLobbies.filter(
           (lobby) => lobby.roomCode !== roomToDecrement,
@@ -127,7 +128,8 @@ io.on("connection", (socket) => {
       userRooms = userRooms.filter((user) => user.socketId !== socket.id);
       if (
         currLobbies.find((lobby) => lobby.roomCode === roomToDecrement)
-          .numOfUsers === 0
+          .numOfUsers === 0 &&
+        roomToDecrement !== "TEST"
       ) {
         currLobbies = currLobbies.filter(
           (lobby) => lobby.roomCode !== roomToDecrement,
@@ -142,6 +144,52 @@ io.on("connection", (socket) => {
   socket.on("sendMessage", (data) => {
     console.log("I AM BEING RECIEVED", data);
     socket.to(data.room).emit("receivedMessage", data);
+  });
+
+  // on receiving a flagToggled event, logs the message "(insert location here later)'s flag
+  // toggled ON" when toggleState is true and "(insert location here later)'s flag toggled OFF"
+  // when toggleState is off
+  socket.on("flagToggled", (toggleState) => {
+    if (toggleState) {
+      console.log("(insert location here later)'s flag toggled ON");  
+    }
+    else {
+      console.log("(insert location here later)'s flag toggled OFF");  
+    }
+  });
+
+  socket.on("cardClickedWithFlag", (isFlaggingMode) => {
+    if (isFlaggingMode) {
+      console.log("(insert location here later) was clicked with flag");
+    }
+    else {
+      console.log("(insert location here later) was clicked with guess");
+    }
+  });
+
+  socket.on("finalizedGuess", () => {
+    console.log("(player) finalized their guess");
+  });
+
+  socket.on("cancelledGuess", () => {
+    console.log("(player) cancelled their guess");
+  //upon receiving a settingDifficulty, settingTheme, settingNumGuesses, or settingGridSize
+  // event, log "updating ____ setting" and the new difficulty setting
+
+  socket.on("settingDifficulty", (boardDifficulty) => {
+    console.log("updating difficulty setting to ", boardDifficulty);
+  });
+
+  socket.on("settingTheme", (boardTheme) => {
+    console.log("updating theme setting to ", boardTheme);
+  });
+
+  socket.on("settingNumberOfGuesses", (numGuess) => {
+    console.log("updating number of guesses to ", numGuess);
+  });
+
+  socket.on("settingGridSize", (gridSize) => {
+    console.log("updating gridSize to ", gridSize);
   });
 });
 

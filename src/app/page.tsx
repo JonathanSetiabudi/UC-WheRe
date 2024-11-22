@@ -5,6 +5,8 @@ import { socket } from "@/utils/socket";
 import Messages from "./messages/page";
 import Image from "next/image";
 import Orange from "../../public/assets/orange.svg";
+import Game from "../app/game/page";
+import Lobby from "./Lobby/page";
 
 export default function Home() {
   socket.connect();
@@ -73,24 +75,45 @@ export default function Home() {
             UC WheRe?
             <br/>
           </div>
+          <a
+            href="http://localhost:3000"
+            target="_blank"
+            data-test="new-tab-button"
+          >
+            New Tab for Testing
+          </a>
+          <br />
           <input className="p-2 mb-1 text-black rounded-md"
             type="text"
             placeholder="Username"
             onChange={onUsernameChange}
+            data-test="username-input"
           />
+            
           <button className = "mb-5 text-xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue" onClick={createLobby}>Create a Lobby</button>
           <input className="p-2 mb-1 text-black rounded-md"
             type="text"
             placeholder="Enter Lobby ID"
             onChange={onRoomChange}
+            data-test="lobby-input"
           />
-          <button className = "mb-3 text-xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue" onClick={joinLobby}>Join a Lobby</button>
+            
+          <button className = "mb-3 text-xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue" data-test="join-lobby-button" onClick={joinLobby}>Join a Lobby</button>
           <Image src={Orange} alt="Orange"/>
         </div>
       ) : (
         <div className = "bg-ucwhere-orange p-5 font-jersey text-white">
           <div className = "text-2xl">Room:{room}</div>
-          <Messages username={username} room={room} />
+          <a
+            href="http://localhost:3000"
+            target="_blank"
+            data-test="new-tab-button"
+          >
+            New Tab for Testing
+          </a>
+          <Messages data-test="messaging-component" username={username} room={room} />
+          <Lobby code={room} />
+          <Game/>
         </div>
       )}
     </div>
