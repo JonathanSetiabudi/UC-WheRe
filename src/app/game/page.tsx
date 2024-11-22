@@ -4,55 +4,160 @@ import { useEffect, useState } from "react";
 import { socket } from "@/utils/socket";
 import Location from "../objects/Location.js";
 
-// export default function Game() {
-//   socket.connect();
+const Game = () => {
+  // initialize gameCards
+  const gameCards: Location[] = Array.from({ length: 16 }, (_, i) => {
+    return new Location(
+      `Location ${i + 1}`,
+      `Description ${i + 1}`,
+      `image${i + 1}.jpg`,
+      "Easy",
+      "Default"
+    );
+  });
 
-
-// }
-
-interface GameProps {
-  locations: Location[];
-}
-
-const Game = ({ locations } : GameProps) => {
-  const [cardsList, setCardsList] = useState<Location[]>(locations.slice(0, 16));
-  const [cardsTheme, setCardsTheme] = useState<string>("CampusLandmarks");
-
-  const setSize4x4 = () => {
-    if (cardsList.length != 16) {
-      setCardsList(locations.slice(0, 16));
-    }
-  };
+  const [locations, setLocations] = useState<Location[]>(gameCards); // re-render gameCards
+  const [isFlaggingMode, setIsFlaggingMode] = useState<boolean>(true); // flagging mode is true on default
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null); 
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // pop up screen is not open (false) on default
   
-  const setSize4x5 = () => {
-    if (cardsList.length != 20 ) {
-      const addLocations = locations.slice(cardsList.length, 20);
-      setCardsList([...cardsList, ...addLocations]);
+  const toggleFlag = (index: number) => {
+    const updatedCard = [...locations];
+    updatedCard[index].toggleFlag(); // calls .toggleFlag() from location class
+    setLocations(updatedCard);
+  };
+
+  const handleCardClick = (index: number) => {
+    if (isFlaggingMode) {
+      // if clicked in flagging mode, toggle the card's flag
+      toggleFlag(index);
+    } else {
+      // if clicked in guessing mode, select the card to guess
+      setSelectedLocation(locations[index]);
+      setIsModalOpen(true);
     }
   };
 
-  // check
-  const filterTheme = (theme: string) => {
-    setCardsTheme(theme);
-    const filteredLocations = locations.filter(location => location.locationType === theme);
+  const finalizeGuess = () => {
+    setIsModalOpen(false); // close pop up after finalizing guess
+    // guess--... other stuff
+  }
+
+  const cancelGuess = () => {
+    setIsModalOpen(false); // close pop up to cancel guess
+    setSelectedLocation(null); // de-selects card
   }
 
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <h1>Interactive Location Grid</h1>
 
-    {/* Gridsize buttons */}
-    <button onClick={setSize4x4}>Set Size to 16 (4x4)</button>
-    <button onClick={setSize4x5}>Expand to 20 (4x5)</button>
+      {/* Toggle Button */}
+      <button
+        onClick={() => setIsFlaggingMode(!isFlaggingMode)}
+        style={{
+          marginBottom: "20px",
+          padding: "10px 20px",
+          backgroundColor: isFlaggingMode ? "lightblue" : "lightcoral",
+          border: "1px solid black",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        Switch to {isFlaggingMode ? "Guessing" : "Flagging"} Mode
+      </button>
 
-    {/* Location theme dropdown menu */}
-    <select onChange={(e) => filterTheme(e.target.value)} value={cardsTheme}>
-      <option value="CampusLandmarks">Campus Landmarks</option>
-      <option value="Residential&Dining">Residential & Dining</option>
-      <option value="StudySpots">Study Spots</option>
-      <option value="BikeRacks">Bike Racks</option>
-      <option value="Streets&ParkingLots">Streets and Parking Lots</option>
+      {/* Grid Container */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: "10px",
+          width: "fit-content",
+        }}
+      >
+        {/* Render each location as a button */}
+        {locations.map((location, index) => (
+          <button
+            key={index}
+            onClick={() => handleCardClick(index)}
+            style={{
+              padding: "20px",
+              backgroundColor: location.isFlagged ? "lightgreen" : "lightgray",
+              border: "1px solid black",
+              borderRadius: "5px",
+              cursor: "pointer",
+              textAlign: "center",
+            }}
+          >
+            {location.name}
+          </button>
+        ))}
+      </div>
 
-    </select>
-  </div>
-  )
+      {/* Pop-up (modal) to confirm guess */}
+      {isModalOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "white",
+            padding: "20px",
+            border: "2px solid black",
+            borderRadius: "10px",
+            zIndex: 1000,
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+          }}
+        >
+          <h3>Confirm Your Selection</h3>
+          <p>Are you sure you want to select: {selectedLocation?.name}?</p>
+          <div style={{ display: "flex", justifyContent: "space-around", marginTop: "20px" }}>
+            <button
+              onClick={cancelGuess}
+              style={{
+                padding: "10px 20px",
+                backgroundColor: "lightcoral",
+                border: "1px solid black",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={finalizeGuess}
+              style={{
+                padding: "10px 20px",
+                backgroundColor: "lightgreen",
+                border: "1px solid black",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Overlay */}
+      {isModalOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 999,
+          }}
+        />
+      )}
+    </div>
+  );
 };
+
+export default Game;
