@@ -155,6 +155,23 @@ io.on("connection", (socket) => {
       console.log("(insert location here later)'s flag toggled OFF");  
     }
   });
+
+  socket.on("cardClickedWithFlag", (isFlaggingMode) => {
+    if (isFlaggingMode) {
+      console.log("(insert location here later) was clicked with flag");
+    }
+    else {
+      console.log("(insert location here later) was clicked with guess");
+    }
+  });
+
+  socket.on("finalizedGuess", () => {
+    console.log("(player) finalized their guess");
+  });
+
+  socket.on("cancelledGuess", () => {
+    console.log("(player) cancelled their guess");
+  });
 });
 
 server.listen(8080, () => {

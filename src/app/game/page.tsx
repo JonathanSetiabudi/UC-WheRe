@@ -36,13 +36,11 @@ const Game = () => {
     socket.emit("flagToggled", updatedCard[index].checkFlag());
   };
 
-  
-
   const handleClickOnGrid = (index: number) => {
+    socket.emit("cardClickedOnGrid", isFlaggingMode);
     if (isFlaggingMode) {
       // if clicked in flagging mode, toggle the card's flag
       toggleFlag(index);
-      //socket.emit
     } else {
       // if clicked in guessing mode, select the card to guess
       setSelectedLocation(locations[index]);
@@ -52,12 +50,14 @@ const Game = () => {
 
   const finalizeGuess = () => {
     setIsModalOpen(false); // close pop up after finalizing guess
-    // guess--... other stuff
+    socket.emit("finalizedGuess");
+    // guess--... other stuff (go to result screen)
   }
 
   const cancelGuess = () => {
     setIsModalOpen(false); // close pop up to cancel guess
     setSelectedLocation(null); // de-selects card
+    socket.emit("cancelledGuess");
   }
 
   return (
@@ -76,7 +76,7 @@ const Game = () => {
         style={{
           marginBottom: "20px",
           padding: "10px 20px",
-          backgroundColor: isFlaggingMode ? "lightblue" : "lightcoral",
+          backgroundColor: isFlaggingMode ? "#bf4240" : "#008080",
           border: "1px solid black",
           borderRadius: "5px",
           cursor: "pointer",
@@ -101,7 +101,7 @@ const Game = () => {
             onClick={() => handleClickOnGrid(index)}
             style={{
               padding: "20px",
-              backgroundColor: location.isFlagged ? "lightgreen" : "lightgray",
+              backgroundColor: location.isFlagged ? "#ff0000" : "#666e78",
               border: "1px solid black",
               borderRadius: "5px",
               cursor: "pointer",
@@ -121,7 +121,7 @@ const Game = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            backgroundColor: "white",
+            backgroundColor: "#32426d",
             padding: "20px",
             border: "2px solid black",
             borderRadius: "10px",
