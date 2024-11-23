@@ -176,20 +176,20 @@ io.on("connection", (socket) => {
   //upon receiving a settingDifficulty, settingTheme, settingNumGuesses, or settingGridSize
   // event, log "updating ____ setting" and the new difficulty setting
 
-  socket.on("settingDifficulty", (boardDifficulty) => {
-    console.log("updating difficulty setting to ", boardDifficulty);
+  socket.on("settingDifficulty", (data) => {
+    console.log("updating difficulty setting to ", data.BoardDifficulty);
   });
 
-  socket.on("settingTheme", (boardTheme) => {
-    console.log("updating theme setting to ", boardTheme);
+  socket.on("settingTheme", (data) => {
+    console.log("updating theme setting to ", data.BoardTheme);
   });
 
-  socket.on("settingNumberOfGuesses", (numGuess) => {
-    console.log("updating number of guesses to ", numGuess);
+  socket.on("settingNumberOfGuesses", (data) => {
+    console.log("updating number of guesses to ", data.numGuess);
   });
 
-  socket.on("settingGridSize", (gridSize) => {
-    console.log("updating gridSize to ", gridSize);
+  socket.on("settingGridSize", (data) => {
+    console.log("updating gridSize to ", data.gridSize);
   });
 });
 

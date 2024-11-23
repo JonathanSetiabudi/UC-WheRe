@@ -29,25 +29,25 @@ const Lobby = ({ room }) => {
   // @ts-expect-error - TS complains about the type of newDiff, but we alr know it's a number
   const onDifficultyChange = (newDifficulty) => {
     setDifficulty(newDifficulty);
-    const data = { room, boardDifficulty };
+    const data = { room: room, boardDifficulty: boardDifficulty };
     socket.emit("settingDifficulty", data);
   };
   // @ts-expect-error - TS complains about the type of newTheme, but we alr know it's a number
   const onThemeChange = (newTheme) => {
     setTheme(newTheme);
-    const data = { room, boardTheme };
+    const data = { room: room, boardTheme: boardTheme };
     socket.emit("settingTheme", data);
   };
   // @ts-expect-error - TS complains about the type of newNumGuesses, but we alr know it's a number
   const onNumGuessChange = (newNumGuesses) => {
     setNumOfGuesses(newNumGuesses);
-    const data = { room, numGuess };
+    const data = { room: room, numGuess: numGuess };
     socket.emit("settingNumberOfGuesses", data);
   };
   // @ts-expect-error - TS complains about the type of newGridSize, but we alr know it's a number
   const onGridChange = (newGridSize) => {
     setGridSize(newGridSize);
-    const data = { room, gridSize };
+    const data = { room: room, gridSize: gridSize };
     socket.emit("settingGridSize", data);
   };
 
