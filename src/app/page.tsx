@@ -141,7 +141,7 @@ export default function Home() {
               <Game />
             </div>
           ) : (
-            <Lobby code={room} />
+            <Lobby room={room} />
           )}
           <button
             className="text-xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue"

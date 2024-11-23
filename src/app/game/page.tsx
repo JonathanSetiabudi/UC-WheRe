@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { socket } from "@/utils/socket";
 import Location from "../objects/Location";
 
@@ -11,13 +11,13 @@ const Game = () => {
       `Location ${i + 1}`,
       `Description ${i + 1}`,
       `image${i + 1}.jpg`,
-      "Easy",
+      0,
       "Default",
     );
   });
 
-  const [normHiddenCard, setNormHiddenCard] = useState<Location | null>(null); // host hidden card
-  const [scottHiddenCard, setScottHiddenCard] = useState<Location | null>(null); // guest hiddenCard
+  // const [normHiddenCard, setNormHiddenCard] = useState<Location | null>(null); // host hidden card
+  // const [scottHiddenCard, setScottHiddenCard] = useState<Location | null>(null); // guest hiddenCard
   const [locations, setLocations] = useState<Location[]>(gameCards); // re-render gameCards
   const [isFlaggingMode, setIsFlaggingMode] = useState<boolean>(true); // flagging mode is true on default
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(

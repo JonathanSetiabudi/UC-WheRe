@@ -4,10 +4,9 @@ import React, { useEffect, useState } from "react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Home from "../page.jsx";
 import { socket } from "@/utils/socket";
+// import userRooms from ".../server/index.js";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import userRooms from ".../server/index.js";
-
-const Lobby = ({ code }) => {
+const Lobby = ({ room }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [playersInLobby, setPlayerCount] = useState(0);
   const [boardDifficulty, setDifficulty] = useState(0);
@@ -17,31 +16,32 @@ const Lobby = ({ code }) => {
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    socket.on("createdLobby", (room) => {
+    socket.on("createdLobby", () => {
       setPlayerCount((playersInLobby) => playersInLobby + 1);
     });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    socket.on("joinedLobby", (room) => {
+    socket.on("joinedLobby", () => {
       setPlayerCount((playersInLobby) => playersInLobby + 1);
     });
   });
 
-  // sends update signals to server when button is clicke
+  // sends update signals to server when button is clicked
+  // @ts-expect-error - TS complains about the type of newDiff, but we alr know it's a number
   const onDifficultyChange = (newDifficulty) => {
     setDifficulty(newDifficulty);
     socket.emit("settingDifficulty", boardDifficulty);
   };
-
+  // @ts-expect-error - TS complains about the type of newTheme, but we alr know it's a number
   const onThemeChange = (newTheme) => {
     setTheme(newTheme);
     socket.emit("settingTheme", boardTheme);
   };
-
+  // @ts-expect-error - TS complains about the type of newNumGuesses, but we alr know it's a number
   const onNumGuessChange = (newNumGuesses) => {
     setNumOfGuesses(newNumGuesses);
     socket.emit("settingNumberOfGuesses", numGuess);
   };
-
+  // @ts-expect-error - TS complains about the type of newGridSize, but we alr know it's a number
   const onGridChange = (newGridSize) => {
     setGridSize(newGridSize);
     socket.emit("settingGridSize", gridSize);
@@ -148,3 +148,113 @@ const Lobby = ({ code }) => {
 // try to change guess select to dropdown menu instead.
 // for commit
 export default Lobby;
+
+// import { User } from "./User";
+
+// // 4x4 = 20
+// // 5x5 = 25
+// // 4 = 4x4
+// // 5 = 5x5
+// // 46 = 4x6
+// // board theme is string or int?
+
+// // include tests
+
+// class Lobby {
+//   //defining variable types
+//   hostID: string;
+//   guestID: string;
+//   playersInLobby: string[] = [];
+//   code: string;
+//   gridSize: { width: number; height: number };
+//   boardDifficulty: number;
+//   boardTheme: number;
+//   numGuess: number;
+
+//   constructor(
+//     user: User,
+//     code: string,
+//     gridSize = { width: 4, height: 4 },
+//     boardDiff = 0,
+//     boardTheme = 0,
+//     numGuess = 1,
+//   ) {
+//     this.hostID = user.id;
+//     this.guestID = ""; // null on default
+//     this.playersInLobby.push(user.id);
+//     this.code = code;
+//     this.gridSize = gridSize;
+//     this.boardDifficulty = boardDiff;
+//     this.boardTheme = boardTheme;
+//     this.numGuess = numGuess;
+//   }
+
+//   joinGame(newUser: User, code: string) {
+//     if (code !== this.code) {
+//       throw new Error("Invalid code.");
+//     }
+
+//     if (this.getNumPlayers() >= 2) {
+//       throw new Error("Lobby is full.");
+//     }
+
+//     if (this.playersInLobby.includes(newUser.id)) {
+//       throw new Error(`User ${newUser.id} is already in the lobby.`);
+//     }
+
+//     this.playersInLobby.push(newUser.id);
+//     this.guestID = newUser.id;
+//   }
+
+//   static hostGame(user: User, code: string) {
+//     return new Lobby(user, code);
+//   }
+
+//   getHostID() {
+//     return this.hostID;
+//   }
+
+//   getGuestID() {
+//     return this.guestID;
+//   }
+
+//   getCurrPlayers() {
+//     return this.playersInLobby;
+//   }
+
+//   getNumPlayers() {
+//     return this.playersInLobby.length;
+//   }
+
+//   setGridSize(width: number, height: number) {
+//     this.gridSize = { width, height };
+//   }
+
+//   getGridSize() {
+//     return this.gridSize;
+//   }
+
+//   setBoardDiff(boardDiff: number) {
+//     this.boardDifficulty = boardDiff;
+//   }
+
+//   getBoardDiff() {
+//     return this.boardDifficulty;
+//   }
+
+//   setBoardTheme(boardTheme: number) {
+//     this.boardTheme = boardTheme;
+//   }
+
+//   getBoardTheme() {
+//     return this.boardTheme;
+//   }
+
+//   setNumGuess(numGuess: number) {
+//     this.numGuess = numGuess;
+//   }
+
+//   getNumGuess() {
+//     return this.numGuess;
+//   }
+// }
