@@ -173,6 +173,8 @@ io.on("connection", (socket) => {
 
   socket.on("cancelledGuess", () => {
     console.log("(player) cancelled their guess");
+  });
+  
   //upon receiving a settingDifficulty, settingTheme, settingNumGuesses, or settingGridSize
   // event, log "updating ____ setting" and the new difficulty setting
 
