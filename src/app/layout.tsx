@@ -6,7 +6,7 @@ const jersey = Jersey_25({
   weight: "400",
   variable: "--font-jersey25",
   display: "swap",
-})
+});
 
 export const metadata: Metadata = {
   title: "UCR WheRe?",
@@ -20,9 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${jersey.variable} ${jersey.variable} antialiased`}
-      >
+      <body className={`${jersey.variable} ${jersey.variable} antialiased`}>
         {children}
       </body>
     </html>

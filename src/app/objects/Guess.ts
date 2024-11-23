@@ -1,15 +1,13 @@
-import { LocationClass } from './Location'
+import { LocationClass } from "./Location";
 
-class Guess{
+class Guess {
+  guessLocationName: string;
 
-    guessLocationName: string;
+  constructor(inputLocation: LocationClass) {
+    this.guessLocationName = inputLocation.name;
+  }
 
-    constructor(inputLocation: LocationClass){
-        this.guessLocationName = inputLocation.name;
-    }
-
-    guessLocation(Location: LocationClass, Guess: Guess) {
-        return Location.name === Guess.guessLocationName;
-    }
+  guessLocation(Location: LocationClass, Guess: Guess) {
+    return Location.name === Guess.guessLocationName;
+  }
 }
-

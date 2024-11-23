@@ -91,6 +91,7 @@ Our project adds a twist to the popular game "Guess Who?" (By Hasbro) as instead
   - Card Descriptions: In both the Card Selection screen and the Game screen, the player can hover over the different cards displayed on the board which will display a pop up in the corner of the screen displaying a description of the location in the card. This will help students become more familiar with the location
 
 Some nice to have features:
+
 - Card Gallery: In the main menu, the players can access a "Card Gallery" that will display all the available cards that can show up in the games along with their descriptions. The player can see these descriptions by hovering over the cards with their mouse
 
 ### How to play the game
@@ -113,14 +114,17 @@ This diagram illustrates the navigation between all screens for the users to exp
 Figma: https://www.figma.com/design/VmG7uA7jlvptvLS0uReVXZ/cs100?node-id=0-1&t=XrUsxLECUcbLSxdd-1
 
 ## Class Diagram
-### Before ###
+
+### Before
+
 ![image](https://github.com/user-attachments/assets/476c8125-042e-49c9-9fbb-a6d82676a293)
-### After ###
+
+### After
+
 ![image](https://github.com/user-attachments/assets/39ec36a1-9488-4700-8b16-68bdaad872ef)
 </br>
 </br>
 The changes include removing the User class, creating a Home class, removing the Guess class, and placing the functions/responsibilities inside the game class. Our reasoning for removing the user class was that the User was an "up in the air" idea, and after careful consideration, we felt there was no need for it. Replacing its user class was the Home/Start Screen class. This was to follow the _Single Responsibility Principle_ better. This way, the lobby won't have two responsibilities: creating/joining a lobby and configuring the game settings for the lobby. We put the create/joining lobby responsibilities inside the Home class while leaving the remaining stuff inside the Lobby class. This will help us separate the code better as Lobby seemed saturated with too many responsibilities so spreading some of the code to the Home component helps with that. Another change we made was just to move the Guess class functionality to within the Game class. It seemed unnecessary to create such a small class for something that wouldn't violate the _Single Responsibility Principle_. This way we also would better follow _SOLID_ Principles as the two classes wouldn't have similar responsibilities.
-
 
 > ## Final deliverable
 >

@@ -9,8 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ucwhere:{
-          "light-blue": "#9DBBD7", 
+        ucwhere: {
+          "light-blue": "#9DBBD7",
           blue: "#6584A8",
           yellow: "#FFF8D2",
           orange: "#FFCA81",
@@ -18,9 +18,9 @@ const config: Config = {
           green: "#99C399",
         },
       },
-      fontFamily:{
+      fontFamily: {
         jersey: ["var(--font-jersey25)"],
-      }
+      },
     },
   },
   plugins: [],

@@ -1,4 +1,4 @@
-import { User } from './User'
+;import { User } from "./User";
 
 // 4x4 = 20
 // 5x5 = 25
@@ -9,95 +9,101 @@ import { User } from './User'
 
 // include tests
 
-class Lobby{
+class Lobby {
+  //defining variable types
+  hostID: string;
+  guestID: string;
+  playersInLobby: string[] = [];
+  code: string;
+  gridSize: { width: number; height: number };
+  boardDifficulty: number;
+  boardTheme: number;
+  numGuess: number;
 
-    //defining variable types
-    hostID: string;
-    guestID: string;
-    playersInLobby: string[] = [];
-    code: string;
-    gridSize: {width: number, height: number};
-    boardDifficulty: number;
-    boardTheme: number; 
-    numGuess: number;
+  constructor(
+    user: User,
+    code: string,
+    gridSize = { width: 4, height: 4 },
+    boardDiff = 0,
+    boardTheme = 0,
+    numGuess = 1,
+  ) {
+    this.hostID = user.id;
+    this.guestID = ""; // null on default
+    this.playersInLobby.push(user.id);
+    this.code = code;
+    this.gridSize = gridSize;
+    this.boardDifficulty = boardDiff;
+    this.boardTheme = boardTheme;
+    this.numGuess = numGuess;
+  }
 
-    constructor(user: User, code: string, gridSize = { width: 4, height: 4 }, boardDiff = 0, boardTheme = 0, numGuess = 1) {
-        this.hostID = user.id;
-        this.guestID = ""; // null on default
-        this.playersInLobby.push(user.id);  
-        this.code = code;
-        this.gridSize = gridSize;
-        this.boardDifficulty = boardDiff;
-        this.boardTheme = boardTheme;
-        this.numGuess = numGuess;
+  joinGame(newUser: User, code: string) {
+    if (code !== this.code) {
+      throw new Error("Invalid code.");
     }
 
-    joinGame(newUser: User, code: string) {
-        if (code !== this.code) {
-            throw new Error('Invalid code.');
-        }
-
-        if (this.getNumPlayers() >= 2) {
-            throw new Error('Lobby is full.')
-        }
-
-        if (this.playersInLobby.includes(newUser.id)) {
-            throw new Error(`User ${newUser.id} is already in the lobby.`)
-        }
-
-        this.playersInLobby.push(newUser.id);
-        this.guestID = newUser.id;
+    if (this.getNumPlayers() >= 2) {
+      throw new Error("Lobby is full.");
     }
 
-    static hostGame(user: User, code:string ) {
-        return new Lobby(user, code);
+    if (this.playersInLobby.includes(newUser.id)) {
+      throw new Error(`User ${newUser.id} is already in the lobby.`);
     }
 
-    getHostID() {
-        return this.hostID;
-    }
+    this.playersInLobby.push(newUser.id);
+    this.guestID = newUser.id;
+  }
 
-    getGuestID() {
-        return this.guestID;
-    }
+  static hostGame(user: User, code: string) {
+    return new Lobby(user, code);
+  }
 
-    getCurrPlayers() {
-        return this.playersInLobby;
-    }
+  getHostID() {
+    return this.hostID;
+  }
 
-    getNumPlayers() {
-        return this.playersInLobby.length;
-    }
+  getGuestID() {
+    return this.guestID;
+  }
 
-    setGridSize(width: number, height: number) {
-        this.gridSize = { width, height };
-    }
+  getCurrPlayers() {
+    return this.playersInLobby;
+  }
 
-    getGridSize() {
-        return this.gridSize;
-    }
+  getNumPlayers() {
+    return this.playersInLobby.length;
+  }
 
-    setBoardDiff(boardDiff: number) {
-        this.boardDifficulty = boardDiff;
-    }
+  setGridSize(width: number, height: number) {
+    this.gridSize = { width, height };
+  }
 
-    getBoardDiff() {
-        return this.boardDifficulty;
-    }
+  getGridSize() {
+    return this.gridSize;
+  }
 
-    setBoardTheme(boardTheme: number) {
-        this.boardTheme = boardTheme;
-    }
+  setBoardDiff(boardDiff: number) {
+    this.boardDifficulty = boardDiff;
+  }
 
-    getBoardTheme() {
-        return this.boardTheme;
-    }
+  getBoardDiff() {
+    return this.boardDifficulty;
+  }
 
-    setNumGuess(numGuess: number) {
-        this.numGuess = numGuess;
-    }
+  setBoardTheme(boardTheme: number) {
+    this.boardTheme = boardTheme;
+  }
 
-    getNumGuess() {
-        return this.numGuess;
-    }
+  getBoardTheme() {
+    return this.boardTheme;
+  }
+
+  setNumGuess(numGuess: number) {
+    this.numGuess = numGuess;
+  }
+
+  getNumGuess() {
+    return this.numGuess;
+  }
 }

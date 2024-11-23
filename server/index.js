@@ -151,18 +151,16 @@ io.on("connection", (socket) => {
   // when toggleState is off
   socket.on("flagToggled", (toggleState) => {
     if (toggleState) {
-      console.log("(insert location here later)'s flag toggled ON");  
-    }
-    else {
-      console.log("(insert location here later)'s flag toggled OFF");  
+      console.log("(insert location here later)'s flag toggled ON");
+    } else {
+      console.log("(insert location here later)'s flag toggled OFF");
     }
   });
 
   socket.on("cardClickedWithFlag", (isFlaggingMode) => {
     if (isFlaggingMode) {
       console.log("(insert location here later) was clicked with flag");
-    }
-    else {
+    } else {
       console.log("(insert location here later) was clicked with guess");
     }
   });
@@ -174,7 +172,7 @@ io.on("connection", (socket) => {
   socket.on("cancelledGuess", () => {
     console.log("(player) cancelled their guess");
   });
-  
+
   //upon receiving a settingDifficulty, settingTheme, settingNumGuesses, or settingGridSize
   // event, log "updating ____ setting" and the new difficulty setting
 
