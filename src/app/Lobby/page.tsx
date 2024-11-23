@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import Home from "../page.jsx";
 import { socket } from "@/utils/socket";
 // import userRooms from ".../server/index.js";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// @ts-expect-error - TS complains about the type of newTheme, but we alr know it's a string
 const Lobby = ({ room }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [playersInLobby, setPlayerCount] = useState(0);
@@ -29,22 +29,26 @@ const Lobby = ({ room }) => {
   // @ts-expect-error - TS complains about the type of newDiff, but we alr know it's a number
   const onDifficultyChange = (newDifficulty) => {
     setDifficulty(newDifficulty);
-    socket.emit("settingDifficulty", boardDifficulty);
+    const data = { room, boardDifficulty };
+    socket.emit("settingDifficulty", data);
   };
   // @ts-expect-error - TS complains about the type of newTheme, but we alr know it's a number
   const onThemeChange = (newTheme) => {
     setTheme(newTheme);
-    socket.emit("settingTheme", boardTheme);
+    const data = { room, boardTheme };
+    socket.emit("settingTheme", data);
   };
   // @ts-expect-error - TS complains about the type of newNumGuesses, but we alr know it's a number
   const onNumGuessChange = (newNumGuesses) => {
     setNumOfGuesses(newNumGuesses);
-    socket.emit("settingNumberOfGuesses", numGuess);
+    const data = { room, numGuess };
+    socket.emit("settingNumberOfGuesses", data);
   };
   // @ts-expect-error - TS complains about the type of newGridSize, but we alr know it's a number
   const onGridChange = (newGridSize) => {
     setGridSize(newGridSize);
-    socket.emit("settingGridSize", gridSize);
+    const data = { room, gridSize };
+    socket.emit("settingGridSize", data);
   };
 
   // difficulty handlers
