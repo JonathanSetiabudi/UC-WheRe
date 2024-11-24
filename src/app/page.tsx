@@ -16,6 +16,9 @@ export default function Home() {
   const [room, setRoom] = useState("");
   const [showLobby, setShowLobby] = useState(false);
   const [showGame, setShowGame] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
+  const [lobbyIsFull, setLobbyIsFull] = useState<boolean>(false);
+  const [lobbyNotExistent, setLobbyNotExistent] = useState<boolean>(false);
 
   // @ts-expect-error - TS complains about the type of e, but we don't use it
   const onUsernameChange = (e) => {
@@ -42,6 +45,13 @@ export default function Home() {
     setShowGame(true);
   };
 
+  const leaveError = () => {
+    setShowErrorModal(false);
+    // setRoom(null);
+    setLobbyIsFull(false);
+    setLobbyNotExistent(false);
+  };
+
   useEffect(() => {
     socket.connect();
 
@@ -55,11 +65,13 @@ export default function Home() {
     });
 
     socket.on("lobbyFull", () => {
-      alert("Lobby is full");
+      setShowErrorModal(true);
+      setLobbyIsFull(true);
     });
 
     socket.on("lobbyNonExistent", () => {
-      alert("Lobby does not exist");
+      setShowErrorModal(true);
+      setLobbyNotExistent(true);
     });
 
     return () => {
@@ -151,6 +163,45 @@ export default function Home() {
           </button>
         </div>
       )}
+
+      {showErrorModal && (
+        <div
+        style={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          backgroundColor: "#32426d",
+          padding: "20px",
+          border: "2px solid black",
+          borderRadius: "10px",
+          zIndex: 1000,
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+        }}
+      >
+        { lobbyIsFull && (
+          <p>Lobby you are attempting to join is full</p>
+        )}
+        { lobbyNotExistent && (
+          <p>Lobby you are attempting to join is non-existent</p>
+        )}
+        <div style={{ display: "flex", justifyContent: "space-around", marginTop: "20px" }}>
+          <button
+            onClick={leaveError}
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#32426d",
+              border: "1px solid black",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+      )}
+
     </div>
   );
 }
