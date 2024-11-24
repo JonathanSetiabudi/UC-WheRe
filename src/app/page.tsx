@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import { socket } from "@/utils/socket";
 import Messages from "./messages/page";
+import Image from "next/image";
+import Orange from "../../public/assets/orange.svg";
 import Game from "../app/game/page";
 import Lobby from "./Lobby/page";
-
 
 export default function Home() {
   socket.connect();
@@ -13,7 +14,8 @@ export default function Home() {
   //react states for username and room
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
-  const [showChat, setShowChat] = useState(false);
+  const [showLobby, setShowLobby] = useState(false);
+  const [showGame, setShowGame] = useState(false);
 
   // @ts-expect-error - TS complains about the type of e, but we don't use it
   const onUsernameChange = (e) => {
@@ -33,7 +35,11 @@ export default function Home() {
 
   const createLobby = () => {
     socket.emit("create_lobby");
-    setShowChat(true);
+    setShowLobby(true);
+  };
+
+  const startGame = () => {
+    setShowGame(true);
   };
 
   useEffect(() => {
@@ -45,7 +51,7 @@ export default function Home() {
 
     socket.on("joinedLobby", (data) => {
       setRoom(data);
-      setShowChat(true);
+      setShowLobby(true);
     });
 
     socket.on("lobbyFull", () => {
@@ -64,10 +70,18 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    document.body.style.backgroundColor = "#FFF8D2";
+  }, []);
+
   return (
     <div className="Home">
-      {!showChat ? (
-        <div>
+      {!showLobby ? (
+        <div className="flex flex-col items-center font-jersey">
+          <div className="mb-7 text-center text-7xl text-ucwhere-blue">
+            UC WheRe?
+            <br />
+          </div>
           <a
             href="http://localhost:3000"
             target="_blank"
@@ -77,30 +91,39 @@ export default function Home() {
           </a>
           <br />
           <input
+            className="mb-1 rounded-md p-2 text-black"
             type="text"
             placeholder="Username"
             onChange={onUsernameChange}
             data-test="username-input"
           />
-          <br />
-          <button onClick={createLobby} data-test="create-lobby-button">
+
+          <button
+            className="mb-5 text-xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue"
+            onClick={createLobby}
+          >
             Create a Lobby
           </button>
-          <br />
           <input
+            className="mb-1 rounded-md p-2 text-black"
             type="text"
             placeholder="Enter Lobby ID"
             onChange={onRoomChange}
             data-test="lobby-input"
           />
-          <br />
-          <button onClick={joinLobby} data-test="join-lobby-button">
+
+          <button
+            className="mb-3 text-xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue"
+            data-test="join-lobby-button"
+            onClick={joinLobby}
+          >
             Join a Lobby
           </button>
+          <Image src={Orange} alt="Orange" />
         </div>
       ) : (
-        <div>
-          <h2 data-test="room-code">Room:{room}</h2>
+        <div className="bg-ucwhere-orange p-5 font-jersey text-white">
+          <div className="text-2xl">Room:{room}</div>
           <a
             href="http://localhost:3000"
             target="_blank"
@@ -108,13 +131,24 @@ export default function Home() {
           >
             New Tab for Testing
           </a>
-          <Messages
-            data-test="messaging-component"
-            username={username}
-            room={room}
-          />
-          <Lobby code={room} />
-          <Game/>
+          {showGame ? (
+            <div>
+              <Messages
+                data-test="messaging-component"
+                username={username}
+                room={room}
+              />
+              <Game />
+            </div>
+          ) : (
+            <Lobby room={room} />
+          )}
+          <button
+            className="text-xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue"
+            onClick={startGame}
+          >
+            Start Game
+          </button>
         </div>
       )}
     </div>
