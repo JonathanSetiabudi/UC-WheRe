@@ -174,7 +174,7 @@ io.on("connection", (socket) => {
   socket.on("cancelledGuess", () => {
     console.log("(player) cancelled their guess");
   });
-  
+
   //upon receiving a settingDifficulty, settingTheme, settingNumGuesses, or settingGridSize
   // event, log "updating ____ setting" and the new difficulty setting
 
@@ -197,5 +197,4 @@ io.on("connection", (socket) => {
 
 server.listen(8080, () => {
   console.log("listening on 8080");
-});
 });
