@@ -19,6 +19,7 @@ export default function Home() {
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
   const [lobbyIsFull, setLobbyIsFull] = useState<boolean>(false);
   const [lobbyNotExistent, setLobbyNotExistent] = useState<boolean>(false);
+  const [isEmptyUsername, setIsEmptyUsername] = useState<boolean>(false);
 
   // @ts-expect-error - TS complains about the type of e, but we don't use it
   const onUsernameChange = (e) => {
@@ -31,14 +32,24 @@ export default function Home() {
   };
 
   const joinLobby = () => {
-    if (username !== "" && room !== "") {
+    if (username.trim() !== "" && room !== "") {
       socket.emit("join_lobby", room);
+    }
+    else if (username.trim() === "") {
+      setIsEmptyUsername(true);
+      setShowErrorModal(true);
     }
   };
 
   const createLobby = () => {
-    socket.emit("create_lobby");
-    setShowLobby(true);
+    if (username.trim() === "") {
+      setIsEmptyUsername(true);
+      setShowErrorModal(true);
+    }
+    else {
+      socket.emit("create_lobby");
+      setShowLobby(true);
+    }
   };
 
   const startGame = () => {
@@ -50,6 +61,7 @@ export default function Home() {
     // setRoom(null);
     setLobbyIsFull(false);
     setLobbyNotExistent(false);
+    setIsEmptyUsername(false);
   };
 
   useEffect(() => {
@@ -184,6 +196,9 @@ export default function Home() {
         )}
         { lobbyNotExistent && (
           <p>Lobby you are attempting to join is non-existent</p>
+        )}
+        { isEmptyUsername && (
+          <p>You must input a username to play</p>
         )}
         <div style={{ display: "flex", justifyContent: "space-around", marginTop: "20px" }}>
           <button
