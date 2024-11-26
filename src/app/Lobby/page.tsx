@@ -104,50 +104,50 @@ const Lobby = (props) => {
   };
 
   const buttonPerms = (checkIfHost) => {
-    return (checkIfHost ?  
-    "text-black hover:bg-blue-200" : "text-gray-400 cursor-not-allowed"
-  )};
+    return checkIfHost
+      ? "text-black hover:bg-blue-200"
+      : "text-gray-400 cursor-not-allowed";
+  };
 
   return (
     <div>
-      
       <br></br>
-      
+
       <p>Set your difficulty:</p>
-      
-      <button 
+
+      <button
         onClick={handleClickEasy}
         disabled={!props.isHost}
         className={buttonPerms(props.isHost)}
-      > 
-        Easy   
+      >
+        Easy
       </button>
-      
+
       <br></br>
-      
-      <button 
+
+      <button
         onClick={handleClickMedium}
         disabled={!props.isHost}
         className={buttonPerms(props.isHost)}
-      > 
-        Medium 
+      >
+        Medium
       </button>
-      
+
       <br></br>
 
-      <button 
+      <button
         onClick={handleClickHard}
         disabled={!props.isHost}
         className={buttonPerms(props.isHost)}
-      > 
-        Hard 
+      >
+        Hard
       </button>
 
       <br></br>
-      
+
       <p>Select a theme:</p>
-      
-      <button 
+
+      <button
         onClick={handleClickThemeResAndDining}
         disabled={!props.isHost}
         className={buttonPerms(props.isHost)}
@@ -158,7 +158,7 @@ const Lobby = (props) => {
 
       <br></br>
 
-      <button 
+      <button
         onClick={handleClickThemeCampusLandmarks}
         disabled={!props.isHost}
         className={buttonPerms(props.isHost)}
@@ -166,30 +166,30 @@ const Lobby = (props) => {
         {" "}
         Campus Landmarks{" "}
       </button>
-      
+
       <br></br>
-      
-      <button 
+
+      <button
         onClick={handleClickThemeStudySpots}
         disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}  
-      > 
-        Study Spots 
-      </button>
-      
-      <br></br>
-      
-      <button 
-        onClick={handleClickThemeBikeRacks}
-        disabled={!props.isHost}
         className={buttonPerms(props.isHost)}
-      > 
-        Bike Racks 
+      >
+        Study Spots
       </button>
 
       <br></br>
-      
-      <button 
+
+      <button
+        onClick={handleClickThemeBikeRacks}
+        disabled={!props.isHost}
+        className={buttonPerms(props.isHost)}
+      >
+        Bike Racks
+      </button>
+
+      <br></br>
+
+      <button
         onClick={handleClickThemeStreetsAndParking}
         disabled={!props.isHost}
         className={buttonPerms(props.isHost)}
@@ -201,22 +201,22 @@ const Lobby = (props) => {
       <br></br>
 
       <p>How many guesses?</p>
-      
-      <button 
+
+      <button
         onClick={handleClickGuess1}
         disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}  
-      > 
-        1 guess 
+        className={buttonPerms(props.isHost)}
+      >
+        1 guess
       </button>
-      
+
       <br></br>
 
-      <button 
+      <button
         onClick={handleClickGuess3}
         disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}  
-      > 
+        className={buttonPerms(props.isHost)}
+      >
         3 guesses
       </button>
 
@@ -224,22 +224,22 @@ const Lobby = (props) => {
 
       <p>Set your board size:</p>
 
-      <button 
+      <button
         onClick={handleClickBoardSmall}
         disabled={!props.isHost}
         className={buttonPerms(props.isHost)}
-      > 
-        4 x 4 
+      >
+        4 x 4
       </button>
-      
+
       <br></br>
-      
-      <button 
+
+      <button
         onClick={handleClickBoardLarge}
         disabled={!props.isHost}
         className={buttonPerms(props.isHost)}
-      > 
-        5 x 4 
+      >
+        5 x 4
       </button>
     </div>
   );

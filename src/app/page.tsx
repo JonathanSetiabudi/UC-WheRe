@@ -35,8 +35,7 @@ export default function Home() {
   const joinLobby = () => {
     if (username.trim() !== "" && room !== "") {
       socket.emit("join_lobby", room);
-    }
-    else if (username.trim() === "") {
+    } else if (username.trim() === "") {
       setIsEmptyUsername(true);
       setShowErrorModal(true);
     }
@@ -46,8 +45,7 @@ export default function Home() {
     if (username.trim() === "") {
       setIsEmptyUsername(true);
       setShowErrorModal(true);
-    }
-    else {
+    } else {
       socket.emit("create_lobby");
       setShowLobby(true);
     }
@@ -55,6 +53,7 @@ export default function Home() {
 
   const startGame = () => {
     setShowGame(true);
+    //socket.emit...
   };
 
   // leave modal caused by homepage errors
@@ -74,9 +73,10 @@ export default function Home() {
   };
 
   const buttonPerms = (checkIfHost) => {
-    return (checkIfHost ?  
-    "text-black hover:bg-blue-200" : "text-gray-400 cursor-not-allowed"
-  )};
+    return checkIfHost
+      ? "text-black hover:bg-blue-200"
+      : "text-gray-400 cursor-not-allowed";
+  };
 
   useEffect(() => {
     socket.connect();
@@ -89,7 +89,6 @@ export default function Home() {
     socket.on("joinedLobby", (data) => {
       setRoom(data);
       setShowLobby(true);
-
     });
 
     socket.on("lobbyFull", () => {
@@ -182,21 +181,21 @@ export default function Home() {
             </div>
           ) : (
             <div>
-              <Lobby room={room} isHost={isHost}/>
-              
+              <Lobby room={room} isHost={isHost} />
+
               <br></br>
 
               <button
-                  className="text-2xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue"
-                  data-test="leave-button"
-                  onClick={leave}
-                >
-                  Leave
+                className="text-2xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue"
+                data-test="leave-button"
+                onClick={leave}
+              >
+                Leave
               </button>
             </div>
           )}
           <button
-            className= {buttonPerms(isHost)} 
+            className={buttonPerms(isHost)}
             disabled={!isHost}
             onClick={startGame}
           >
@@ -207,45 +206,46 @@ export default function Home() {
 
       {showErrorModal && (
         <div
-        style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          backgroundColor: "#32426d",
-          padding: "20px",
-          border: "2px solid black",
-          borderRadius: "10px",
-          zIndex: 1000,
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-        }}
-      >
-        { lobbyIsFull && (
-          <p>Lobby you are attempting to join is full</p>
-        )}
-        { lobbyNotExistent && (
-          <p>Lobby you are attempting to join is non-existent</p>
-        )}
-        { isEmptyUsername && (
-          <p>You must input a username to play</p>
-        )}
-        <div style={{ display: "flex", justifyContent: "space-around", marginTop: "20px" }}>
-          <button
-            onClick={leaveError}
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "#32426d",
+            padding: "20px",
+            border: "2px solid black",
+            borderRadius: "10px",
+            zIndex: 1000,
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+          }}
+        >
+          {lobbyIsFull && <p>Lobby you are attempting to join is full</p>}
+          {lobbyNotExistent && (
+            <p>Lobby you are attempting to join is non-existent</p>
+          )}
+          {isEmptyUsername && <p>You must input a username to play</p>}
+          <div
             style={{
-              padding: "10px 20px",
-              backgroundColor: "#32426d",
-              border: "1px solid black",
-              borderRadius: "5px",
-              cursor: "pointer",
+              display: "flex",
+              justifyContent: "space-around",
+              marginTop: "20px",
             }}
           >
-            Cancel
-          </button>
+            <button
+              onClick={leaveError}
+              style={{
+                padding: "10px 20px",
+                backgroundColor: "#32426d",
+                border: "1px solid black",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
-      </div>
       )}
-
     </div>
   );
 }

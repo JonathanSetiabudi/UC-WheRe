@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { socket } from "@/utils/socket";
 import Location from "../objects/Location";
 
-
 const Game = () => {
   // initialize gameCards
   const gameCards: Location[] = Array.from({ length: 16 }, (_, i) => {
@@ -13,23 +12,30 @@ const Game = () => {
       `Description ${i + 1}`,
       `image${i + 1}.jpg`,
       1,
-      "Default"
+      "Default",
     );
-  }); 
+  });
 
   // take gameCards from selectCard
 
-  const [normHiddenCard, setNormHiddenCard] = useState<Location | null>(null); // host hidden card
-  const [scottHiddenCard, setScottHiddenCard] = useState<Location | null>(null);  // guest hiddenCard
+  // const [normHiddenCard, setNormHiddenCard] = useState<Location | null>(null); // host hidden card
+  // const [scottHiddenCard, setScottHiddenCard] = useState<Location | null>(null); // guest hiddenCard
   const [locations, setLocations] = useState<Location[]>(gameCards); // re-render gameCards
   const [numGuesses, setNumGuesses] = useState<number>(1); // num. guesses a player can make
   const [isFlaggingMode, setIsFlaggingMode] = useState<boolean>(true); // flagging mode is true on default
-  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null); 
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(
+    null,
+  );
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // pop up screen is not open (false) on default
+  //const [bothHasSelected, set]
 
   // make selection page
   // set norm and scot hidden card
-  
+
+  useEffect(() => {
+    // empty (for now)
+  });
+
   const toggleFlag = (index: number) => {
     const updatedCard = [...locations];
     updatedCard[index].toggleFlag(); // calls .toggleFlag() from location class
@@ -54,23 +60,24 @@ const Game = () => {
     setIsModalOpen(false); // close pop up after finalizing guess
     socket.emit("finalizedGuess");
     setNumGuesses(numGuesses - 1);
-    
+
     // useEffect() => {
     //   if (numGuesses == 0) {
     //     // game over
     //   }
     // }
-  }
+  };
 
   const cancelGuess = () => {
     setIsModalOpen(false); // close pop up to cancel guess
     setSelectedLocation(null); // de-selects card
     socket.emit("cancelledGuess");
-  }
+  };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-
+    <div
+      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
       {/* board display */}
       <div
         style={{
@@ -100,7 +107,7 @@ const Game = () => {
       </div>
 
       {/* display mode status */}
-      { !isFlaggingMode ? (
+      {!isFlaggingMode ? (
         <h1>Currently in Guessing Mode</h1>
       ) : (
         <h1>Currently in Flagging Mode</h1>
@@ -140,7 +147,13 @@ const Game = () => {
           <h3>Confirm Your Selection</h3>
           <p>Are you sure you want to select: {selectedLocation?.name}?</p>
           <p>Guesses Left: {numGuesses} </p>
-          <div style={{ display: "flex", justifyContent: "space-around", marginTop: "20px" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              marginTop: "20px",
+            }}
+          >
             <button
               onClick={cancelGuess}
               style={{

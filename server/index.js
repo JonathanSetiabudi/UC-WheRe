@@ -50,6 +50,8 @@ currLobbies = [
     theme: 0,
     numGuesses: 1,
     gridSize: 16,
+    hostHasSelected: false,
+    guestHasSelected: false,
   },
 ];
 
@@ -153,6 +155,33 @@ io.on("connection", (socket) => {
         );
         console.log(`Lobby ${roomToDecrement} has been deleted`);
       }
+    }
+  });
+
+  // socket.on("launchGame", (data) => {
+  //   if (currLobbies.find((lobby) => lobby.roomCode === data.room)
+  //     .numOfUsers === 2) {
+  //   }
+  // });
+
+  socket.on("selectCard", (data) => {
+    if (data.isHost === true) {
+      currLobbies.find(
+        (lobby) => lobby.roomCode === data.room,
+      ).hostHasSelected = true;
+    } else {
+      currLobbies.find(
+        (lobby) => lobby.roomCode === data.room,
+      ).guestHasSelected = true;
+    }
+
+    if (
+      currLobbies.find((lobby) => lobby.roomCode === data.room)
+        .hostHasSelected === true &&
+      currLobbies.find((lobby) => lobby.roomCode === data.room)
+        .guestHasSelected === true
+    ) {
+      socket.to(data.room).emit("startGame");
     }
   });
 
