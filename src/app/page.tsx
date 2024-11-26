@@ -14,8 +14,13 @@ export default function Home() {
   //react states for username and room
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
-  const [showLobby, setShowLobby] = useState(false);
-  const [showGame, setShowGame] = useState(false);
+  const [showLobby, setShowLobby] = useState<boolean>(false);
+  const [showGame, setShowGame] = useState<boolean>(false);
+  const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
+  const [lobbyIsFull, setLobbyIsFull] = useState<boolean>(false);
+  const [lobbyNotExistent, setLobbyNotExistent] = useState<boolean>(false);
+  const [isEmptyUsername, setIsEmptyUsername] = useState<boolean>(false);
+  const [isHost, setIsHost] = useState<boolean>(false);
 
   // @ts-expect-error - TS complains about the type of e, but we don't use it
   const onUsernameChange = (e) => {
@@ -28,18 +33,49 @@ export default function Home() {
   };
 
   const joinLobby = () => {
-    if (username !== "" && room !== "") {
+    if (username.trim() !== "" && room !== "") {
       socket.emit("join_lobby", room);
+    } else if (username.trim() === "") {
+      setIsEmptyUsername(true);
+      setShowErrorModal(true);
     }
   };
 
   const createLobby = () => {
-    socket.emit("create_lobby");
-    setShowLobby(true);
+    if (username.trim() === "") {
+      setIsEmptyUsername(true);
+      setShowErrorModal(true);
+    } else {
+      socket.emit("create_lobby");
+      setShowLobby(true);
+    }
   };
 
   const startGame = () => {
     setShowGame(true);
+    //socket.emit...
+  };
+
+  // leave modal caused by homepage errors
+  const leaveError = () => {
+    setShowErrorModal(false);
+    // setRoom(null);
+    setLobbyIsFull(false);
+    setLobbyNotExistent(false);
+    setIsEmptyUsername(false);
+  };
+
+  const leave = () => {
+    setIsHost(false);
+    setShowLobby(false);
+    setShowGame(false);
+    socket.emit("leave", room);
+  };
+
+  const buttonPerms = (checkIfHost) => {
+    return checkIfHost
+      ? "text-black hover:bg-blue-200"
+      : "text-gray-400 cursor-not-allowed";
   };
 
   useEffect(() => {
@@ -47,6 +83,7 @@ export default function Home() {
 
     socket.on("createdLobby", (data) => {
       setRoom(data);
+      setIsHost(true);
     });
 
     socket.on("joinedLobby", (data) => {
@@ -55,11 +92,13 @@ export default function Home() {
     });
 
     socket.on("lobbyFull", () => {
-      alert("Lobby is full");
+      setShowErrorModal(true);
+      setLobbyIsFull(true);
     });
 
     socket.on("lobbyNonExistent", () => {
-      alert("Lobby does not exist");
+      setShowErrorModal(true);
+      setLobbyNotExistent(true);
     });
 
     return () => {
@@ -141,14 +180,70 @@ export default function Home() {
               <Game />
             </div>
           ) : (
-            <Lobby room={room} />
+            <div>
+              <Lobby room={room} isHost={isHost} />
+
+              <br></br>
+
+              <button
+                className="text-2xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue"
+                data-test="leave-button"
+                onClick={leave}
+              >
+                Leave
+              </button>
+            </div>
           )}
           <button
-            className="text-xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue"
+            className={buttonPerms(isHost)}
+            disabled={!isHost}
             onClick={startGame}
           >
             Start Game
           </button>
+        </div>
+      )}
+
+      {showErrorModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "#32426d",
+            padding: "20px",
+            border: "2px solid black",
+            borderRadius: "10px",
+            zIndex: 1000,
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+          }}
+        >
+          {lobbyIsFull && <p>Lobby you are attempting to join is full</p>}
+          {lobbyNotExistent && (
+            <p>Lobby you are attempting to join is non-existent</p>
+          )}
+          {isEmptyUsername && <p>You must input a username to play</p>}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              marginTop: "20px",
+            }}
+          >
+            <button
+              onClick={leaveError}
+              style={{
+                padding: "10px 20px",
+                backgroundColor: "#32426d",
+                border: "1px solid black",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -6,13 +6,13 @@ import Home from "../page.jsx";
 import { socket } from "@/utils/socket";
 // import userRooms from ".../server/index.js";
 // @ts-expect-error - TS complains about the type of newTheme, but we alr know it's a string
-const Lobby = ({ room }) => {
+const Lobby = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [playersInLobby, setPlayerCount] = useState(0);
-  const [boardDifficulty, setDifficulty] = useState(0);
-  const [boardTheme, setTheme] = useState(1);
-  const [numGuess, setNumOfGuesses] = useState(1);
-  const [gridSize, setGridSize] = useState(16);
+  const [playersInLobby, setPlayerCount] = useState<number>(0);
+  const [boardDifficulty, setDifficulty] = useState<number>(0);
+  const [boardTheme, setTheme] = useState<number>(1);
+  const [numGuess, setNumOfGuesses] = useState<number>(1);
+  const [gridSize, setGridSize] = useState<number>(16);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -29,25 +29,25 @@ const Lobby = ({ room }) => {
   // @ts-expect-error - TS complains about the type of newDiff, but we alr know it's a number
   const onDifficultyChange = (newDifficulty) => {
     setDifficulty(newDifficulty);
-    const data = { room: room, boardDifficulty: boardDifficulty };
+    const data = { room: props.room, boardDifficulty: boardDifficulty };
     socket.emit("settingDifficulty", data);
   };
   // @ts-expect-error - TS complains about the type of newTheme, but we alr know it's a number
   const onThemeChange = (newTheme) => {
     setTheme(newTheme);
-    const data = { room: room, boardTheme: boardTheme };
+    const data = { room: props.room, boardTheme: boardTheme };
     socket.emit("settingTheme", data);
   };
   // @ts-expect-error - TS complains about the type of newNumGuesses, but we alr know it's a number
   const onNumGuessChange = (newNumGuesses) => {
     setNumOfGuesses(newNumGuesses);
-    const data = { room: room, numGuess: numGuess };
+    const data = { room: props.room, numGuess: numGuess };
     socket.emit("settingNumberOfGuesses", data);
   };
   // @ts-expect-error - TS complains about the type of newGridSize, but we alr know it's a number
   const onGridChange = (newGridSize) => {
     setGridSize(newGridSize);
-    const data = { room: room, gridSize: gridSize };
+    const data = { room: props.room, gridSize: gridSize };
     socket.emit("settingGridSize", data);
   };
 
@@ -103,48 +103,144 @@ const Lobby = ({ room }) => {
     onGridChange(20);
   };
 
+  const buttonPerms = (checkIfHost) => {
+    return checkIfHost
+      ? "text-black hover:bg-blue-200"
+      : "text-gray-400 cursor-not-allowed";
+  };
+
   return (
     <div>
       <br></br>
+
       <p>Set your difficulty:</p>
-      <button onClick={handleClickEasy}> Easy </button>
-      <br></br>
-      <button onClick={handleClickMedium}> Medium </button>
-      <br></br>
-      <button onClick={handleClickHard}> Hard </button>
+
+      <button
+        onClick={handleClickEasy}
+        disabled={!props.isHost}
+        className={buttonPerms(props.isHost)}
+      >
+        Easy
+      </button>
 
       <br></br>
+
+      <button
+        onClick={handleClickMedium}
+        disabled={!props.isHost}
+        className={buttonPerms(props.isHost)}
+      >
+        Medium
+      </button>
+
+      <br></br>
+
+      <button
+        onClick={handleClickHard}
+        disabled={!props.isHost}
+        className={buttonPerms(props.isHost)}
+      >
+        Hard
+      </button>
+
+      <br></br>
+
       <p>Select a theme:</p>
-      <button onClick={handleClickThemeResAndDining}>
+
+      <button
+        onClick={handleClickThemeResAndDining}
+        disabled={!props.isHost}
+        className={buttonPerms(props.isHost)}
+      >
         {" "}
         Residential and Dining{" "}
       </button>
+
       <br></br>
-      <button onClick={handleClickThemeCampusLandmarks}>
+
+      <button
+        onClick={handleClickThemeCampusLandmarks}
+        disabled={!props.isHost}
+        className={buttonPerms(props.isHost)}
+      >
         {" "}
         Campus Landmarks{" "}
       </button>
+
       <br></br>
-      <button onClick={handleClickThemeStudySpots}> Study Spots </button>
+
+      <button
+        onClick={handleClickThemeStudySpots}
+        disabled={!props.isHost}
+        className={buttonPerms(props.isHost)}
+      >
+        Study Spots
+      </button>
+
       <br></br>
-      <button onClick={handleClickThemeBikeRacks}> Bike Racks </button>
+
+      <button
+        onClick={handleClickThemeBikeRacks}
+        disabled={!props.isHost}
+        className={buttonPerms(props.isHost)}
+      >
+        Bike Racks
+      </button>
+
       <br></br>
-      <button onClick={handleClickThemeStreetsAndParking}>
+
+      <button
+        onClick={handleClickThemeStreetsAndParking}
+        disabled={!props.isHost}
+        className={buttonPerms(props.isHost)}
+      >
         {" "}
         Streets and Parking Lots{" "}
       </button>
 
       <br></br>
+
       <p>How many guesses?</p>
-      <button onClick={handleClickGuess1}> 1 guess </button>
-      <br></br>
-      <button onClick={handleClickGuess3}> 3 guesses </button>
+
+      <button
+        onClick={handleClickGuess1}
+        disabled={!props.isHost}
+        className={buttonPerms(props.isHost)}
+      >
+        1 guess
+      </button>
 
       <br></br>
-      <p>Set your board size:</p>
-      <button onClick={handleClickBoardSmall}> 4 x 4 </button>
+
+      <button
+        onClick={handleClickGuess3}
+        disabled={!props.isHost}
+        className={buttonPerms(props.isHost)}
+      >
+        3 guesses
+      </button>
+
       <br></br>
-      <button onClick={handleClickBoardLarge}> 5 x 4 </button>
+
+      <p>Set your board size:</p>
+
+      <button
+        onClick={handleClickBoardSmall}
+        disabled={!props.isHost}
+        className={buttonPerms(props.isHost)}
+      >
+        4 x 4
+      </button>
+
+      <br></br>
+
+      <button
+        onClick={handleClickBoardLarge}
+        disabled={!props.isHost}
+        className={buttonPerms(props.isHost)}
+      >
+        5 x 4
+      </button>
     </div>
   );
 };

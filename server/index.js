@@ -50,6 +50,8 @@ currLobbies = [
     theme: 0,
     numGuesses: 1,
     gridSize: 16,
+    hostHasSelected: false,
+    guestHasSelected: false,
   },
 ];
 
@@ -75,7 +77,7 @@ io.on("connection", (socket) => {
     console.log(`User(${socket.id}) created room: ${roomCode}`);
     socket.join(roomCode);
     socket.emit("createdLobby", roomCode);
-    // console.log(`Players in ${roomCode}`, room.players);
+    console.log(`Players in ${roomCode}`, room.players);
   });
 
   //on joining the room, logs the message "User connected to room
@@ -153,6 +155,33 @@ io.on("connection", (socket) => {
         );
         console.log(`Lobby ${roomToDecrement} has been deleted`);
       }
+    }
+  });
+
+  // socket.on("launchGame", (data) => {
+  //   if (currLobbies.find((lobby) => lobby.roomCode === data.room)
+  //     .numOfUsers === 2) {
+  //   }
+  // });
+
+  socket.on("selectCard", (data) => {
+    if (data.isHost === true) {
+      currLobbies.find(
+        (lobby) => lobby.roomCode === data.room,
+      ).hostHasSelected = true;
+    } else {
+      currLobbies.find(
+        (lobby) => lobby.roomCode === data.room,
+      ).guestHasSelected = true;
+    }
+
+    if (
+      currLobbies.find((lobby) => lobby.roomCode === data.room)
+        .hostHasSelected === true &&
+      currLobbies.find((lobby) => lobby.roomCode === data.room)
+        .guestHasSelected === true
+    ) {
+      socket.to(data.room).emit("startGame");
     }
   });
 
