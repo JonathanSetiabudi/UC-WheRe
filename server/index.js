@@ -41,8 +41,17 @@ function generateLobbyCode() {
   }
 }
 
-currLobbies = [{ roomCode: "TEST", numOfUsers: 0 }];
-userRooms = [];
+currLobbies = [
+  {
+    roomCode: "TEST",
+    players: [],
+    numOfUsers: 0,
+    difficulty: 0,
+    theme: 0,
+    numGuesses: 1,
+    gridSize: 16,
+  },
+];
 
 //on connection, logs the message "User connected" and the socket id
 //this is basically a list of event listeners
@@ -55,17 +64,18 @@ io.on("connection", (socket) => {
     const roomCode = generateLobbyCode();
     let room = {
       roomCode: roomCode,
+      players: [socket.id],
       numOfUsers: 1,
+      difficulty: 0,
+      theme: 0,
+      numGuesses: 1,
+      gridSize: 16,
     };
     currLobbies.push(room);
     console.log(`User(${socket.id}) created room: ${roomCode}`);
     socket.join(roomCode);
-    userAndTheirRoom = {
-      socketId: socket.id,
-      roomCode: roomCode,
-    };
-    userRooms.push(userAndTheirRoom);
     socket.emit("createdLobby", roomCode);
+    // console.log(`Players in ${roomCode}`, room.players);
   });
 
   //on joining the room, logs the message "User connected to room
@@ -75,11 +85,10 @@ io.on("connection", (socket) => {
         currLobbies.find((lobby) => lobby.roomCode === room).numOfUsers++;
         socket.join(room);
         console.log(`User(${socket.id}) connected to lobby: ${room}`);
-        userAndTheirRoom = {
-          socketId: socket.id,
-          roomCode: room,
-        };
-        userRooms.push(userAndTheirRoom);
+        currLobbies
+          .find((roomToBeFound) => roomToBeFound.roomCode === room)
+          .players.push(socket.id);
+        // console.log(`Players in ${room}`, currLobbies.find((roomToBeFound) => roomToBeFound.roomCode === room).players);
         socket.emit("joinedLobby", room);
       } else {
         console.log(`User(${socket.id}) tried to join full lobby: ${room}`);
@@ -98,12 +107,16 @@ io.on("connection", (socket) => {
   socket.on("leave", (room) => {
     console.log(`User(${socket.id}) disconnected from lobby: ${room}`);
     socket.leave(room);
-    const user = userRooms.find((user) => user.socketId === socket.id);
-    if (user) {
-      const roomToDecrement = user.roomCode;
+    const roomToChange = currLobbies.find((lobby) =>
+      lobby.players.includes(socket.id),
+    );
+    if (roomToChange) {
+      const roomToDecrement = roomToChange.roomCode;
       currLobbies.find((lobby) => lobby.roomCode === roomToDecrement)
         .numOfUsers--;
-      userRooms = userRooms.filter((user) => user.socketId !== socket.id);
+      roomToChange.players = roomToChange.players.filter(
+        (player) => player !== socket.id,
+      );
       if (
         currLobbies.find((lobby) => lobby.roomCode === roomToDecrement)
           .numOfUsers === 0 &&
@@ -120,12 +133,16 @@ io.on("connection", (socket) => {
   //on disconnect, logs the message "User disconnected" and the socket id
   socket.on("disconnect", () => {
     console.log(`User(${socket.id}) disconnected`);
-    const user = userRooms.find((user) => user.socketId === socket.id);
-    if (user) {
-      const roomToDecrement = user.roomCode;
+    const roomToChange = currLobbies.find((lobby) =>
+      lobby.players.includes(socket.id),
+    );
+    if (roomToChange) {
+      const roomToDecrement = roomToChange.roomCode;
       currLobbies.find((lobby) => lobby.roomCode === roomToDecrement)
         .numOfUsers--;
-      userRooms = userRooms.filter((user) => user.socketId !== socket.id);
+      roomToChange.players = roomToChange.players.filter(
+        (player) => player !== socket.id,
+      );
       if (
         currLobbies.find((lobby) => lobby.roomCode === roomToDecrement)
           .numOfUsers === 0 &&
