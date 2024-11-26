@@ -6,13 +6,14 @@ import Home from "../page.jsx";
 import { socket } from "@/utils/socket";
 // import userRooms from ".../server/index.js";
 // @ts-expect-error - TS complains about the type of newTheme, but we alr know it's a string
-const Lobby = ({ room }) => {
+const Lobby = ({ room, isHost }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [playersInLobby, setPlayerCount] = useState(0);
-  const [boardDifficulty, setDifficulty] = useState(0);
-  const [boardTheme, setTheme] = useState(1);
-  const [numGuess, setNumOfGuesses] = useState(1);
-  const [gridSize, setGridSize] = useState(16);
+  const [playersInLobby, setPlayerCount] = useState<number>(0);
+  const [boardDifficulty, setDifficulty] = useState<number>(0);
+  const [boardTheme, setTheme] = useState<number>(1);
+  const [numGuess, setNumOfGuesses] = useState<number>(1);
+  const [gridSize, setGridSize] = useState<number>(16);
+  const [checkIfHost, setCheckIfHost] = useState<boolean>(false);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -103,48 +104,143 @@ const Lobby = ({ room }) => {
     onGridChange(20);
   };
 
+  const buttonPerms = (checkIfHost) =>
+    checkIfHost ? 
+    "text-black hover:bg-blue-200" : "text-gray-400 cursor-not-allowed";
+
   return (
     <div>
+      
       <br></br>
+      
       <p>Set your difficulty:</p>
-      <button onClick={handleClickEasy}> Easy </button>
+      
+      <button 
+        onClick={handleClickEasy}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
+      > 
+        Easy   
+      </button>
+      
       <br></br>
-      <button onClick={handleClickMedium}> Medium </button>
+      
+      <button 
+        onClick={handleClickMedium}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
+      > 
+        Medium 
+      </button>
+      
       <br></br>
-      <button onClick={handleClickHard}> Hard </button>
+
+      <button 
+        onClick={handleClickHard}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
+      > 
+        Hard 
+      </button>
 
       <br></br>
+      
       <p>Select a theme:</p>
-      <button onClick={handleClickThemeResAndDining}>
+      
+      <button 
+        onClick={handleClickThemeResAndDining}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
+      >
         {" "}
         Residential and Dining{" "}
       </button>
+
       <br></br>
-      <button onClick={handleClickThemeCampusLandmarks}>
+
+      <button 
+        onClick={handleClickThemeCampusLandmarks}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
+      >
         {" "}
         Campus Landmarks{" "}
       </button>
+      
       <br></br>
-      <button onClick={handleClickThemeStudySpots}> Study Spots </button>
+      
+      <button 
+        onClick={handleClickThemeStudySpots}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}  
+      > 
+        Study Spots 
+      </button>
+      
       <br></br>
-      <button onClick={handleClickThemeBikeRacks}> Bike Racks </button>
+      
+      <button 
+        onClick={handleClickThemeBikeRacks}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
+      > 
+        Bike Racks 
+      </button>
+
       <br></br>
-      <button onClick={handleClickThemeStreetsAndParking}>
+      
+      <button 
+        onClick={handleClickThemeStreetsAndParking}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
+      >
         {" "}
         Streets and Parking Lots{" "}
       </button>
 
       <br></br>
+
       <p>How many guesses?</p>
-      <button onClick={handleClickGuess1}> 1 guess </button>
+      
+      <button 
+        onClick={handleClickGuess1}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}  
+      > 
+        1 guess 
+      </button>
+      
       <br></br>
-      <button onClick={handleClickGuess3}> 3 guesses </button>
+
+      <button 
+        onClick={handleClickGuess3}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}  
+      > 
+        3 guesses
+      </button>
 
       <br></br>
+
       <p>Set your board size:</p>
-      <button onClick={handleClickBoardSmall}> 4 x 4 </button>
+
+      <button 
+        onClick={handleClickBoardSmall}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
+      > 
+        4 x 4 
+      </button>
+      
       <br></br>
-      <button onClick={handleClickBoardLarge}> 5 x 4 </button>
+      
+      <button 
+        onClick={handleClickBoardLarge}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
+      > 
+        5 x 4 
+      </button>
     </div>
   );
 };

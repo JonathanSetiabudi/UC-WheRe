@@ -65,7 +65,7 @@ io.on("connection", (socket) => {
       roomCode: roomCode,
     };
     userRooms.push(userAndTheirRoom);
-    socket.emit("createdLobby", roomCode);
+    socket.emit("createdLobby", { roomCode, isHost: true });
   });
 
   //on joining the room, logs the message "User connected to room
@@ -80,7 +80,7 @@ io.on("connection", (socket) => {
           roomCode: room,
         };
         userRooms.push(userAndTheirRoom);
-        socket.emit("joinedLobby", room);
+        socket.emit("joinedLobby", { room, isHost: false });
       } else {
         console.log(`User(${socket.id}) tried to join full lobby: ${room}`);
         socket.emit("lobbyFull");
