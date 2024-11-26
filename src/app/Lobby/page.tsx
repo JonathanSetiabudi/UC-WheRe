@@ -23,6 +23,16 @@ const Lobby = (props) => {
     socket.on("joinedLobby", () => {
       setPlayerCount((playersInLobby) => playersInLobby + 1);
     });
+    
+    socket.on("finishedUpdatingDifficulty", (updatedData) =>{
+        setDifficulty(updatedData.boardDifficulty);
+    });
+
+    socket.on("finishedUpdatingTheme", (updatedData) =>{
+        setTheme(updatedData.boardTheme)
+    });
+
+
   });
 
   // sends update signals to server when button is clicked

@@ -49,7 +49,7 @@ currLobbies = [
     difficulty: 0,
     theme: 0,
     numGuesses: 1,
-    gridSize: 16,
+    lobbyGridSize: 16,
     hostHasSelected: false,
     guestHasSelected: false,
   },
@@ -224,18 +224,30 @@ io.on("connection", (socket) => {
 
   socket.on("settingDifficulty", (data) => {
     console.log("updating difficulty setting to ", data.BoardDifficulty);
+    difficulty = BoardDifficulty;
+    const updatedData = { room: props.room, boardDifficulty: difficulty };
+    socket.emit("finishedUpdatingDifficulty", updatedData);
   });
 
   socket.on("settingTheme", (data) => {
     console.log("updating theme setting to ", data.BoardTheme);
+    theme = BoardTheme;
+    const updatedData = { room: props.room, BoardTheme: theme };
+    socket.emit("finishedUpdatingTheme", updatedData);
   });
 
   socket.on("settingNumberOfGuesses", (data) => {
     console.log("updating number of guesses to ", data.numGuess);
+    numGuesses = numGuess;
+    const updatedData = { room: props.room, numGuess: numGuesses };
+    socket.emit("finishedUpdatingGuesses", updatedData);
   });
 
   socket.on("settingGridSize", (data) => {
     console.log("updating gridSize to ", data.gridSize);
+    lobbyGridSize = gridSize;
+    const updatedData = { room: props.room, gridSize: lobbyGridSize };
+    socket.emit("finishedUpdatingGridSize", updatedData);
   });
 });
 
