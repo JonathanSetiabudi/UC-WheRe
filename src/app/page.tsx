@@ -14,12 +14,13 @@ export default function Home() {
   //react states for username and room
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
-  const [showLobby, setShowLobby] = useState(false);
-  const [showGame, setShowGame] = useState(false);
+  const [showLobby, setShowLobby] = useState<boolean>(false);
+  const [showGame, setShowGame] = useState<boolean>(false);
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
   const [lobbyIsFull, setLobbyIsFull] = useState<boolean>(false);
   const [lobbyNotExistent, setLobbyNotExistent] = useState<boolean>(false);
   const [isEmptyUsername, setIsEmptyUsername] = useState<boolean>(false);
+  const [isHost, setIsHost] = useState<boolean>(false);
 
   // @ts-expect-error - TS complains about the type of e, but we don't use it
   const onUsernameChange = (e) => {
@@ -56,6 +57,7 @@ export default function Home() {
     setShowGame(true);
   };
 
+  // leave modal caused by homepage errors
   const leaveError = () => {
     setShowErrorModal(false);
     // setRoom(null);
@@ -64,16 +66,30 @@ export default function Home() {
     setIsEmptyUsername(false);
   };
 
+  const leave = () => {
+    setIsHost(false);
+    setShowLobby(false);
+    setShowGame(false);
+    socket.emit("leave", room);
+  };
+
+  const buttonPerms = (checkIfHost) => {
+    return (checkIfHost ?  
+    "text-black hover:bg-blue-200" : "text-gray-400 cursor-not-allowed"
+  )};
+
   useEffect(() => {
     socket.connect();
 
     socket.on("createdLobby", (data) => {
       setRoom(data);
+      setIsHost(true);
     });
 
     socket.on("joinedLobby", (data) => {
       setRoom(data);
       setShowLobby(true);
+
     });
 
     socket.on("lobbyFull", () => {
@@ -165,10 +181,23 @@ export default function Home() {
               <Game />
             </div>
           ) : (
-            <Lobby room={room} />
+            <div>
+              <Lobby room={room} isHost={isHost}/>
+              
+              <br></br>
+
+              <button
+                  className="text-2xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue"
+                  data-test="leave-button"
+                  onClick={leave}
+                >
+                  Leave
+              </button>
+            </div>
           )}
           <button
-            className="text-xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue"
+            className= {buttonPerms(isHost)} 
+            disabled={!isHost}
             onClick={startGame}
           >
             Start Game
