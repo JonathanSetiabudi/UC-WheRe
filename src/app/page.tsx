@@ -91,6 +91,14 @@ export default function Home() {
       setLobbyIsFull(true);
     });
 
+    socket.on("hostLeft", () => {
+      leave();
+    });
+
+    socket.on("guestLeftMidGame", () => {
+      leave();
+    });
+
     socket.on("triedJoinFullLobby", () => {
       setShowErrorModal(true);
       // setLobbyIsFull(true);
