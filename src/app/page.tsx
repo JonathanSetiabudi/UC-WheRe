@@ -202,15 +202,18 @@ export default function Home() {
               >
                 Leave
               </button>
+
+              <br></br>
+              
+              <button
+                className={buttonPerms(isHost)}
+                disabled={!isHost}
+                onClick={doStartGame}
+              >
+                Start Game
+              </button>
             </div>
           )}
-          <button
-            className={buttonPerms(isHost)}
-            disabled={!isHost}
-            onClick={doStartGame}
-          >
-            Start Game
-          </button>
         </div>
       )}
 
@@ -232,7 +235,7 @@ export default function Home() {
           {lobbyIsFull && <p>Lobby you are attempting to join is full</p>}
           {lobbyNotExistent && <p>Lobby you are attempting to join is non-existent</p>}
           {isEmptyUsername && <p>You must input a username to play</p>}
-          {!lobbyIsFull && <p>Not enough players to start game</p>}
+          {showLobby && !lobbyIsFull && <p>Not enough players to start game</p>}
 
           <div
             style={{
