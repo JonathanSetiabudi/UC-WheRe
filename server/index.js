@@ -53,6 +53,7 @@ currLobbies = [
     gridSize: 16,
     hostHasSelected: false,
     guestHasSelected: false,
+    gameStarted: false,
   },
 ];
 
@@ -96,7 +97,11 @@ io.on("connection", (socket) => {
         ) {
           console.log(`room (${room}) is now full`);
         }
-        // console.log(`Players in ${room}`, currLobbies.find((roomToBeFound) => roomToBeFound.roomCode === room).players);
+        console.log(
+          `Players in ${room}`,
+          currLobbies.find((roomToBeFound) => roomToBeFound.roomCode === room)
+            .players,
+        );
         socket.emit("joinedLobby", room);
       } else {
         console.log(`User(${socket.id}) tried to join full lobby: ${room}`);
@@ -120,18 +125,19 @@ io.on("connection", (socket) => {
     );
     if (roomToChange) {
       const roomToDecrement = roomToChange.roomCode;
-      currLobbies.find((lobby) => lobby.roomCode === roomToDecrement)
-        .numOfUsers--;
-      roomToChange.players = roomToChange.players.filter(
-        (player) => player !== socket.id,
-      );
-      if (
-        currLobbies.find((lobby) => lobby.roomCode === roomToDecrement)
-          .numOfUsers === 0 &&
-        roomToDecrement !== "TEST"
-      ) {
+      roomToChange.numOfUsers--;
+      if (roomToChange.players[0] === socket.id) {
+        socket.to(roomToChange.roomCode).emit("hostLeft");
+      } else if (roomToChange.gameStarted === true) {
+        socket.to(roomToChange.roomCode).emit("guestLeftMidGame");
+      } else {
+        roomToChange.players = roomToChange.players.filter(
+          (player) => player !== socket.id,
+        );
+      }
+      if (roomToChange.numOfUsers === 0 && roomToChange.roomCode !== "TEST") {
         currLobbies = currLobbies.filter(
-          (lobby) => lobby.roomCode !== roomToDecrement,
+          (lobby) => lobby.roomCode !== roomToChange.roomCode,
         );
         console.log(`Lobby ${roomToDecrement} has been deleted`);
       }
@@ -192,13 +198,14 @@ io.on("connection", (socket) => {
         (lobby) => lobby.roomCode === data.room,
       ).guestHasSelected = true;
     }
+  });
 
   socket.on("tryStartGame", (room) => {
-    if (currLobbies.find((lobby) => lobby.roomCode === room)) {
-      if (
-        currLobbies.find((lobby) => lobby.roomCode === room).numOfUsers === 2
-      ) {
+    theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
+    if (theLobby) {
+      if (theLobby.numOfUsers === 2) {
         io.to(room).emit("successStartGame");
+        theLobby.gameStarted = true;
         console.log(
           `Host User(${socket.id}) successsfully started a game in lobby: ${room}`,
         );
