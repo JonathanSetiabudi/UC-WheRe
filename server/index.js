@@ -170,26 +170,28 @@ io.on("connection", (socket) => {
   //   }
   // });
 
-  // socket.on("selectCard", (data) => {
-  //   if (data.isHost === true) {
-  //     currLobbies.find(
-  //       (lobby) => lobby.roomCode === data.room,
-  //     ).hostHasSelected = true;
-  //   } else {
-  //     currLobbies.find(
-  //       (lobby) => lobby.roomCode === data.room,
-  //     ).guestHasSelected = true;
-  //   }
+  //on receiving a sendMessage event, logs the message "I AM BEING RECIEVED" and the data
+  //then emits the receivedMessage event to the room with the message
+  socket.on("sendMessage", (data) => {
+    console.log("I AM BEING RECIEVED", data);
+    socket.to(data.room).emit("receivedMessage", data);
+  });
 
-  //   if (
-  //     currLobbies.find((lobby) => lobby.roomCode === data.room)
-  //       .hostHasSelected === true &&
-  //     currLobbies.find((lobby) => lobby.roomCode === data.room)
-  //       .guestHasSelected === true
-  //   ) {
-  //     socket.to(data.room).emit("startGame");
-  //   }
-  // });
+  socket.on("answerQuestion", (answer, room, author) => {
+    console.log("Answer received", answer);
+    socket.to(room).emit("receivedAnswer", answer, author);
+  });
+
+  socket.on("selectCard", (data) => {
+    if (data.isHost === true) {
+      currLobbies.find(
+        (lobby) => lobby.roomCode === data.room,
+      ).hostHasSelected = true;
+    } else {
+      currLobbies.find(
+        (lobby) => lobby.roomCode === data.room,
+      ).guestHasSelected = true;
+    }
 
   socket.on("tryStartGame", (room) => {
     if (currLobbies.find((lobby) => lobby.roomCode === room)) {
@@ -211,13 +213,6 @@ io.on("connection", (socket) => {
         `Host User(${socket.id}) tried to start game in a non-existent lobby: ${room}`,
       );
     }
-  });
-
-  //on receiving a sendMessage event, logs the message "I AM BEING RECIEVED" and the data
-  //then emits the receivedMessage event to the room with the message
-  socket.on("sendMessage", (data) => {
-    console.log("I AM BEING RECIEVED", data);
-    socket.to(data.room).emit("receivedMessage", data);
   });
 
   // on receiving a flagToggled event, logs the message "(insert location here later)'s flag

@@ -22,12 +22,12 @@ export default function Home() {
   const [isEmptyUsername, setIsEmptyUsername] = useState<boolean>(false);
   const [isHost, setIsHost] = useState<boolean>(false);
 
-  // @ts-expect-error - TS complains about the type of e, but we don't use it
+  // @ts-expect-error - TS complains about the type of e, but don't worry about it
   const onUsernameChange = (e) => {
     setUsername(e.target.value);
   };
 
-  // @ts-expect-error - TS complains about the type of e, but we don't use it
+  // @ts-expect-error - TS complains about the type of e, but don't worry about it
   const onRoomChange = (e) => {
     setRoom(e.target.value.toUpperCase());
   };
@@ -186,6 +186,7 @@ export default function Home() {
                 data-test="messaging-component"
                 username={username}
                 room={room}
+                isHost={isHost}
               />
               <Game />
             </div>
