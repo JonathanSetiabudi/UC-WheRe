@@ -91,10 +91,6 @@ io.on("connection", (socket) => {
           .find((roomToBeFound) => roomToBeFound.roomCode === room)
           .players.push(socket.id);
         // console.log(`Players in ${room}`, currLobbies.find((roomToBeFound) => roomToBeFound.roomCode === room).players);
-        // if (currLobbies.find((lobby) => lobby.roomCode === room).numOfUsers === 2) {
-        //   console.log(`room ${room} is now full`);
-        //   socket.emit("lobbyBecameFull");
-        // }
         socket.emit("joinedLobby", room);
       } else {
         console.log(`User(${socket.id}) tried to join full lobby: ${room}`);
@@ -120,13 +116,6 @@ io.on("connection", (socket) => {
       const roomToDecrement = roomToChange.roomCode;
       currLobbies.find((lobby) => lobby.roomCode === roomToDecrement)
         .numOfUsers--;
-      
-      if (currLobbies.find((lobby) => lobby.roomCode === roomToDecrement)
-        .numOfUsers + 1 === 2) {
-        console.log(`room ${room} is no longer full`)    
-        socket.emit("lobbyNoLongerFull");
-      }
-
       roomToChange.players = roomToChange.players.filter(
         (player) => player !== socket.id,
       );
@@ -169,15 +158,11 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("startGame", (data) => {
-    if (currLobbies.find((lobby) => lobby.roomCode === data)
-      .numOfUsers === 2) {
-        socket.to(data).emit("gameStarted");
-    }
-    else {
-      socket.to(data).emit("cannotStartGame");
-    }
-  });
+  // socket.on("launchGame", (data) => {
+  //   if (currLobbies.find((lobby) => lobby.roomCode === data.room)
+  //     .numOfUsers === 2) {
+  //   }
+  // });
 
   socket.on("selectCard", (data) => {
     if (data.isHost === true) {
@@ -196,7 +181,7 @@ io.on("connection", (socket) => {
       currLobbies.find((lobby) => lobby.roomCode === data.room)
         .guestHasSelected === true
     ) {
-      socket.to(data.room).emit("launchGame");
+      socket.to(data.room).emit("startGame");
     }
   });
 
@@ -210,32 +195,28 @@ io.on("connection", (socket) => {
   // on receiving a flagToggled event, logs the message "(insert location here later)'s flag
   // toggled ON" when toggleState is true and "(insert location here later)'s flag toggled OFF"
   // when toggleState is off
-  // socket.on("flagToggled", (toggleState) => {
-  //   if (toggleState) {
-  //     console.log("(insert location here later)'s flag toggled ON");
-  //   } else {
-  //     console.log("(insert location here later)'s flag toggled OFF");
-  //   }
-  // });
+  socket.on("flagToggled", (toggleState) => {
+    if (toggleState) {
+      console.log("(insert location here later)'s flag toggled ON");
+    } else {
+      console.log("(insert location here later)'s flag toggled OFF");
+    }
+  });
 
-  // socket.on("cardClickedWithFlag", (isFlaggingMode) => {
-  //   if (isFlaggingMode) {
-  //     console.log("(insert location here later) was clicked with flag");
-  //   } else {
-  //     console.log("(insert location here later) was clicked with guess");
-  //   }
-  // });
+  socket.on("cardClickedWithFlag", (isFlaggingMode) => {
+    if (isFlaggingMode) {
+      console.log("(insert location here later) was clicked with flag");
+    } else {
+      console.log("(insert location here later) was clicked with guess");
+    }
+  });
 
   socket.on("finalizedGuess", () => {
     console.log("(player) finalized their guess");
   });
 
-  // socket.on("cancelledGuess", () => {
-  //   console.log("(player) cancelled their guess");
-  // });
-
-  socket.on("cardSelected", () => {
-    console.log("card is selected");
+  socket.on("cancelledGuess", () => {
+    console.log("(player) cancelled their guess");
   });
 
   //upon receiving a settingDifficulty, settingTheme, settingNumGuesses, or settingGridSize

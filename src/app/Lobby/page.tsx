@@ -103,7 +103,7 @@ const Lobby = (props) => {
     onGridChange(20);
   };
 
-  const buttonPerms = (checkIfHost: boolean) => {
+  const buttonPerms = (checkIfHost) => {
     return checkIfHost
       ? "text-black hover:bg-blue-200"
       : "text-gray-400 cursor-not-allowed";

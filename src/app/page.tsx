@@ -34,7 +34,6 @@ export default function Home() {
 
   const joinLobby = () => {
     if (username.trim() !== "" && room !== "") {
-      // setLobbyIsFull(true);
       socket.emit("join_lobby", room);
     } else if (username.trim() === "") {
       setIsEmptyUsername(true);
@@ -52,13 +51,9 @@ export default function Home() {
     }
   };
 
-  // start game is for starting game from lobby to game
-  // launch game is for launching game from selection screen to game, can only launch when both players have selected
   const startGame = () => {
-    if (lobbyIsFull) {
-      setShowGame(true);
-    }
-    socket.emit("startGame", room);
+    setShowGame(true);
+    //socket.emit...
   };
 
   // leave modal caused by homepage errors
@@ -77,14 +72,14 @@ export default function Home() {
     socket.emit("leave", room);
   };
 
-  const buttonPerms = (checkIfHost: boolean) => {
+  const buttonPerms = (checkIfHost) => {
     return checkIfHost
       ? "text-black hover:bg-blue-200"
       : "text-gray-400 cursor-not-allowed";
   };
 
   useEffect(() => {
-    //socket.connect();
+    socket.connect();
 
     socket.on("createdLobby", (data) => {
       setRoom(data);
@@ -94,27 +89,11 @@ export default function Home() {
     socket.on("joinedLobby", (data) => {
       setRoom(data);
       setShowLobby(true);
-      // setLobbyIsFull(true);
-    });
-
-    socket.on("gameStarted", () => {
-      setShowGame(true);
-    });
-
-    socket.on("cannotStartGame", () => {
-      setShowErrorModal(true);
-    });
-
-    // socket.on("lobbyBecameFull", () => {
-    //   setLobbyIsFull(true);
-    // });
-
-    socket.on("lobbyNoLongerFull", () => {
-      setLobbyIsFull(false);
     });
 
     socket.on("lobbyFull", () => {
       setShowErrorModal(true);
+      setLobbyIsFull(true);
     });
 
     socket.on("lobbyNonExistent", () => {
@@ -128,7 +107,7 @@ export default function Home() {
       socket.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ lobbyIsFull ]);
+  }, []);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#FFF8D2";
@@ -213,18 +192,15 @@ export default function Home() {
               >
                 Leave
               </button>
-
-              <br></br>
-
-              <button
-                className={buttonPerms(isHost)}
-                disabled={!isHost}
-                onClick={startGame}
-              >
-                Start Game
-              </button>
             </div>
           )}
+          <button
+            className={buttonPerms(isHost)}
+            disabled={!isHost}
+            onClick={startGame}
+          >
+            Start Game
+          </button>
         </div>
       )}
 
