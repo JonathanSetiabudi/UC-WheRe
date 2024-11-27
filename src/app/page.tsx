@@ -51,16 +51,15 @@ export default function Home() {
     }
   };
 
-  const startGame = () => {
-    setShowGame(true);
-    //socket.emit...
+  const doStartGame = () => {
+    socket.emit("tryStartGame", room);
   };
 
   // leave modal caused by homepage errors
   const leaveError = () => {
     setShowErrorModal(false);
     // setRoom(null);
-    setLobbyIsFull(false);
+    // setLobbyIsFull(false);
     setLobbyNotExistent(false);
     setIsEmptyUsername(false);
   };
@@ -89,19 +88,30 @@ export default function Home() {
     socket.on("joinedLobby", (data) => {
       setRoom(data);
       setShowLobby(true);
-    });
-
-    socket.on("lobbyFull", () => {
-      setShowErrorModal(true);
       setLobbyIsFull(true);
     });
 
-    socket.on("lobbyNonExistent", () => {
+    socket.on("triedJoinFullLobby", () => {
+      setShowErrorModal(true);
+      // setLobbyIsFull(true);
+    });
+
+    socket.on("triedJoinNonExistentLobby", () => {
       setShowErrorModal(true);
       setLobbyNotExistent(true);
     });
 
+    socket.on("successStartGame", (data) => {
+      setShowGame(true);
+    });
+
+    socket.on("failStartGame", (data) => {
+      setShowErrorModal(true);
+    });
+
     return () => {
+      setLobbyIsFull(false);
+
       socket.emit("leave", room);
 
       socket.disconnect();
@@ -197,7 +207,7 @@ export default function Home() {
           <button
             className={buttonPerms(isHost)}
             disabled={!isHost}
-            onClick={startGame}
+            onClick={doStartGame}
           >
             Start Game
           </button>
@@ -220,10 +230,10 @@ export default function Home() {
           }}
         >
           {lobbyIsFull && <p>Lobby you are attempting to join is full</p>}
-          {lobbyNotExistent && (
-            <p>Lobby you are attempting to join is non-existent</p>
-          )}
+          {lobbyNotExistent && <p>Lobby you are attempting to join is non-existent</p>}
           {isEmptyUsername && <p>You must input a username to play</p>}
+          {!lobbyIsFull && <p>Not enough players to start game</p>}
+
           <div
             style={{
               display: "flex",

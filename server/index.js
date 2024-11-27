@@ -90,17 +90,20 @@ io.on("connection", (socket) => {
         currLobbies
           .find((roomToBeFound) => roomToBeFound.roomCode === room)
           .players.push(socket.id);
+        if (currLobbies.find((lobby) => lobby.roomCode === room).numOfUsers === 2) {
+          console.log(`room (${room}) is now full`);
+        }
         // console.log(`Players in ${room}`, currLobbies.find((roomToBeFound) => roomToBeFound.roomCode === room).players);
         socket.emit("joinedLobby", room);
       } else {
         console.log(`User(${socket.id}) tried to join full lobby: ${room}`);
-        socket.emit("lobbyFull");
+        socket.emit("triedJoinFullLobby");
       }
     } else {
       console.log(
         `User(${socket.id}) tried to join non-existent lobby: ${room}`,
       );
-      socket.emit("lobbyNonExistent");
+      socket.emit("triedJoinNonExistentLobby");
     }
   });
 
@@ -164,24 +167,33 @@ io.on("connection", (socket) => {
   //   }
   // });
 
-  socket.on("selectCard", (data) => {
-    if (data.isHost === true) {
-      currLobbies.find(
-        (lobby) => lobby.roomCode === data.room,
-      ).hostHasSelected = true;
-    } else {
-      currLobbies.find(
-        (lobby) => lobby.roomCode === data.room,
-      ).guestHasSelected = true;
-    }
+  // socket.on("selectCard", (data) => {
+  //   if (data.isHost === true) {
+  //     currLobbies.find(
+  //       (lobby) => lobby.roomCode === data.room,
+  //     ).hostHasSelected = true;
+  //   } else {
+  //     currLobbies.find(
+  //       (lobby) => lobby.roomCode === data.room,
+  //     ).guestHasSelected = true;
+  //   }
 
-    if (
-      currLobbies.find((lobby) => lobby.roomCode === data.room)
-        .hostHasSelected === true &&
-      currLobbies.find((lobby) => lobby.roomCode === data.room)
-        .guestHasSelected === true
-    ) {
-      socket.to(data.room).emit("startGame");
+  //   if (
+  //     currLobbies.find((lobby) => lobby.roomCode === data.room)
+  //       .hostHasSelected === true &&
+  //     currLobbies.find((lobby) => lobby.roomCode === data.room)
+  //       .guestHasSelected === true
+  //   ) {
+  //     socket.to(data.room).emit("startGame");
+  //   }
+  // });
+
+  socket.on("tryStartGame", (room) => {
+    if (currLobbies.find((lobby) => lobby.roomCode === room).numOfUsers === 2) {
+      socket.emit("successStartGame");
+    }
+    else {
+      socket.emit("failStartGame");
     }
   });
 
