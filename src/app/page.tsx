@@ -72,7 +72,7 @@ export default function Home() {
     socket.emit("leave", room);
   };
 
-  const buttonPerms = (checkIfHost) => {
+  const buttonPerms = (checkIfHost: boolean) => {
     return checkIfHost
       ? "text-black hover:bg-blue-200"
       : "text-gray-400 cursor-not-allowed";
