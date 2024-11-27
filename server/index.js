@@ -164,6 +164,18 @@ io.on("connection", (socket) => {
   //   }
   // });
 
+  //on receiving a sendMessage event, logs the message "I AM BEING RECIEVED" and the data
+  //then emits the receivedMessage event to the room with the message
+  socket.on("sendMessage", (data) => {
+    console.log("I AM BEING RECIEVED", data);
+    socket.to(data.room).emit("receivedMessage", data);
+  });
+
+  socket.on("answerQuestion", (answer, room, author) => {
+    console.log("Answer received", answer);
+    socket.to(room).emit("receivedAnswer", answer, author);
+  });
+
   socket.on("selectCard", (data) => {
     if (data.isHost === true) {
       currLobbies.find(
@@ -183,13 +195,6 @@ io.on("connection", (socket) => {
     ) {
       socket.to(data.room).emit("startGame");
     }
-  });
-
-  //on receiving a sendMessage event, logs the message "I AM BEING RECIEVED" and the data
-  //then emits the receivedMessage event to the room with the message
-  socket.on("sendMessage", (data) => {
-    console.log("I AM BEING RECIEVED", data);
-    socket.to(data.room).emit("receivedMessage", data);
   });
 
   // on receiving a flagToggled event, logs the message "(insert location here later)'s flag

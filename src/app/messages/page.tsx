@@ -2,17 +2,50 @@
 import { socket } from "@/utils/socket";
 import { useEffect, useState } from "react";
 
-// @ts-expect-error - TS complains about the type of username & room but we don't need to worry about it
-const Messages = ({ username, room }) => {
+interface MessageData {
+  room: string;
+  author: string;
+  message: string;
+  received: boolean;
+  time: string;
+}
+
+const Messages = ({
+  username,
+  room,
+  isHost,
+}: {
+  username: string;
+  room: string;
+  isHost: boolean;
+}) => {
   const [message, setMessage] = useState("");
-  const [messageLog, setMessageLog] = useState([]);
+  const [messageLog, setMessageLog] = useState<MessageData[]>([]);
+  const [canMessage, setCanMessage] = useState<boolean>(isHost);
 
   useEffect(() => {
     socket.off("receivedMessage").on("receivedMessage", (data) => {
+      data.received = true;
       console.log(data);
-      // @ts-expect-error - TS complains about the type of message, but we know it's a string
-      setMessageLog((list) => [...list, data.author + ":" + data.message]);
+      setMessageLog((list) => [...list, data]);
     });
+
+    socket
+      .off("receivedAnswer")
+      .on("receivedAnswer", (answer: string, author: string) => {
+        const answerData = {
+          room: room,
+          author: author,
+          message: answer,
+          received: false,
+          time:
+            new Date(Date.now()).getHours() +
+            ":" +
+            new Date(Date.now()).getMinutes(),
+        };
+        setMessageLog((list) => [...list, answerData]);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // @ts-expect-error - TS complains about the type of e, but we don't use it
@@ -26,23 +59,29 @@ const Messages = ({ username, room }) => {
     e.preventDefault();
     //Emits message to server
     if (message.trim() !== "") {
+      setCanMessage((previous) => !previous);
       const messageData = {
         room: room,
         author: username,
         message: message,
+        received: false,
         time:
           new Date(Date.now()).getHours() +
           ":" +
           new Date(Date.now()).getMinutes(),
       };
       //Adds message to messageLog
-      // @ts-expect-error - TS complains about the type of message, but we know it's a string
-      setMessageLog((list) => [...list, username + ":" + message]);
+      setMessageLog((list) => [...list, messageData]);
       await socket.emit("sendMessage", messageData);
       //Clears input field
       setMessage("");
     }
   };
+
+  function answerQuestion(answer: string, room: string, author: string) {
+    setCanMessage((previous) => !previous);
+    socket.emit("answerQuestion", answer, room, author);
+  }
 
   const leave = () => {
     socket.emit("leave", room);
@@ -55,20 +94,35 @@ const Messages = ({ username, room }) => {
       </div>
       <div className="chat-body">
         <ul>
-          {messageLog.map((message, index) => {
+          {messageLog.map((messageData, index) => {
             return (
               <form key={index}>
-                {message}
+                {`${messageData.author}:${messageData.message}`}
                 <br />
-                {}
-                <p>
-                  Yes
-                  <input type="radio" name={`yes_no${index}`} />
-                </p>
-                <p>
-                  No
-                  <input type="radio" name={`yes_no${index}`} />
-                </p>
+                {messageData.received ? (
+                  <div>
+                    <button
+                      type="button"
+                      name={`yes_no${index}`}
+                      onClick={() =>
+                        answerQuestion("Yes", messageData.room, username)
+                      }
+                    >
+                      Yes
+                    </button>
+                    <button
+                      type="button"
+                      name={`yes_no${index}`}
+                      onClick={() =>
+                        answerQuestion("No", messageData.room, username)
+                      }
+                    >
+                      No
+                    </button>
+                  </div>
+                ) : (
+                  <> </>
+                )}
               </form>
             );
           })}
@@ -76,7 +130,11 @@ const Messages = ({ username, room }) => {
       </div>
       <div className="chat-footer">
         <form>
-          <button onClick={sendMessage} data-test="send-message-button">
+          <button
+            onClick={sendMessage}
+            data-test="send-message-button"
+            disabled={!canMessage}
+          >
             &#9658;
           </button>
           <input
