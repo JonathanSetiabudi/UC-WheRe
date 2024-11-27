@@ -6,6 +6,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 //imports cors module as cors
 const cors = require("cors");
+const { isNullOrUndefined } = require("util");
 
 //creates an instance of express called app
 const app = express();
@@ -191,10 +192,24 @@ io.on("connection", (socket) => {
   // });
 
   socket.on("tryStartGame", (room) => {
-    if (currLobbies.find((lobby) => lobby.roomCode === room).numOfUsers === 2) {
-      socket.to(data.room).emit("successStartGame");
+    if (currLobbies.find((lobby) => lobby.roomCode === room)) {
+      if (
+        currLobbies.find((lobby) => lobby.roomCode === room).numOfUsers === 2
+      ) {
+        io.to(room).emit("successStartGame");
+        console.log(
+          `Host User(${socket.id}) successsfully started a game in lobby: ${room}`,
+        );
+      } else {
+        io.to(room).emit("failStartGame");
+        console.log(
+          `Host User(${socket.id}) failed to start a game in lobby: ${room}`,
+        );
+      }
     } else {
-      socket.to(data.room).emit("failStartGame");
+      console.log(
+        `Host User(${socket.id}) tried to start game in a non-existent lobby: ${room}`,
+      );
     }
   });
 
