@@ -101,11 +101,11 @@ export default function Home() {
       setLobbyNotExistent(true);
     });
 
-    socket.on("successStartGame", (data) => {
+    socket.on("successStartGame", () => {
       setShowGame(true);
     });
 
-    socket.on("failStartGame", (data) => {
+    socket.on("failStartGame", () => {
       setShowErrorModal(true);
     });
 
@@ -204,7 +204,7 @@ export default function Home() {
               </button>
 
               <br></br>
-              
+
               <button
                 className={buttonPerms(isHost)}
                 disabled={!isHost}
@@ -233,7 +233,9 @@ export default function Home() {
           }}
         >
           {lobbyIsFull && <p>Lobby you are attempting to join is full</p>}
-          {lobbyNotExistent && <p>Lobby you are attempting to join is non-existent</p>}
+          {lobbyNotExistent && (
+            <p>Lobby you are attempting to join is non-existent</p>
+          )}
           {isEmptyUsername && <p>You must input a username to play</p>}
           {showLobby && !lobbyIsFull && <p>Not enough players to start game</p>}
 

@@ -90,20 +90,22 @@ io.on("connection", (socket) => {
         currLobbies
           .find((roomToBeFound) => roomToBeFound.roomCode === room)
           .players.push(socket.id);
-        if (currLobbies.find((lobby) => lobby.roomCode === room).numOfUsers === 2) {
+        if (
+          currLobbies.find((lobby) => lobby.roomCode === room).numOfUsers === 2
+        ) {
           console.log(`room (${room}) is now full`);
         }
         // console.log(`Players in ${room}`, currLobbies.find((roomToBeFound) => roomToBeFound.roomCode === room).players);
         socket.emit("joinedLobby", room);
       } else {
         console.log(`User(${socket.id}) tried to join full lobby: ${room}`);
-        socket.emit("triedJoinFullLobby");
+        socket.to(data.room).emit("triedJoinFullLobby");
       }
     } else {
       console.log(
         `User(${socket.id}) tried to join non-existent lobby: ${room}`,
       );
-      socket.emit("triedJoinNonExistentLobby");
+      socket.to(data.room).emit("triedJoinNonExistentLobby");
     }
   });
 
@@ -190,10 +192,9 @@ io.on("connection", (socket) => {
 
   socket.on("tryStartGame", (room) => {
     if (currLobbies.find((lobby) => lobby.roomCode === room).numOfUsers === 2) {
-      socket.emit("successStartGame");
-    }
-    else {
-      socket.emit("failStartGame");
+      socket.to(data.room).emit("successStartGame");
+    } else {
+      socket.to(data.room).emit("failStartGame");
     }
   });
 
