@@ -51,16 +51,15 @@ export default function Home() {
     }
   };
 
-  const startGame = () => {
-    setShowGame(true);
-    //socket.emit...
+  const doStartGame = () => {
+    socket.emit("tryStartGame", room);
   };
 
   // leave modal caused by homepage errors
   const leaveError = () => {
     setShowErrorModal(false);
     // setRoom(null);
-    setLobbyIsFull(false);
+    // setLobbyIsFull(false);
     setLobbyNotExistent(false);
     setIsEmptyUsername(false);
   };
@@ -71,8 +70,8 @@ export default function Home() {
     setShowGame(false);
     socket.emit("leave", room);
   };
-  // @ts-expect-error - TS complains about the type of checkIfHost, but we know it's a boolean
-  const buttonPerms = (checkIfHost) => {
+
+  const buttonPerms = (checkIfHost: boolean) => {
     return checkIfHost
       ? "text-black hover:bg-blue-200"
       : "text-gray-400 cursor-not-allowed";
@@ -89,19 +88,30 @@ export default function Home() {
     socket.on("joinedLobby", (data) => {
       setRoom(data);
       setShowLobby(true);
-    });
-
-    socket.on("lobbyFull", () => {
-      setShowErrorModal(true);
       setLobbyIsFull(true);
     });
 
-    socket.on("lobbyNonExistent", () => {
+    socket.on("triedJoinFullLobby", () => {
+      setShowErrorModal(true);
+      // setLobbyIsFull(true);
+    });
+
+    socket.on("triedJoinNonExistentLobby", () => {
       setShowErrorModal(true);
       setLobbyNotExistent(true);
     });
 
+    socket.on("successStartGame", () => {
+      setShowGame(true);
+    });
+
+    socket.on("failStartGame", () => {
+      setShowErrorModal(true);
+    });
+
     return () => {
+      setLobbyIsFull(false);
+
       socket.emit("leave", room);
 
       socket.disconnect();
@@ -193,15 +203,18 @@ export default function Home() {
               >
                 Leave
               </button>
+
+              <br></br>
+
+              <button
+                className={buttonPerms(isHost)}
+                disabled={!isHost}
+                onClick={doStartGame}
+              >
+                Start Game
+              </button>
             </div>
           )}
-          <button
-            className={buttonPerms(isHost)}
-            disabled={!isHost}
-            onClick={startGame}
-          >
-            Start Game
-          </button>
         </div>
       )}
 
@@ -225,6 +238,8 @@ export default function Home() {
             <p>Lobby you are attempting to join is non-existent</p>
           )}
           {isEmptyUsername && <p>You must input a username to play</p>}
+          {showLobby && !lobbyIsFull && <p>Not enough players to start game</p>}
+
           <div
             style={{
               display: "flex",

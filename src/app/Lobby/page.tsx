@@ -103,8 +103,7 @@ const Lobby = (props) => {
     onGridChange(20);
   };
 
-  // @ts-expect-error - TS complains about the type of checkIfHost, but we know it's a boolean
-  const buttonPerms = (checkIfHost) => {
+  const buttonPerms = (checkIfHost: boolean) => {
     return checkIfHost
       ? "text-black hover:bg-blue-200"
       : "text-gray-400 cursor-not-allowed";
