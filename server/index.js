@@ -192,7 +192,8 @@ io.on("connection", (socket) => {
         (lobby) => lobby.roomCode === data.room,
       ).guestHasSelected = true;
     }
-
+  });
+  
   socket.on("tryStartGame", (room) => {
     if (currLobbies.find((lobby) => lobby.roomCode === room)) {
       if (
