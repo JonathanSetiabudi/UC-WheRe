@@ -9,9 +9,13 @@ import { socket } from "@/utils/socket";
 const Lobby = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [playersInLobby, setPlayerCount] = useState<number>(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [boardDifficulty, setDifficulty] = useState<number>(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [boardTheme, setTheme] = useState<number>(1);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [numGuess, setNumOfGuesses] = useState<number>(1);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [gridSize, setGridSize] = useState<number>(16);
 
   useEffect(() => {
@@ -23,42 +27,53 @@ const Lobby = (props) => {
     socket.on("joinedLobby", () => {
       setPlayerCount((playersInLobby) => playersInLobby + 1);
     });
-    
-    socket.on("finishedUpdatingDifficulty", (updatedData) =>{
-        setDifficulty(updatedData.boardDifficulty);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    socket.on("finishedUpdatingDifficulty", (updatedData) => {
+      setDifficulty(updatedData.boardDifficulty);
     });
-
-    socket.on("finishedUpdatingTheme", (updatedData) =>{
-        setTheme(updatedData.boardTheme)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    socket.on("finishedUpdatingTheme", (updatedData) => {
+      setTheme(updatedData.boardTheme);
     });
-
-
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    socket.on("finishedUpdatingGuesses", (updatedData) => {
+      setNumOfGuesses(updatedData.numGuess);
+    });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    socket.on("finishedUpdatingGridSize", (updatedData) => {
+      setGridSize(updatedData.gridSize);
+    });
   });
 
   // sends update signals to server when button is clicked
   // @ts-expect-error - TS complains about the type of newDiff, but we alr know it's a number
   const onDifficultyChange = (newDifficulty) => {
     setDifficulty(newDifficulty);
-    const data = { room: props.room, boardDifficulty: boardDifficulty };
+    const data = { room: props.room, boardDifficulty: newDifficulty };
     socket.emit("settingDifficulty", data);
   };
   // @ts-expect-error - TS complains about the type of newTheme, but we alr know it's a number
   const onThemeChange = (newTheme) => {
     setTheme(newTheme);
-    const data = { room: props.room, boardTheme: boardTheme };
+    const data = { room: props.room, boardTheme: newTheme };
     socket.emit("settingTheme", data);
   };
   // @ts-expect-error - TS complains about the type of newNumGuesses, but we alr know it's a number
   const onNumGuessChange = (newNumGuesses) => {
     setNumOfGuesses(newNumGuesses);
-    const data = { room: props.room, numGuess: numGuess };
+    const data = { room: props.room, numGuess: newNumGuesses };
     socket.emit("settingNumberOfGuesses", data);
   };
   // @ts-expect-error - TS complains about the type of newGridSize, but we alr know it's a number
   const onGridChange = (newGridSize) => {
     setGridSize(newGridSize);
-    const data = { room: props.room, gridSize: gridSize };
+    const data = { room: props.room, gridSize: newGridSize };
     socket.emit("settingGridSize", data);
+  };
+
+  const testEcho = () => {
+    const data = { room: props.room };
+    socket.emit("testEcho", data);
   };
 
   // difficulty handlers
@@ -117,6 +132,10 @@ const Lobby = (props) => {
     return checkIfHost
       ? "text-black hover:bg-blue-200"
       : "text-gray-400 cursor-not-allowed";
+  };
+
+  const handleTestEcho = () => {
+    testEcho();
   };
 
   return (
@@ -251,6 +270,11 @@ const Lobby = (props) => {
       >
         5 x 4
       </button>
+
+      <p>tester button for lobby settings:</p>
+
+      <br></br>
+      <button onClick={handleTestEcho}>click for echo !</button>
     </div>
   );
 };
