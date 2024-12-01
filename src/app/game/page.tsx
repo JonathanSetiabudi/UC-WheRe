@@ -35,7 +35,6 @@ const Game: React.FC<GameProps> = ({ room }) => {
     if (hiddenCard && locations[index] === hiddenCard) {
       return;
     } else {
-
       // for loop of updated location array
       const updatedCards = locations.map((location, i) => {
         // const updatedLocation = new Location(
@@ -49,11 +48,11 @@ const Game: React.FC<GameProps> = ({ room }) => {
         // if location at i is selected location, make it selected
         if (i === index) {
           location.isSelected_HC = true; //{ ...location, isSelected_HC: true };
-        } 
+        }
         // else (even previously selected cards) deselect it
         else {
           location.isSelected_HC = false; //{ ...location, isSelected_HC: false };
-        } 
+        }
 
         return location;
       });
@@ -62,7 +61,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
       setHiddenCard(updatedCards[index]);
       setPlayerHasSelected(true);
     }
-  }
+  };
 
   const toggleFlag = (index: number) => {
     const updatedCard = [...locations];
@@ -80,7 +79,6 @@ const Game: React.FC<GameProps> = ({ room }) => {
     setIsModalOpen(true);
   };
 
-
   // player selects location
   // player presses ready button
   // calls playerIsReady()
@@ -90,7 +88,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
     setPlayerIsReady(true);
     socket.emit("tryLaunchGame", room);
     // launchGame();
-  }
+  };
 
   const cancelReady = () => {
     setPlayerIsReady(false);
@@ -102,8 +100,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
     if (isSelectionMode) {
       select_HC(index);
       socket.emit("hiddenCardSelected");
-    }
-    else {
+    } else {
       // socket.emit("cardClickedOnGrid", isFlaggingMode);
       if (isFlaggingMode) {
         // if clicked in flagging mode, toggle the card's flag
@@ -132,7 +129,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
 
     socket.on("launchGame", () => {
       setIsSelectionMode(false);
-    }); 
+    });
 
     socket.on("waitingForOtherReady", () => {
       //alert("Waiting for other player to ready up to start.");
@@ -143,8 +140,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-
-      { isSelectionMode && (
+      {isSelectionMode && (
         <div>
           <h1>Select your card!</h1>
         </div>
@@ -166,10 +162,11 @@ const Game: React.FC<GameProps> = ({ room }) => {
             onClick={() => handleClickOnGrid(index)}
             style={{
               padding: "20px",
-              backgroundColor: 
-                location.isSelected_HC ? "#0000FF"
-                : location.isFlagged ? "#ff0000" 
-                : "#666e78",
+              backgroundColor: location.isSelected_HC
+                ? "#0000FF"
+                : location.isFlagged
+                  ? "#ff0000"
+                  : "#666e78",
               border: "1px solid black",
               borderRadius: "5px",
               cursor: "pointer",
@@ -181,8 +178,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
         ))}
       </div>
 
-
-      { isSelectionMode ? (
+      {isSelectionMode ? (
         <div>
           <button
             onClick={handleClickOnReady}
@@ -214,7 +210,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
                 boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
               }}
             >
-              { playerHasSelected ? (
+              {playerHasSelected ? (
                 <div>
                   <h3>Confirm Your Selection</h3>
                   <p>Are you sure you are ready?</p>
@@ -272,7 +268,13 @@ const Game: React.FC<GameProps> = ({ room }) => {
 
               {/* show waiting message when 1/2 player is ready */}
               {playerIsReady && (
-                <div style={{ marginTop: "20px", textAlign: "center", color: "white" }}>
+                <div
+                  style={{
+                    marginTop: "20px",
+                    textAlign: "center",
+                    color: "white",
+                  }}
+                >
                   <p>Waiting for other player to ready up...</p>
                 </div>
               )}
@@ -281,107 +283,107 @@ const Game: React.FC<GameProps> = ({ room }) => {
         </div>
       ) : (
         <div>
-        {/* display mode status */}
-        {!isFlaggingMode ? (
-          <h1>Currently in Guessing Mode</h1>
-        ) : (
-          <h1>Currently in Flagging Mode</h1>
-        )}
+          {/* display mode status */}
+          {!isFlaggingMode ? (
+            <h1>Currently in Guessing Mode</h1>
+          ) : (
+            <h1>Currently in Flagging Mode</h1>
+          )}
 
-
-        {/* toggle button between modes*/}
-        <button
-          onClick={() => setIsFlaggingMode(!isFlaggingMode)}
-          style={{
-            marginBottom: "20px",
-            padding: "10px 20px",
-            backgroundColor: isFlaggingMode ? "#bf4240" : "#008080",
-            border: "1px solid black",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          Switch to {isFlaggingMode ? "Guessing" : "Flagging"} Mode
-        </button>
-
-
-        {/* pop-up (modal) to confirm */}
-        {isModalOpen && (
-          <div
+          {/* toggle button between modes*/}
+          <button
+            onClick={() => setIsFlaggingMode(!isFlaggingMode)}
             style={{
-              position: "fixed",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              backgroundColor: "#32426d",
-              padding: "20px",
-              border: "2px solid black",
-              borderRadius: "10px",
-              zIndex: 1000,
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              marginBottom: "20px",
+              padding: "10px 20px",
+              backgroundColor: isFlaggingMode ? "#bf4240" : "#008080",
+              border: "1px solid black",
+              borderRadius: "5px",
+              cursor: "pointer",
             }}
           >
-          <div>
-            <h3>Confirm Your Selection</h3>
-            <div>
-              <p>Are you sure you want to select: {guessedLocation?.name} as your guess?</p>
-              <p>Guesses Left: {numGuesses} </p>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  marginTop: "20px",
-                }}
-              >
-                <button
-                  onClick={cancelGuess}
-                  style={{
-                    padding: "10px 20px",
-                    backgroundColor: "lightcoral",
-                    border: "1px solid black",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={finalizeGuess}
-                  style={{
-                    padding: "10px 20px",
-                    backgroundColor: "lightgreen",
-                    border: "1px solid black",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Continue
-                </button>
+            Switch to {isFlaggingMode ? "Guessing" : "Flagging"} Mode
+          </button>
+
+          {/* pop-up (modal) to confirm */}
+          {isModalOpen && (
+            <div
+              style={{
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                backgroundColor: "#32426d",
+                padding: "20px",
+                border: "2px solid black",
+                borderRadius: "10px",
+                zIndex: 1000,
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              }}
+            >
+              <div>
+                <h3>Confirm Your Selection</h3>
+                <div>
+                  <p>
+                    Are you sure you want to select: {guessedLocation?.name} as
+                    your guess?
+                  </p>
+                  <p>Guesses Left: {numGuesses} </p>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-around",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <button
+                      onClick={cancelGuess}
+                      style={{
+                        padding: "10px 20px",
+                        backgroundColor: "lightcoral",
+                        border: "1px solid black",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={finalizeGuess}
+                      style={{
+                        padding: "10px 20px",
+                        backgroundColor: "lightgreen",
+                        border: "1px solid black",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Continue
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       )}
+
+      {/* pop-up overlay */}
+      {isModalOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 999,
+          }}
+        />
+      )}
     </div>
-    )}
-
-
-    {/* pop-up overlay */}
-    {isModalOpen && (
-      <div
-        style={{
-          position: "fixed",
-          top: "0",
-          left: "0",
-          width: "100vw",
-          height: "100vh",
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          zIndex: 999,
-        }}
-      />
-    )}
-  </div>
-);
+  );
 };
 
 export default Game;

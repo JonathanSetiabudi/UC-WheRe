@@ -205,37 +205,47 @@ io.on("connection", (socket) => {
       if (theLobby.numOfUsers === 2) {
         io.to(room).emit("successStartGame");
         theLobby.gameStarted = true;
-        console.log(`Host User(${socket.id}) successsfully started a game in lobby: ${room}`);
+        console.log(
+          `Host User(${socket.id}) successsfully started a game in lobby: ${room}`,
+        );
       } else {
         io.to(room).emit("failStartGame");
-        console.log(`Host User(${socket.id}) failed to start a game in lobby: ${room}`);
+        console.log(
+          `Host User(${socket.id}) failed to start a game in lobby: ${room}`,
+        );
       }
     } else {
-      console.log(`Host User(${socket.id}) tried to start game in a non-existent lobby: ${room}`);
+      console.log(
+        `Host User(${socket.id}) tried to start game in a non-existent lobby: ${room}`,
+      );
     }
   });
 
   socket.on("tryLaunchGame", (room) => {
     const theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
-      if (theLobby) {
-        if (!room.readyStatus) {
-          room.readyStatus = {};
-        }
-
-        theLobby.readyStatus[socket.id] = true; // set readyStatus to true
-        console.log(`Player ${socket.id} in room ${room} is ready`);
-
-        const allReady = Object.values(theLobby.readyStatus).every((status) => status === true);
-        if (allReady) {
-          io.to(room).emit("launchGame");
-          console.log(`2/2 players in room ${room} are ready. Launching game`);
-        } else {
-          io.to(room).emit("waitingForOtherReady");
-          console.log(`1/2 players in ${room} are ready. Cannot launch game`);
-        }
-      } else {
-        console.log(`User(${socket.id}) tried to launch game in a non-existent lobby: ${room}`);
+    if (theLobby) {
+      if (!room.readyStatus) {
+        room.readyStatus = {};
       }
+
+      theLobby.readyStatus[socket.id] = true; // set readyStatus to true
+      console.log(`Player ${socket.id} in room ${room} is ready`);
+
+      const allReady = Object.values(theLobby.readyStatus).every(
+        (status) => status === true,
+      );
+      if (allReady) {
+        io.to(room).emit("launchGame");
+        console.log(`2/2 players in room ${room} are ready. Launching game`);
+      } else {
+        io.to(room).emit("waitingForOtherReady");
+        console.log(`1/2 players in ${room} are ready. Cannot launch game`);
+      }
+    } else {
+      console.log(
+        `User(${socket.id}) tried to launch game in a non-existent lobby: ${room}`,
+      );
+    }
   });
 
   socket.on("playerCancelledReady", (room) => {
@@ -244,7 +254,9 @@ io.on("connection", (socket) => {
       theLobby.readyStatus[socket.id] = false; // player is no longer ready
       console.log(`Player ${socket.id} in room ${room} is no longer ready`);
     } else {
-      console.log(`User(${socket.id}) tried to cancel ready in a non-existent lobby: ${room}`);
+      console.log(
+        `User(${socket.id}) tried to cancel ready in a non-existent lobby: ${room}`,
+      );
     }
   });
 

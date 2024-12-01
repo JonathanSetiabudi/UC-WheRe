@@ -44,7 +44,7 @@ export default class LocationClass {
 
   toggleSelection() {
     this.isSelected_HC = !this.isSelected_HC;
-    return this; 
+    return this;
   }
 
   checkSelection() {
