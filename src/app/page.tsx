@@ -196,7 +196,7 @@ export default function Home() {
                 room={room}
                 isHost={isHost}
               />
-              <Game />
+              <Game room={room}/>
             </div>
           ) : (
             <div>

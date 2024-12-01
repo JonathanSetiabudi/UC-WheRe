@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import { socket } from "@/utils/socket";
 import Location from "../objects/Location";
 
-const Game = () => {
+interface GameProps {
+  room: string;
+}
+
+const Game: React.FC<GameProps> = ({ room }) => {
   // initialize gameCards
   const gameCards: Location[] = Array.from({ length: 16 }, (_, i) => {
     return new Location(
@@ -21,9 +25,10 @@ const Game = () => {
   // const [normHiddenCard, setNormHiddenCard] = useState<Location | null>(null); // host hidden card
   // const [scottHiddenCard, setScottHiddenCard] = useState<Location | null>(null); // guest hiddenCard
   const [locations, setLocations] = useState<Location[]>(gameCards); // re-render gameCards
+  const [isSelectionMode, setIsSelectionMode] = useState<boolean>(true);
+  //const [playersSelected, setPlayersSelected] = useState(0); // num. players that have selected a location and clicked "ready"
   const [numGuesses, setNumGuesses] = useState<number>(1); // num. guesses a player can make
   const [isFlaggingMode, setIsFlaggingMode] = useState<boolean>(true); // flagging mode is true on default
-  const [isSelectionMode, setIsSelectionMode] = useState<boolean>(true);
   const [playerHasSelected, setPlayerHasSelected] = useState<boolean>(false);
   const [hiddenCard, setHiddenCard] = useState<Location | null>(null);
   const [guessedLocation, setguessedLocation] = useState<Location | null>(null);
@@ -57,7 +62,7 @@ const Game = () => {
         else {
           location.isSelected_HC = false; //{ ...location, isSelected_HC: false };
         } 
-        
+
         return location;
       });
 
@@ -71,8 +76,6 @@ const Game = () => {
     const updatedCard = [...locations];
     updatedCard[index].toggleFlag(); // calls .toggleFlag() from location class
     setLocations(updatedCard);
-
-    socket.emit("flagToggled", updatedCard[index].checkFlag());
   };
 
   // ADD CONDITION TO CHECK IF BOTH PLAYERS HAVE SELECTED A CARD
@@ -86,10 +89,20 @@ const Game = () => {
   };
 
 
-  const launchGame = () => {
-    setIsSelectionMode(false);
-    socket.emit("tryLaunchGame");
-  };
+  // player selects location
+  // player presses ready button
+  // calls playerIsReady()
+  // if other player is also ready, calls launchGame
+
+  const playerIsReady = () => {
+    socket.emit("tryLaunchGame", room);
+    // launchGame();
+  }
+
+  // const launchGame = () => {
+  //   setIsSelectionMode(false);
+  //   socket.emit("tryLaunchGame", room);
+  // };
 
   const handleClickOnGrid = (index: number) => {
     if (isSelectionMode) {
@@ -111,7 +124,7 @@ const Game = () => {
 
   const finalizeGuess = () => {
     setIsModalOpen(false); // close pop up after finalizing guess
-    socket.emit("finalizedGuess");
+    socket.emit("finalizedGuess", room);
     setNumGuesses(numGuesses - 1);
 
     // useEffect() => {
@@ -128,12 +141,19 @@ const Game = () => {
   const cancelGuess = () => {
     setIsModalOpen(false); // close pop up to cancel guess
     setguessedLocation(null); // de-selects card
-    socket.emit("cancelledGuess");
   };
 
   useEffect(() => {
-    // empty (for now)
-  });
+    socket.connect();
+
+    socket.on("launchGame", () => {
+      setIsSelectionMode(false);
+    }); 
+
+    socket.on("waitingForOtherReady", () => {
+      alert("Waiting for other player to ready up to start.");
+    });
+  }, []);
 
   return (
     <div
@@ -235,7 +255,7 @@ const Game = () => {
                       Cancel
                     </button>
                     <button
-                      onClick={launchGame}
+                      onClick={playerIsReady}
                       style={{
                         padding: "10px 20px",
                         backgroundColor: "lightgreen",
@@ -244,7 +264,7 @@ const Game = () => {
                         cursor: "pointer",
                       }}
                     >
-                      I'm Ready
+                      Im Ready
                     </button>
                   </div>
                 </div>

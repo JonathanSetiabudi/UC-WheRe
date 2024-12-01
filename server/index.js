@@ -46,6 +46,7 @@ currLobbies = [
   {
     roomCode: "TEST",
     players: [],
+    readyStatus: {},
     numOfUsers: 0,
     difficulty: 0,
     theme: 0,
@@ -69,6 +70,7 @@ io.on("connection", (socket) => {
     let room = {
       roomCode: roomCode,
       players: [socket.id],
+      readyStatus: { [socket.id]: false },
       numOfUsers: 1,
       difficulty: 0,
       theme: 0,
@@ -95,7 +97,7 @@ io.on("connection", (socket) => {
         if (
           currLobbies.find((lobby) => lobby.roomCode === room).numOfUsers === 2
         ) {
-          console.log(`room (${room}) is now full`);
+          console.log(`Lobby (${room}) is now full`);
         }
         console.log(
           `Players in ${room}`,
@@ -157,6 +159,9 @@ io.on("connection", (socket) => {
       roomToChange.players = roomToChange.players.filter(
         (player) => player !== socket.id,
       );
+
+      delete roomToChange.readyStatus[socket.id]; // del room's readiness status
+
       if (
         currLobbies.find((lobby) => lobby.roomCode === roomToDecrement)
           .numOfUsers === 0 &&
@@ -201,52 +206,46 @@ io.on("connection", (socket) => {
   });
 
   socket.on("tryStartGame", (room) => {
-    theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
+    const theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
     if (theLobby) {
       if (theLobby.numOfUsers === 2) {
         io.to(room).emit("successStartGame");
         theLobby.gameStarted = true;
-        console.log(
-          `Host User(${socket.id}) successsfully started a game in lobby: ${room}`,
-        );
+        console.log(`Host User(${socket.id}) successsfully started a game in lobby: ${room}`);
       } else {
         io.to(room).emit("failStartGame");
-        console.log(
-          `Host User(${socket.id}) failed to start a game in lobby: ${room}`,
-        );
+        console.log(`Host User(${socket.id}) failed to start a game in lobby: ${room}`);
       }
     } else {
-      console.log(
-        `Host User(${socket.id}) tried to start game in a non-existent lobby: ${room}`,
-      );
+      console.log(`Host User(${socket.id}) tried to start game in a non-existent lobby: ${room}`);
     }
   });
 
-  // on receiving a flagToggled event, logs the message "(insert location here later)'s flag
-  // toggled ON" when toggleState is true and "(insert location here later)'s flag toggled OFF"
-  // when toggleState is off
-  socket.on("flagToggled", (toggleState) => {
-    if (toggleState) {
-      console.log("(insert location here later)'s flag toggled ON");
-    } else {
-      console.log("(insert location here later)'s flag toggled OFF");
-    }
-  });
+  socket.on("tryLaunchGame", (room) => {
+    const theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
+      if (theLobby) {
+        if (!room.readyStatus) {
+          room.readyStatus = {};
+        }
 
-  // socket.on("cardClickedWithFlag", (isFlaggingMode) => {
-  //   if (isFlaggingMode) {
-  //     console.log("(insert location here later) was clicked with flag");
-  //   } else {
-  //     console.log("(insert location here later) was clicked with guess");
-  //   }
-  // });
+        theLobby.readyStatus[socket.id] = true; // set readyStatus to true
+        console.log(`Player ${socket.id} in room ${room} is ready`);
+
+        const allReady = Object.values(theLobby.readyStatus).every((status) => status === true);
+        if (allReady) {
+          io.to(room).emit("launchGame");
+          console.log(`2/2 players in room ${room} are ready. Launching game`);
+        } else {
+          io.to(room).emit("waitingForOtherReady");
+          console.log(`1/2 players in ${room} are ready. Cannot launch game`);
+        }
+      } else {
+        console.log(`User(${socket.id}) tried to launch game in a non-existent lobby: ${room}`);
+      }
+  });
 
   socket.on("finalizedGuess", () => {
-    console.log("(player) finalized their guess");
-  });
-
-  socket.on("cancelledGuess", () => {
-    console.log("(player) cancelled their guess");
+    console.log(`Player ${socket.id} finalized their guess`);
   });
 
   //upon receiving a settingDifficulty, settingTheme, settingNumGuesses, or settingGridSize
