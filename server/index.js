@@ -50,7 +50,7 @@ currLobbies = [
     difficulty: 0,
     theme: 0,
     numGuesses: 1,
-    gridSize: 16,
+    lobbyGridSize: 16,
     hostHasSelected: false,
     guestHasSelected: false,
     gameStarted: false,
@@ -253,19 +253,66 @@ io.on("connection", (socket) => {
   // event, log "updating ____ setting" and the new difficulty setting
 
   socket.on("settingDifficulty", (data) => {
-    console.log("updating difficulty setting to ", data.BoardDifficulty);
+    const lobbyCode = data.room;
+    const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
+    console.log("updating difficulty setting to ", data.boardDifficulty);
+    room.difficulty = data.boardDifficulty;
+    const updatedData = { room: data.room, boardDifficulty: room.difficulty };
+    socket.emit("finishedUpdatingDifficulty", updatedData);
   });
 
   socket.on("settingTheme", (data) => {
-    console.log("updating theme setting to ", data.BoardTheme);
+    const lobbyCode = data.room;
+    const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
+    console.log("updating theme setting to ", data.boardTheme);
+    room.theme = data.boardTheme;
+    const updatedData = { room: data.room, boardTheme: room.theme };
+    socket.emit("finishedUpdatingTheme", updatedData);
   });
 
   socket.on("settingNumberOfGuesses", (data) => {
+    const lobbyCode = data.room;
+    const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
     console.log("updating number of guesses to ", data.numGuess);
+    room.numGuesses = data.numGuess;
+    const updatedData = { room: data.room, numGuess: room.numGuesses };
+    socket.to(data.room).emit("finishedUpdatingGuesses", updatedData);
   });
 
+  /*
   socket.on("settingGridSize", (data) => {
+  const lobbyCode = data.room;
+  const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
+
+  // Update the correct property 'lobbyGridSize' instead of 'gridSize'
+  console.log("updating gridSize to ", data.gridSize);
+  room.lobbyGridSize = data.gridSize;
+
+  // Emit the updated data with the correct property name 'lobbyGridSize'
+  const updatedData = { room: data.room, gridSize: room.lobbyGridSize };
+  socket.emit("finishedUpdatingGridSize", updatedData);
+});
+*/
+  socket.on("settingGridSize", (data) => {
+    const lobbyCode = data.room;
+    const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
+
     console.log("updating gridSize to ", data.gridSize);
+    room.lobbyGridSize = data.gridSize;
+
+    const updatedData = { room: data.room, gridSize: room.lobbyGridSize };
+    socket.emit("finishedUpdatingGridSize", updatedData);
+  });
+
+  socket.on("testEcho", (data) => {
+    const lobbyCode = data.room;
+    const roomData = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
+    console.log("current settings: room", lobbyCode);
+    console.log("players in lobby:", roomData.numOfUsers);
+    console.log("difficulty: ", roomData.difficulty);
+    console.log("theme: ", roomData.theme);
+    console.log("number of guesses: ", roomData.numGuesses);
+    console.log("size of grid: ", roomData.lobbyGridSize);
   });
 });
 
