@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Home from "../page.jsx";
 import { socket } from "@/utils/socket";
+import {LocationClass} from "@/objects/Location";
 // import userRooms from ".../server/index.js";
 // @ts-expect-error - TS complains about the type of newTheme, but we alr know it's a string
 const Lobby = (props) => {
@@ -17,6 +18,22 @@ const Lobby = (props) => {
   const [numGuess, setNumOfGuesses] = useState<number>(1);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [gridSize, setGridSize] = useState<number>(16);
+
+  const locationNames = ["Aberdeen Inverness", "Dundee B", "Pentland Dorms", "Glen Mor Apartments", "North District", "Bannockburn Village", "International Village", "Glascow", "Lothian Dining", "Glen Mor Pool", "Dundee Study Rooms", "AI Lounge", "West Lothian", "Dundee A", "Dundee Gym", "East Lothian Lawn", "Scotty's(Glen Mor)", "HUB", "The Barn", "The Habit", "Coffee Bean", "Getaway Cafe", "Scotty's(ASPB)", "Scotty's(Glascow)", "Bytes", "Emerbee's", "Ivan's", "Noods","Scotty Statue", "Clock Tower", "Barnes and Noble", "SRC", "UCR Sign", "UCPD", "Bournes Hall", "HUMMS", "SSC", "CHASS North", "CHASS South", "Arts Building", "University Theatre", "ULH", "Pierce Hall", "Skye Hall", "Career Center", "AI Bowl", "Stats Building"];
+
+  const filePaths = ["./images/AI_BUILDINGS.HEIC", "./images/DUNDEE_B.HEIC", "./images/PENTLANDHILLS.HEIC", "./images/GLENMOR.JPG", "./images/NORTHDISTRICT.HEIC", "./images/BANNOCKBURN_SIGN.HEIC", "./images/INTERNATIONALVILLAGE.JPG", "./images/GLASCOW.HEIC", "./images/LOTHIAN_RESTAURANT.JPG", "./images/GLENMOR_POOL.HEIC", "./images/DUNDEE_STUDYROOM.JPG", "./images/AI_LOUNGE.JPG", "./images/WEST_LO.JPG", "./images/DUNDEE_A.HEIC", "./images/DUNDEEGYM.JPG", "./images/EASTLO_LAWN", "./images/SCOTTYS_GLENMOR.JPG", "./images/NIGHTHUB.JPG", "./images/THEBARN_DAYTIME.HEIC", "./images/HABIT.JPG", "./images/COFFEEBEAN.JPG", "./images/GETAWAYCAFE.JPG", "./images/ASPB_SCOTTYS.JPG", "./images/SCOTTYS_GLASCOW.JPG", "./images/BYTES.JPG", "./images/EMERBEES.HEIC", "./images/IVANS.HEIC", "./images/NOODS.JPG", "./images/SCOTTY_STATUE.HEIC", "./images/BELLTOWER.HEIC", "./images/BARNES_AND_NOBLE.HEIC", "./images/SRC.HEIC", "./images/UCRSIGN.JPG", "./images/POLICE_DEPARTMENT.HEIC", "./images/BOURNES_HALL.HEIC", "./images/HUMSS.HEIC", "./images/SSC.HEIC", "./images/CHASS_N.HEIC", "./images/CHASS_S.HEIC", "./images/ARTS_BUILDING.HEIC", "./images/UNI_THEATRE.HEIC", "./images/UNIVERSITYLECTUREHALL.HEIC", "./images/PIERCE_HALL.HEIC", "./images/SKYE_HALL.HEIC", "./images/CAREER_CENTER.HEIC", "./images/AI_BOWL.JPG", "./images/STATISTICS.HEIC"];
+
+  let locationMasterArray = [];
+
+  for (let i = 0; i < 28; i++) {
+    const location = new LocationClass(locationNames[i], "description", filePaths[i], "Residential and Dining");
+    locationMasterArray.push(location);
+  }
+
+  for (let j = 28; j < filePaths.length; j++) {
+    const location = new LocationClass(locationNames[j], "description", filePaths[j], "Campus Landmarks");
+    locationMasterArray.push(location);
+  }
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -77,14 +94,15 @@ const Lobby = (props) => {
   };
 
   // difficulty handlers
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleClickEasy = () => {
     onDifficultyChange(0);
   };
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleClickMedium = () => {
     onDifficultyChange(1);
   };
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleClickHard = () => {
     onDifficultyChange(2);
   };
@@ -97,15 +115,15 @@ const Lobby = (props) => {
   const handleClickThemeCampusLandmarks = () => {
     onThemeChange(1);
   };
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleClickThemeStudySpots = () => {
     onThemeChange(2);
   };
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleClickThemeBikeRacks = () => {
     onThemeChange(3);
   };
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleClickThemeStreetsAndParking = () => {
     onThemeChange(4);
   };
@@ -140,7 +158,7 @@ const Lobby = (props) => {
 
   return (
     <div>
-      <br></br>
+      {/* <br></br>
 
       <p>Set your difficulty:</p>
 
@@ -170,7 +188,7 @@ const Lobby = (props) => {
         className={buttonPerms(props.isHost)}
       >
         Hard
-      </button>
+      </button> */}
 
       <br></br>
 
@@ -196,7 +214,7 @@ const Lobby = (props) => {
         Campus Landmarks{" "}
       </button>
 
-      <br></br>
+      {/* <br></br>
 
       <button
         onClick={handleClickThemeStudySpots}
@@ -225,7 +243,7 @@ const Lobby = (props) => {
       >
         {" "}
         Streets and Parking Lots{" "}
-      </button>
+      </button> */}
 
       <br></br>
 

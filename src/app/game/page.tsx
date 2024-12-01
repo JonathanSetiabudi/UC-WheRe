@@ -11,7 +11,6 @@ const Game = () => {
       `Location ${i + 1}`,
       `Description ${i + 1}`,
       `image${i + 1}.jpg`,
-      1,
       "Default",
     );
   });
