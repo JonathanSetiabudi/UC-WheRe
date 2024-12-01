@@ -20,23 +20,15 @@ const Game: React.FC<GameProps> = ({ room }) => {
     );
   });
 
-  // take gameCards from selectCard
-
-  // const [normHiddenCard, setNormHiddenCard] = useState<Location | null>(null); // host hidden card
-  // const [scottHiddenCard, setScottHiddenCard] = useState<Location | null>(null); // guest hiddenCard
   const [locations, setLocations] = useState<Location[]>(gameCards); // re-render gameCards
   const [isSelectionMode, setIsSelectionMode] = useState<boolean>(true);
-  //const [playersSelected, setPlayersSelected] = useState(0); // num. players that have selected a location and clicked "ready"
   const [numGuesses, setNumGuesses] = useState<number>(1); // num. guesses a player can make
   const [isFlaggingMode, setIsFlaggingMode] = useState<boolean>(true); // flagging mode is true on default
   const [playerHasSelected, setPlayerHasSelected] = useState<boolean>(false);
+  const [playerIsReady, setPlayerIsReady] = useState<boolean>(false);
   const [hiddenCard, setHiddenCard] = useState<Location | null>(null);
   const [guessedLocation, setguessedLocation] = useState<Location | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // pop up screen is not open (false) on default
-  //const [bothHasSelected, set]
-
-  // make selection page
-  // set norm and scot hidden card
 
   const select_HC = (index: number) => {
     // if new card clicked is the same as current hidden card, do nothing
@@ -94,15 +86,17 @@ const Game: React.FC<GameProps> = ({ room }) => {
   // calls playerIsReady()
   // if other player is also ready, calls launchGame
 
-  const playerIsReady = () => {
+  const playerPressedReady = () => {
+    setPlayerIsReady(true);
     socket.emit("tryLaunchGame", room);
     // launchGame();
   }
 
-  // const launchGame = () => {
-  //   setIsSelectionMode(false);
-  //   socket.emit("tryLaunchGame", room);
-  // };
+  const cancelReady = () => {
+    setPlayerIsReady(false);
+    setIsModalOpen(false);
+    socket.emit("playerCancelledReady", room);
+  };
 
   const handleClickOnGrid = (index: number) => {
     if (isSelectionMode) {
@@ -124,18 +118,8 @@ const Game: React.FC<GameProps> = ({ room }) => {
 
   const finalizeGuess = () => {
     setIsModalOpen(false); // close pop up after finalizing guess
-    socket.emit("finalizedGuess", room);
     setNumGuesses(numGuesses - 1);
-
-    // useEffect() => {
-    //   if (numGuesses == 0) {
-    //     // game over
-    //   }
-    // }
-  };
-
-  const cancelReady = () => {
-    setIsModalOpen(false);
+    socket.emit("finalizedGuess", room);
   };
 
   const cancelGuess = () => {
@@ -151,7 +135,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
     }); 
 
     socket.on("waitingForOtherReady", () => {
-      alert("Waiting for other player to ready up to start.");
+      //alert("Waiting for other player to ready up to start.");
     });
   }, []);
 
@@ -255,7 +239,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
                       Cancel
                     </button>
                     <button
-                      onClick={playerIsReady}
+                      onClick={playerPressedReady}
                       style={{
                         padding: "10px 20px",
                         backgroundColor: "lightgreen",
@@ -283,6 +267,13 @@ const Game: React.FC<GameProps> = ({ room }) => {
                   >
                     Cancel
                   </button>
+                </div>
+              )}
+
+              {/* show waiting message when 1/2 player is ready */}
+              {playerIsReady && (
+                <div style={{ marginTop: "20px", textAlign: "center", color: "white" }}>
+                  <p>Waiting for other player to ready up...</p>
                 </div>
               )}
             </div>

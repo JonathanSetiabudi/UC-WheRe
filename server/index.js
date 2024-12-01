@@ -175,12 +175,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  // socket.on("launchGame", (data) => {
-  //   if (currLobbies.find((lobby) => lobby.roomCode === data.room)
-  //     .numOfUsers === 2) {
-  //   }
-  // });
-
   //on receiving a sendMessage event, logs the message "I AM BEING RECIEVED" and the data
   //then emits the receivedMessage event to the room with the message
   socket.on("sendMessage", (data) => {
@@ -242,6 +236,16 @@ io.on("connection", (socket) => {
       } else {
         console.log(`User(${socket.id}) tried to launch game in a non-existent lobby: ${room}`);
       }
+  });
+
+  socket.on("playerCancelledReady", (room) => {
+    const theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
+    if (theLobby) {
+      theLobby.readyStatus[socket.id] = false; // player is no longer ready
+      console.log(`Player ${socket.id} in room ${room} is no longer ready`);
+    } else {
+      console.log(`User(${socket.id}) tried to cancel ready in a non-existent lobby: ${room}`);
+    }
   });
 
   socket.on("finalizedGuess", () => {
