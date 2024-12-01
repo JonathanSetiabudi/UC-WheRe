@@ -233,13 +233,13 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("cardClickedWithFlag", (isFlaggingMode) => {
-    if (isFlaggingMode) {
-      console.log("(insert location here later) was clicked with flag");
-    } else {
-      console.log("(insert location here later) was clicked with guess");
-    }
-  });
+  // socket.on("cardClickedWithFlag", (isFlaggingMode) => {
+  //   if (isFlaggingMode) {
+  //     console.log("(insert location here later) was clicked with flag");
+  //   } else {
+  //     console.log("(insert location here later) was clicked with guess");
+  //   }
+  // });
 
   socket.on("finalizedGuess", () => {
     console.log("(player) finalized their guess");

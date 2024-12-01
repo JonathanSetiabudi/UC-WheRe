@@ -7,6 +7,7 @@ export default class LocationClass {
   // defining variable types
   name: string;
   isFlagged: boolean;
+  isSelected_HC: boolean;
   description: string;
   img: string;
   difficulty: number;
@@ -22,6 +23,7 @@ export default class LocationClass {
   ) {
     this.name = name; // set name for each location
     this.isFlagged = false; // set flag to off by default
+    this.isSelected_HC = false;
     this.description = descriptionInput; // use string input as description
     this.img = imageInput; // use png/jpg/heic input as img
     this.difficulty = difficultyLevel; // use string input as difficulty  (can be used for filtering difficulty levels)
@@ -34,6 +36,19 @@ export default class LocationClass {
 
   checkFlag() {
     if (this.isFlagged == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  toggleSelection() {
+    this.isSelected_HC = !this.isSelected_HC;
+    return this; 
+  }
+
+  checkSelection() {
+    if (this.isSelected_HC == true) {
       return true;
     } else {
       return false;
