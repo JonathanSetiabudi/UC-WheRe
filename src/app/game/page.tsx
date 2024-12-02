@@ -29,6 +29,9 @@ const Game: React.FC<GameProps> = ({ room }) => {
   const [hiddenCard, setHiddenCard] = useState<Location | null>(null);
   const [guessedLocation, setGuessedLocation] = useState<Location | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // pop up screen is not open (false) on default
+  const [playerWon, setPlayerWon] = useState<boolean>(false);
+  const [showGameResult, setShowGameResult] = useState<boolean>(false);
+  const [continueModal, setContinueModal] = useState<boolean>(false); // ugly modal to notify player to keep playing while numguesses > 0
 
   const select_HC = (index: number) => {
     // if new card clicked is the same as current hidden card, do nothing
@@ -37,14 +40,6 @@ const Game: React.FC<GameProps> = ({ room }) => {
     } else {
       // for loop of updated location array
       const updatedCards = locations.map((location, i) => {
-        // const updatedLocation = new Location(
-        //   location.name,
-        //   location.description,
-        //   location.img,
-        //   location.difficulty,
-        //   location.locationType
-        // );
-
         // if location at i is selected location, make it selected
         if (i === index) {
           location.isSelected_HC = true; //{ ...location, isSelected_HC: true };
@@ -128,6 +123,32 @@ const Game: React.FC<GameProps> = ({ room }) => {
     setGuessedLocation(null); // de-selects card
   };
 
+  const ResultScreen = () => {
+    return (
+      <div
+        style={{ 
+          display: "flex", 
+          flexDirection: "column", 
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+        }}
+      > 
+        { playerWon ? (
+          <div>
+            <h1>VICTORY</h1>
+            <p>You guessed right! Woohoo!</p>
+          </div>
+        ) : (
+          <div>
+            <h1>DEFEAT</h1>
+            <p>The other player guessed your card! Better luck next time!</p>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   useEffect(() => {
     socket.connect();
 
@@ -140,11 +161,14 @@ const Game: React.FC<GameProps> = ({ room }) => {
     });
 
     socket.on("victory", () => {
-      alert("You guessed right! You won!");
+
+      setPlayerWon(true);
+      setShowGameResult(true);
     });
 
     socket.on("defeat", () => {
-      alert("The other player guessed your card!");
+
+      setShowGameResult(true);
     });
 
     socket.on("incorrectGuess", () => {
@@ -176,142 +200,232 @@ const Game: React.FC<GameProps> = ({ room }) => {
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-      {isSelectionMode && (
-        <div>
-          <h1>Select your card!</h1>
-        </div>
-      )}
 
-      {/* board display */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "10px",
-          width: "fit-content",
-        }}
-      >
-        {/* render each card as a button */}
-        {locations.map((location, index) => (
-          <button
-            key={index}
-            onClick={() => handleClickOnGrid(index)}
+      { !showGameResult ? (
+        <div>
+          {isSelectionMode && (
+            <div>
+              <h1>Select your card!</h1>
+            </div>
+          )}
+
+          {/* board display */}
+          <div
             style={{
-              padding: "20px",
-              backgroundColor: location.isSelected_HC
-                ? "#0000FF"
-                : location.isFlagged
-                  ? "#ff0000"
-                  : "#666e78",
-              border: "1px solid black",
-              borderRadius: "5px",
-              cursor: "pointer",
-              textAlign: "center",
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: "10px",
+              width: "fit-content",
             }}
           >
-            {location.name}
-          </button>
-        ))}
-      </div>
+            {/* render each card as a button */}
+            {locations.map((location, index) => (
+              <button
+                key={index}
+                onClick={() => handleClickOnGrid(index)}
+                style={{
+                  padding: "20px",
+                  backgroundColor: location.isSelected_HC
+                    ? "#0000FF"
+                    : location.isFlagged
+                      ? "#ff0000"
+                      : "#666e78",
+                  border: "1px solid black",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  textAlign: "center",
+                }}
+              >
+                {location.name}
+              </button>
+            ))}
+          </div>
 
-      {isSelectionMode ? (
-        <div>
-          <button
-            onClick={handleClickOnReady}
-            style={{
-              marginBottom: "20px",
-              padding: "10px 20px",
-              backgroundColor: "#70cf73",
-              border: "3px black",
-              borderRadius: "5px",
-              cursor: "pointer",
-              textAlign: "center",
-            }}
-          >
-            Ready
-          </button>
+          {isSelectionMode ? (
+            <div>
+              <button
+                onClick={handleClickOnReady}
+                style={{
+                  marginBottom: "20px",
+                  padding: "10px 20px",
+                  backgroundColor: "#70cf73",
+                  border: "3px black",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  textAlign: "center",
+                }}
+              >
+                Ready
+              </button>
 
-          {isModalOpen && (
-            <div
-              style={{
-                position: "fixed",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                backgroundColor: "#32426d",
-                padding: "20px",
-                border: "2px solid black",
-                borderRadius: "10px",
-                zIndex: 1000,
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-              }}
-            >
-              {playerHasSelected ? (
-                <div>
-                  <h3>Confirm Your Selection</h3>
-                  <p>Are you sure you are ready?</p>
-                  <p>The card you have selected is: {hiddenCard?.name}</p>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-around",
-                      marginTop: "20px",
-                    }}
-                  >
-                    <button
-                      onClick={cancelReady}
-                      style={{
-                        padding: "10px 20px",
-                        backgroundColor: "lightcoral",
-                        border: "1px solid black",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={playerPressedReady}
-                      style={{
-                        padding: "10px 20px",
-                        backgroundColor: "lightgreen",
-                        border: "1px solid black",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Im Ready
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  <p>Please select a card</p>
-                  <button
-                    onClick={cancelReady}
-                    style={{
-                      padding: "10px 20px",
-                      backgroundColor: "lightcoral",
-                      border: "1px solid black",
-                      borderRadius: "5px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              )}
-
-              {/* show waiting message when 1/2 player is ready */}
-              {playerIsReady && (
+              {isModalOpen && (
                 <div
                   style={{
-                    marginTop: "20px",
-                    textAlign: "center",
-                    color: "white",
+                    position: "fixed",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    backgroundColor: "#32426d",
+                    padding: "20px",
+                    border: "2px solid black",
+                    borderRadius: "10px",
+                    zIndex: 1000,
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
                   }}
                 >
-                  <p>Waiting for other player to ready up...</p>
+                  {playerHasSelected ? (
+                    <div>
+                      <h3>Confirm Your Selection</h3>
+                      <p>Are you sure you are ready?</p>
+                      <p>The card you have selected is: {hiddenCard?.name}</p>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-around",
+                          marginTop: "20px",
+                        }}
+                      >
+                        <button
+                          onClick={cancelReady}
+                          style={{
+                            padding: "10px 20px",
+                            backgroundColor: "lightcoral",
+                            border: "1px solid black",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={playerPressedReady}
+                          style={{
+                            padding: "10px 20px",
+                            backgroundColor: "lightgreen",
+                            border: "1px solid black",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Im Ready
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <p>Please select a card</p>
+                      <button
+                        onClick={cancelReady}
+                        style={{
+                          padding: "10px 20px",
+                          backgroundColor: "lightcoral",
+                          border: "1px solid black",
+                          borderRadius: "5px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  )}
+
+                  {/* show waiting message when 1/2 player is ready */}
+                  {playerIsReady && (
+                    <div
+                      style={{
+                        marginTop: "20px",
+                        textAlign: "center",
+                        color: "white",
+                      }}
+                    >
+                      <p>Waiting for other player to ready up...</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div>
+              {/* display mode status */}
+              {!isFlaggingMode ? (
+                <h1>Currently in Guessing Mode</h1>
+              ) : (
+                <h1>Currently in Flagging Mode</h1>
+              )}
+
+              {/* toggle button between modes*/}
+              <button
+                onClick={() => setIsFlaggingMode(!isFlaggingMode)}
+                style={{
+                  marginBottom: "20px",
+                  padding: "10px 20px",
+                  backgroundColor: isFlaggingMode ? "#bf4240" : "#008080",
+                  border: "1px solid black",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Switch to {isFlaggingMode ? "Guessing" : "Flagging"} Mode
+              </button>
+
+              {/* pop-up (modal) to confirm */}
+              {isModalOpen && (
+                <div
+                  style={{
+                    position: "fixed",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    backgroundColor: "#32426d",
+                    padding: "20px",
+                    border: "2px solid black",
+                    borderRadius: "10px",
+                    zIndex: 1000,
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                  }}
+                >
+                  <div>
+                    <h3>Confirm Your Selection</h3>
+                    <div>
+                      <p>
+                        Are you sure you want to select: {guessedLocation?.name} as
+                        your guess?
+                      </p>
+                      <p>Guesses Left: {numGuesses} </p>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-around",
+                          marginTop: "20px",
+                        }}
+                      >
+                        <button
+                          onClick={cancelGuess}
+                          style={{
+                            padding: "10px 20px",
+                            backgroundColor: "lightcoral",
+                            border: "1px solid black",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={finalizeGuess}
+                          style={{
+                            padding: "10px 20px",
+                            backgroundColor: "lightgreen",
+                            border: "1px solid black",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Continue
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -319,93 +433,12 @@ const Game: React.FC<GameProps> = ({ room }) => {
         </div>
       ) : (
         <div>
-          {/* display mode status */}
-          {!isFlaggingMode ? (
-            <h1>Currently in Guessing Mode</h1>
-          ) : (
-            <h1>Currently in Flagging Mode</h1>
-          )}
-
-          {/* toggle button between modes*/}
-          <button
-            onClick={() => setIsFlaggingMode(!isFlaggingMode)}
-            style={{
-              marginBottom: "20px",
-              padding: "10px 20px",
-              backgroundColor: isFlaggingMode ? "#bf4240" : "#008080",
-              border: "1px solid black",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            Switch to {isFlaggingMode ? "Guessing" : "Flagging"} Mode
-          </button>
-
-          {/* pop-up (modal) to confirm */}
-          {isModalOpen && (
-            <div
-              style={{
-                position: "fixed",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                backgroundColor: "#32426d",
-                padding: "20px",
-                border: "2px solid black",
-                borderRadius: "10px",
-                zIndex: 1000,
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-              }}
-            >
-              <div>
-                <h3>Confirm Your Selection</h3>
-                <div>
-                  <p>
-                    Are you sure you want to select: {guessedLocation?.name} as
-                    your guess?
-                  </p>
-                  <p>Guesses Left: {numGuesses} </p>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-around",
-                      marginTop: "20px",
-                    }}
-                  >
-                    <button
-                      onClick={cancelGuess}
-                      style={{
-                        padding: "10px 20px",
-                        backgroundColor: "lightcoral",
-                        border: "1px solid black",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={finalizeGuess}
-                      style={{
-                        padding: "10px 20px",
-                        backgroundColor: "lightgreen",
-                        border: "1px solid black",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Continue
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          <ResultScreen />
         </div>
       )}
 
       {/* pop-up overlay */}
-      {isModalOpen && (
+      { isModalOpen && (
         <div
           style={{
             position: "fixed",
