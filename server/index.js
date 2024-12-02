@@ -47,6 +47,7 @@ currLobbies = [
     roomCode: "TEST",
     players: [],
     readyStatus: {},
+    hiddenCards: {},
     numOfUsers: 0,
     difficulty: 0,
     theme: 0,
@@ -71,6 +72,7 @@ io.on("connection", (socket) => {
       roomCode: roomCode,
       players: [socket.id],
       readyStatus: { [socket.id]: false },
+      hiddenCards: { [socket.id]: null },
       numOfUsers: 1,
       difficulty: 0,
       theme: 0,
@@ -113,7 +115,7 @@ io.on("connection", (socket) => {
       console.log(
         `User(${socket.id}) tried to join non-existent lobby: ${room}`,
       );
-      socket.to(data.room).emit("triedJoinNonExistentLobby");
+      socket.to(room).emit("triedJoinNonExistentLobby");
     }
   });
 
@@ -187,15 +189,34 @@ io.on("connection", (socket) => {
     socket.to(room).emit("receivedAnswer", answer, author);
   });
 
-  socket.on("selectCard", (data) => {
-    if (data.isHost === true) {
-      currLobbies.find(
-        (lobby) => lobby.roomCode === data.room,
-      ).hostHasSelected = true;
+  // socket.on("selectCard", (data) => {
+  //   if (data.isHost === true) {
+  //     currLobbies.find(
+  //       (lobby) => lobby.roomCode === data.room,
+  //     ).hostHasSelected = true;
+  //   } else {
+  //     currLobbies.find(
+  //       (lobby) => lobby.roomCode === data.room,
+  //     ).guestHasSelected = true;
+  //   }
+  // });
+
+  socket.on("setHiddenCard", ({ room, hiddenCard }) => {
+    const theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
+    if (theLobby) {
+      if (!theLobby.hiddenCards) {
+        theLobby.hiddenCards = {};
+      }
+
+      theLobby.hiddenCards[socket.id] = hiddenCard;
+      console.log(
+        `Player ${socket.id} set their hidden card to ${hiddenCard.name}`,
+      );
+      //console.log(`Player ${socket.id} set their hidden card`);
     } else {
-      currLobbies.find(
-        (lobby) => lobby.roomCode === data.room,
-      ).guestHasSelected = true;
+      console.log(
+        `Player ${socket.id} tried to set their hidden card in non-existent lobby`,
+      );
     }
   });
 
@@ -260,8 +281,30 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("finalizedGuess", () => {
-    console.log(`Player ${socket.id} finalized their guess`);
+  socket.on("finalizedGuess", ({ room, guessedCardName }) => {
+    //console.log(`Player ${socket.id} finalized their guess`);
+    const theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
+    if (theLobby) {
+      //console.log("Hidden Cards:", theLobby.hiddenCards);
+
+      const oppID = theLobby.players.find((id) => id !== socket.id);
+      const oppCard = theLobby.hiddenCards[oppID];
+
+      if (guessedCardName === oppCard.name) {
+        io.to(socket.id).emit("victory");
+        io.to(oppID).emit("defeat");
+        console.log(`Player ${socket.id} won by guessing right!`);
+      } else {
+        io.to(socket.id).emit("incorrectGuess");
+        console.log(
+          `Player ${socket.id} guessed incorrectly. Decrementing numGuesses available`,
+        );
+      }
+    } else {
+      console.log(
+        `User(${socket.id}) tried to finalize guess in a non-existent lobby: ${room}`,
+      );
+    }
   });
 
   //upon receiving a settingDifficulty, settingTheme, settingNumGuesses, or settingGridSize

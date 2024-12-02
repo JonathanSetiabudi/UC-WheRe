@@ -27,7 +27,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
   const [playerHasSelected, setPlayerHasSelected] = useState<boolean>(false);
   const [playerIsReady, setPlayerIsReady] = useState<boolean>(false);
   const [hiddenCard, setHiddenCard] = useState<Location | null>(null);
-  const [guessedLocation, setguessedLocation] = useState<Location | null>(null);
+  const [guessedLocation, setGuessedLocation] = useState<Location | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // pop up screen is not open (false) on default
 
   const select_HC = (index: number) => {
@@ -59,7 +59,9 @@ const Game: React.FC<GameProps> = ({ room }) => {
 
       setLocations(updatedCards);
       setHiddenCard(updatedCards[index]);
-      setPlayerHasSelected(true);
+      setPlayerHasSelected(true); // checker for modal
+
+      socket.emit("setHiddenCard", { room, hiddenCard: locations[index] });
     }
   };
 
@@ -69,13 +71,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
     setLocations(updatedCard);
   };
 
-  // ADD CONDITION TO CHECK IF BOTH PLAYERS HAVE SELECTED A CARD
   const handleClickOnReady = () => {
-    // if (hiddenCard !== null) {
-    //   // setIsSelectionMode(false);
-    //   setIsModalOpen(true);
-    //   socket.emit("player is ready to launch the game")
-    // }
     setIsModalOpen(true);
   };
 
@@ -107,21 +103,29 @@ const Game: React.FC<GameProps> = ({ room }) => {
         toggleFlag(index);
       } else {
         // if clicked in guessing mode, guess the card
-        setguessedLocation(locations[index]);
+        setGuessedLocation(locations[index]);
         setIsModalOpen(true);
       }
     }
   };
 
   const finalizeGuess = () => {
-    setIsModalOpen(false); // close pop up after finalizing guess
-    setNumGuesses(numGuesses - 1);
-    socket.emit("finalizedGuess", room);
+    if (guessedLocation && guessedLocation.name) {
+      setIsModalOpen(false); // close pop up after finalizing guess
+      socket.emit("finalizedGuess", {
+        room,
+        guessedCardName: guessedLocation.name,
+      });
+    } else {
+      console.log(
+        "ERRROR: guessedLocation is undefined or does not have a name property.",
+      );
+    }
   };
 
   const cancelGuess = () => {
     setIsModalOpen(false); // close pop up to cancel guess
-    setguessedLocation(null); // de-selects card
+    setGuessedLocation(null); // de-selects card
   };
 
   useEffect(() => {
@@ -134,6 +138,38 @@ const Game: React.FC<GameProps> = ({ room }) => {
     socket.on("waitingForOtherReady", () => {
       //alert("Waiting for other player to ready up to start.");
     });
+
+    socket.on("victory", () => {
+      alert("You guessed right! You won!");
+    });
+
+    socket.on("defeat", () => {
+      alert("The other player guessed your card!");
+    });
+
+    socket.on("incorrectGuess", () => {
+      setNumGuesses((prevNumGuesses) => {
+        const newNumGuesses = prevNumGuesses - 1;
+
+        if (newNumGuesses > 0) {
+          alert("You guessed wrong! Try again");
+        } else {
+          alert("You guessed wrong and ran out of guesses");
+        }
+
+        return newNumGuesses;
+      });
+    });
+
+    // return () => {
+    //   socket.off("launchGame");
+    //   socket.off("waitingForOtherReady");
+    //   socket.off("victory");
+    //   socket.off("defeat");
+    //   socket.off("incorrectGuess");
+    // };
+
+    // }, [socket, numGuesses]);
   }, []);
 
   return (
