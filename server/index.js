@@ -105,13 +105,13 @@ io.on("connection", (socket) => {
         socket.emit("joinedLobby", room);
       } else {
         console.log(`User(${socket.id}) tried to join full lobby: ${room}`);
-        socket.to(data.room).emit("triedJoinFullLobby");
+        socket.to(room).emit("triedJoinFullLobby");
       }
     } else {
       console.log(
         `User(${socket.id}) tried to join non-existent lobby: ${room}`,
       );
-      socket.to(data.room).emit("triedJoinNonExistentLobby");
+      socket.to(room).emit("triedJoinNonExistentLobby");
     }
   });
 
