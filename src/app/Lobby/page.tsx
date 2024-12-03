@@ -53,7 +53,7 @@ const Lobby = (props) => {
     "Barnes and Noble",
     "SRC",
     "UCR Sign",
-    "Multidisciplinary Research Building"
+    "Multidisciplinary Research Building",
     "UCPD",
     "Bournes Hall",
     "HUMSS",
