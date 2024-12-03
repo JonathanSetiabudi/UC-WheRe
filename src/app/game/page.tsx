@@ -199,7 +199,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
       socket.off("defeat");
       socket.off("incorrectGuess");
     };
-  }, []);
+  }, [room]);
   // }, []);
 
   return (
