@@ -172,9 +172,10 @@ const Lobby = (props) => {
     "The Aberdeen-Inverness Bowl at UCR is an outdoor recreational space located near the Aberdeen-Inverness residence halls. It serves as a social and relaxation area for students, offering a place for informal gatherings, outdoor activities, and community events in a scenic and inviting setting. It is located across from Winston Chung and the Multidisciplinary building.",
     "The Statistics Building at UCR houses classrooms, research labs, and faculty offices for the Department of Statistics. It provides a collaborative environment for students and faculty to engage in data analysis, research projects, and academic pursuits related to statistical theory and applications.",
   ];
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, prefer-const
   let locationMasterArray: LocationClass[] = [];
   let arrayByTheme: LocationClass[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let gameBoard: LocationClass[] = [];
 
   for (let i = 0; i < 28; i++) {
@@ -245,10 +246,10 @@ const Lobby = (props) => {
     if (n > arr.length) {
       throw new Error("n cannot be larger than the array length");
     }
-    
+
     const result = [];
     const seen = new Set();
-  
+
     while (result.length < n) {
       const randomIndex = Math.floor(Math.random() * arr.length);
       if (!seen.has(randomIndex)) {
@@ -256,7 +257,7 @@ const Lobby = (props) => {
         result.push(arr[randomIndex]);
       }
     }
-  
+
     return result;
   }
 
