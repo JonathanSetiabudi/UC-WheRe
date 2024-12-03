@@ -121,9 +121,12 @@ const Lobby = (props) => {
     "./images/STATISTICS.HEIC",
   ];
 
-  const descriptions = ["Aberdeen-Inverness (A-I), located next to the SRC and Glascow, offers a vibrant, community-focused living experience. Conveniently located near campus amenities, A-I features lounges, study spaces, and frequent events. With modern facilities and a welcoming atmosphere, it’s the perfect place for students to connect, learn, and grow.", 
-    "Dundee Building B at UCR offers students the most modern and comfortable living environment out of all the dorms. Featuring entertainment lounges, music and karokee rooms, study lounges, and social spaces, it’s perfect for fostering connections and focusing on academics. Conveniently located near Glascow and North District, Dundee B ensures a supportive and engaging residential experience.","Pentland Hills is a network of different dorm buildings with the most unique dorm expierience consisting of a suite style layout. With plentiful lounges, and outdoor spaces, they offer a balance of comfort and productivity. Close to Glen Mor and Dundee, Pentland Hills fosters academic focus and social connections in a supportive environment.",
-    "Glen Mor Apartments at UCR offer standard, apartment-style living with private bedrooms, kitchens, and living spaces. They combine independence with proximity to campus. Amenities include study areas, fitness facilities, and a pool, providing a convenient and comfortable home for academic and personal growth.","Considered the big brother of the Dundee Dorms, it takes the Dundee experience to your own room, with the standard layout being 4 bedrooms and 2 bathrooms with a modern kitchen and similar furniture to Dundee's. It contains many private study room, similar to Dundee, allowing for academic success and comfort. It has it's own mini grocery store and boba shop on the first floor.",
+  const descriptions = [
+    "Aberdeen-Inverness (A-I), located next to the SRC and Glascow, offers a vibrant, community-focused living experience. Conveniently located near campus amenities, A-I features lounges, study spaces, and frequent events. With modern facilities and a welcoming atmosphere, it’s the perfect place for students to connect, learn, and grow.",
+    "Dundee Building B at UCR offers students the most modern and comfortable living environment out of all the dorms. Featuring entertainment lounges, music and karokee rooms, study lounges, and social spaces, it’s perfect for fostering connections and focusing on academics. Conveniently located near Glascow and North District, Dundee B ensures a supportive and engaging residential experience.",
+    "Pentland Hills is a network of different dorm buildings with the most unique dorm expierience consisting of a suite style layout. With plentiful lounges, and outdoor spaces, they offer a balance of comfort and productivity. Close to Glen Mor and Dundee, Pentland Hills fosters academic focus and social connections in a supportive environment.",
+    "Glen Mor Apartments at UCR offer standard, apartment-style living with private bedrooms, kitchens, and living spaces. They combine independence with proximity to campus. Amenities include study areas, fitness facilities, and a pool, providing a convenient and comfortable home for academic and personal growth.",
+    "Considered the big brother of the Dundee Dorms, it takes the Dundee experience to your own room, with the standard layout being 4 bedrooms and 2 bathrooms with a modern kitchen and similar furniture to Dundee's. It contains many private study room, similar to Dundee, allowing for academic success and comfort. It has it's own mini grocery store and boba shop on the first floor.",
     "Bannockburn Village at UCR offers affordable, apartment-style housing with spacious layouts and essential amenities. Ideal for grad students, it provides a balance of independence and community. Located near campus, Bannockburn is a convenient and welcoming option for students seeking a supportive environment for living and learning.",
     "Offering a selection of two-, three-, or five-bedroom apartments tailored for student living, International Village provides residents with an exceptional experience in the area. Relaxation and recreation take center stage with amenities such as a fitness center, study lounges, and an onsite laundry room, ensuring a perfect balance between academics and leisure. Inside your spacious student apartment, unwind effortlessly with modern features, fully furnished interiors including appliances, all utilities included, and central AC.",
     "In Fall 2020, Dining opened its newest Residential Restaurant, Glasgow, adjacent to the equally brand new Dundee Residence Hall. The venue also includes a Scotty's convenience store with a selection of grab-n-go sandwiches, salads, hot/cold beverages, frozen foods, ice cream, and snacks as well as health and personal care items. At full capacity, the two-story, 830-seat Glasgow will include an exhibition bakery, retail store, and two private dining rooms.",
@@ -166,15 +169,15 @@ const Lobby = (props) => {
     "Skye Hall at UCR is an academic building that houses classrooms, faculty offices, and meeting spaces. It provides a modern environment for learning and collaboration, supporting a range of academic disciplines and offering students and faculty a space to engage in educational activities and discussions. It is located adjacent to the HUB.",
     "The Career Center at UCR provides students with resources and support to explore career paths, develop professional skills, and connect with potential employers. Offering workshops, career counseling, job fairs, and internships, it helps students prepare for successful careers after graduation. It is located adjacent to the University Lecture and Skye Halls.",
     "The Aberdeen-Inverness Bowl at UCR is an outdoor recreational space located near the Aberdeen-Inverness residence halls. It serves as a social and relaxation area for students, offering a place for informal gatherings, outdoor activities, and community events in a scenic and inviting setting. It is located across from Winston Chung and the Multidisciplinary building.",
-    "The Statistics Building at UCR houses classrooms, research labs, and faculty offices for the Department of Statistics. It provides a collaborative environment for students and faculty to engage in data analysis, research projects, and academic pursuits related to statistical theory and applications."
-  ]
+    "The Statistics Building at UCR houses classrooms, research labs, and faculty offices for the Department of Statistics. It provides a collaborative environment for students and faculty to engage in data analysis, research projects, and academic pursuits related to statistical theory and applications.",
+  ];
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const locationMasterArray = [];
 
   for (let i = 0; i < 28; i++) {
     const location = new LocationClass(
       locationNames[i],
-      "description",
+      descriptions[i],
       filePaths[i],
       "Residential and Dining",
     );
@@ -184,7 +187,7 @@ const Lobby = (props) => {
   for (let j = 28; j < filePaths.length; j++) {
     const location = new LocationClass(
       locationNames[j],
-      "description",
+      descriptions[j],
       filePaths[j],
       "Campus Landmarks",
     );
