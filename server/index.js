@@ -164,9 +164,11 @@ io.on("connection", (socket) => {
 
       if (roomToChange.gameStarted) {
         const oppID = roomToChange.players.find((id) => id !== socket.id);
-        
+
         io.to(oppID).emit("victory");
-        console.log(`Player ${oppID} wins as they are the only player left in lobby ${roomToChange}`);
+        console.log(
+          `Player ${oppID} wins as they are the only player left in lobby ${roomToChange}`,
+        );
       }
 
       if (
@@ -300,7 +302,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("ranOutOfGuesses", ( room ) => {
+  socket.on("ranOutOfGuesses", (room) => {
     const theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
     if (theLobby) {
       const oppID = theLobby.players.find((id) => id !== socket.id);

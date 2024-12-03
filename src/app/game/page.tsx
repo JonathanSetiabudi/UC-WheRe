@@ -126,22 +126,22 @@ const Game: React.FC<GameProps> = ({ room }) => {
 
   const closeContinueModal = () => {
     setContinueModal(false);
-  }
+  };
 
   // bug at continue modal, decrements all the way to -1
 
   const ResultScreen = () => {
     return (
       <div
-        style={{ 
-          display: "flex", 
-          flexDirection: "column", 
+        style={{
+          display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
         }}
-      > 
-        { playerWon ? (
+      >
+        {playerWon ? (
           <div>
             <h1>VICTORY</h1>
             {/*<p>You guessed right! Woohoo!</p>*/}
@@ -168,13 +168,11 @@ const Game: React.FC<GameProps> = ({ room }) => {
     });
 
     socket.on("victory", () => {
-
       setPlayerWon(true);
       setShowGameResult(true);
     });
 
     socket.on("defeat", () => {
-
       setShowGameResult(true);
     });
 
@@ -201,16 +199,14 @@ const Game: React.FC<GameProps> = ({ room }) => {
       socket.off("defeat");
       socket.off("incorrectGuess");
     };
-
-    }, []);
+  }, []);
   // }, []);
 
   return (
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-
-      { !showGameResult ? (
+      {!showGameResult ? (
         <div>
           {isSelectionMode && (
             <div>
@@ -397,8 +393,8 @@ const Game: React.FC<GameProps> = ({ room }) => {
                     <h3>Confirm Your Selection</h3>
                     <div>
                       <p>
-                        Are you sure you want to select: {guessedLocation?.name} as
-                        your guess?
+                        Are you sure you want to select: {guessedLocation?.name}{" "}
+                        as your guess?
                       </p>
                       <p>Guesses Left: {numGuesses} </p>
                       <div
@@ -438,7 +434,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
                 </div>
               )}
 
-              { continueModal && (
+              {continueModal && (
                 <div
                   style={{
                     position: "fixed",
@@ -468,7 +464,6 @@ const Game: React.FC<GameProps> = ({ room }) => {
                   >
                     Try again
                   </button>
-
                 </div>
               )}
             </div>
@@ -481,7 +476,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
       )}
 
       {/* pop-up overlay */}
-      { isModalOpen && (
+      {isModalOpen && (
         <div
           style={{
             position: "fixed",
