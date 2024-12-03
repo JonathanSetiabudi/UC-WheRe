@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Home from "../page.jsx";
 import { socket } from "@/utils/socket";
-import { LocationClass } from "@/objects/Location";
+import LocationClass from "../objects/Location";
 // import userRooms from ".../server/index.js";
 // @ts-expect-error - TS complains about the type of newTheme, but we alr know it's a string
 const Lobby = (props) => {
@@ -18,7 +18,7 @@ const Lobby = (props) => {
   const [numGuess, setNumOfGuesses] = useState<number>(1);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [gridSize, setGridSize] = useState<number>(16);
-
+  // waa
   const locationNames = [
     "Aberdeen Inverness",
     "Dundee B",
@@ -54,9 +54,10 @@ const Lobby = (props) => {
     "SRC",
     "UCR Sign",
     "Multidisciplinary Research Building",
+    "Multidisciplinary Research Building",
     "UCPD",
     "Bournes Hall",
-    "HUMMS",
+    "HUMSS",
     "SSC",
     "CHASS North",
     "CHASS South",
