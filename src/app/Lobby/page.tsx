@@ -173,7 +173,9 @@ const Lobby = (props) => {
     "The Statistics Building at UCR houses classrooms, research labs, and faculty offices for the Department of Statistics. It provides a collaborative environment for students and faculty to engage in data analysis, research projects, and academic pursuits related to statistical theory and applications.",
   ];
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const locationMasterArray = [];
+  let locationMasterArray: LocationClass[] = [];
+  let arrayByTheme: LocationClass[] = [];
+  let gameBoard: LocationClass[] = [];
 
   for (let i = 0; i < 28; i++) {
     const location = new LocationClass(
@@ -185,7 +187,7 @@ const Lobby = (props) => {
     locationMasterArray.push(location);
   }
 
-  for (let j = 28; j < filePaths.length; j++) {
+  for (let j = 28; j < 48; j++) {
     const location = new LocationClass(
       locationNames[j],
       descriptions[j],
@@ -222,16 +224,53 @@ const Lobby = (props) => {
     });
   });
 
-  // sends update signals to server when button is clicked
-  // @ts-expect-error - TS complains about the type of newDiff, but we alr know it's a number
-  const onDifficultyChange = (newDifficulty) => {
-    setDifficulty(newDifficulty);
-    const data = { room: props.room, boardDifficulty: newDifficulty };
-    socket.emit("settingDifficulty", data);
+  const locationByTheme = (theme: number) => {
+    arrayByTheme = [];
+    if (theme === 0) {
+      for (let i = 0; i < locationMasterArray.length; i++) {
+        if (locationMasterArray[i].locationType === "Residential and Dining") {
+          arrayByTheme.push(locationMasterArray[i]);
+        }
+      }
+    } else if (theme === 1) {
+      for (let i = 0; i < locationMasterArray.length; i++) {
+        if (locationMasterArray[i].locationType === "Campus Landmarks") {
+          arrayByTheme.push(locationMasterArray[i]);
+        }
+      }
+    }
   };
+
+  function getRandomItems<T>(arr: Array<T>, n: number) {
+    if (n > arr.length) {
+      throw new Error("n cannot be larger than the array length");
+    }
+    
+    const result = [];
+    const seen = new Set();
+  
+    while (result.length < n) {
+      const randomIndex = Math.floor(Math.random() * arr.length);
+      if (!seen.has(randomIndex)) {
+        seen.add(randomIndex);
+        result.push(arr[randomIndex]);
+      }
+    }
+  
+    return result;
+  }
+
+  // sends update signals to server when button is clicked
+  // const onDifficultyChange = (newDifficulty) => {
+  //   setDifficulty(newDifficulty);
+  //   const data = { room: props.room, boardDifficulty: newDifficulty };
+  //   socket.emit("settingDifficulty", data);
+  // };
   // @ts-expect-error - TS complains about the type of newTheme, but we alr know it's a number
   const onThemeChange = (newTheme) => {
     setTheme(newTheme);
+    locationByTheme(newTheme);
+    gameBoard = getRandomItems(arrayByTheme, gridSize);
     const data = { room: props.room, boardTheme: newTheme };
     socket.emit("settingTheme", data);
   };
@@ -244,6 +283,7 @@ const Lobby = (props) => {
   // @ts-expect-error - TS complains about the type of newGridSize, but we alr know it's a number
   const onGridChange = (newGridSize) => {
     setGridSize(newGridSize);
+    gameBoard = getRandomItems(arrayByTheme, newGridSize);
     const data = { room: props.room, gridSize: newGridSize };
     socket.emit("settingGridSize", data);
   };
@@ -253,19 +293,19 @@ const Lobby = (props) => {
     socket.emit("testEcho", data);
   };
 
-  // difficulty handlers
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleClickEasy = () => {
-    onDifficultyChange(0);
-  };
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleClickMedium = () => {
-    onDifficultyChange(1);
-  };
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleClickHard = () => {
-    onDifficultyChange(2);
-  };
+  // // difficulty handlers
+  // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // const handleClickEasy = () => {
+  //   onDifficultyChange(0);
+  // };
+  // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // const handleClickMedium = () => {
+  //   onDifficultyChange(1);
+  // };
+  // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // const handleClickHard = () => {
+  //   onDifficultyChange(2);
+  // };
 
   // theme handlers
   const handleClickThemeResAndDining = () => {
@@ -275,18 +315,18 @@ const Lobby = (props) => {
   const handleClickThemeCampusLandmarks = () => {
     onThemeChange(1);
   };
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleClickThemeStudySpots = () => {
-    onThemeChange(2);
-  };
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleClickThemeBikeRacks = () => {
-    onThemeChange(3);
-  };
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleClickThemeStreetsAndParking = () => {
-    onThemeChange(4);
-  };
+  // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // const handleClickThemeStudySpots = () => {
+  //   onThemeChange(2);
+  // };
+  // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // const handleClickThemeBikeRacks = () => {
+  //   onThemeChange(3);
+  // };
+  // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // const handleClickThemeStreetsAndParking = () => {
+  //   onThemeChange(4);
+  // };
 
   // guess handlers (will probably convert to dropdown menu)
   const handleClickGuess1 = () => {
