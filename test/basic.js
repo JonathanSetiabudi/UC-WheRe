@@ -10,7 +10,13 @@ function waitFor(socket, event) {
 }
 
 describe("Game Tests", () => {
-  let io, serverSocket1, serverSocket2, serverSocket3, clientSocket1, clientSocket2, clientSocket3;
+  let io,
+    serverSocket1,
+    serverSocket2,
+    serverSocket3,
+    clientSocket1,
+    clientSocket2,
+    clientSocket3;
 
   let currLobbies;
 
