@@ -53,8 +53,6 @@ currLobbies = [
     theme: 0,
     numGuesses: 1,
     gridSize: 16,
-    hostHasSelected: false,
-    guestHasSelected: false,
     gameStarted: false,
   },
 ];
@@ -164,6 +162,13 @@ io.on("connection", (socket) => {
 
       delete roomToChange.readyStatus[socket.id]; // del room's readiness status
 
+      if (roomToChange.gameStarted) {
+        const oppID = roomToChange.players.find((id) => id !== socket.id);
+        
+        io.to(oppID).emit("victory");
+        console.log(`Player ${oppID} wins as they are the only player left in lobby ${roomToChange}`);
+      }
+
       if (
         currLobbies.find((lobby) => lobby.roomCode === roomToDecrement)
           .numOfUsers === 0 &&
@@ -188,18 +193,6 @@ io.on("connection", (socket) => {
     console.log("Answer received", answer);
     socket.to(room).emit("receivedAnswer", answer, author);
   });
-
-  // socket.on("selectCard", (data) => {
-  //   if (data.isHost === true) {
-  //     currLobbies.find(
-  //       (lobby) => lobby.roomCode === data.room,
-  //     ).hostHasSelected = true;
-  //   } else {
-  //     currLobbies.find(
-  //       (lobby) => lobby.roomCode === data.room,
-  //     ).guestHasSelected = true;
-  //   }
-  // });
 
   socket.on("setHiddenCard", ({ room, hiddenCard }) => {
     const theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
@@ -303,6 +296,22 @@ io.on("connection", (socket) => {
     } else {
       console.log(
         `User(${socket.id}) tried to finalize guess in a non-existent lobby: ${room}`,
+      );
+    }
+  });
+
+  socket.on("ranOutOfGuesses", ( room ) => {
+    const theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
+    if (theLobby) {
+      const oppID = theLobby.players.find((id) => id !== socket.id);
+
+      io.to(socket.id).emit("defeat");
+      io.to(oppID).emit("victory");
+
+      console.log(`Player ${socket.id} ran out of guesses and lost!`);
+    } else {
+      console.log(
+        `User(${socket.id}) ran out of guesses in a non-existent lobby: ${room}`,
       );
     }
   });

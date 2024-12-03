@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { socket } from "@/utils/socket";
 import Location from "../objects/Location";
+//import Messages from "./messages/page";
 
 interface GameProps {
   room: string;
@@ -22,7 +23,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
 
   const [locations, setLocations] = useState<Location[]>(gameCards); // re-render gameCards
   const [isSelectionMode, setIsSelectionMode] = useState<boolean>(true);
-  const [numGuesses, setNumGuesses] = useState<number>(1); // num. guesses a player can make
+  const [numGuesses, setNumGuesses] = useState<number>(3); // num. guesses a player can make
   const [isFlaggingMode, setIsFlaggingMode] = useState<boolean>(true); // flagging mode is true on default
   const [playerHasSelected, setPlayerHasSelected] = useState<boolean>(false);
   const [playerIsReady, setPlayerIsReady] = useState<boolean>(false);
@@ -123,6 +124,12 @@ const Game: React.FC<GameProps> = ({ room }) => {
     setGuessedLocation(null); // de-selects card
   };
 
+  const closeContinueModal = () => {
+    setContinueModal(false);
+  }
+
+  // bug at continue modal, decrements all the way to -1
+
   const ResultScreen = () => {
     return (
       <div
@@ -137,12 +144,12 @@ const Game: React.FC<GameProps> = ({ room }) => {
         { playerWon ? (
           <div>
             <h1>VICTORY</h1>
-            <p>You guessed right! Woohoo!</p>
+            {/*<p>You guessed right! Woohoo!</p>*/}
           </div>
         ) : (
           <div>
             <h1>DEFEAT</h1>
-            <p>The other player guessed your card! Better luck next time!</p>
+            {/* <p>The other player guessed your card! Better luck next time!</p> */}
           </div>
         )}
       </div>
@@ -175,26 +182,28 @@ const Game: React.FC<GameProps> = ({ room }) => {
       setNumGuesses((prevNumGuesses) => {
         const newNumGuesses = prevNumGuesses - 1;
 
-        if (newNumGuesses > 0) {
-          alert("You guessed wrong! Try again");
+        if (newNumGuesses !== 0) {
+          //alert("You guessed wrong! Try again");
+          setContinueModal(true);
         } else {
-          alert("You guessed wrong and ran out of guesses");
+          //alert("You guessed wrong and ran out of guesses");
+          socket.emit("ranOutOfGuesses", room);
         }
 
         return newNumGuesses;
       });
     });
 
-    // return () => {
-    //   socket.off("launchGame");
-    //   socket.off("waitingForOtherReady");
-    //   socket.off("victory");
-    //   socket.off("defeat");
-    //   socket.off("incorrectGuess");
-    // };
+    return () => {
+      // socket.off("launchGame");
+      // socket.off("waitingForOtherReady");
+      socket.off("victory");
+      socket.off("defeat");
+      socket.off("incorrectGuess");
+    };
 
-    // }, [socket, numGuesses]);
-  }, []);
+    }, []);
+  // }, []);
 
   return (
     <div
@@ -426,6 +435,40 @@ const Game: React.FC<GameProps> = ({ room }) => {
                       </div>
                     </div>
                   </div>
+                </div>
+              )}
+
+              { continueModal && (
+                <div
+                  style={{
+                    position: "fixed",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    backgroundColor: "#32426d",
+                    padding: "20px",
+                    border: "2px solid black",
+                    borderRadius: "10px",
+                    zIndex: 1000,
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                  }}
+                >
+                  <h1>You guessed wrong</h1>
+                  <p>Guesses Left: {numGuesses} </p>
+
+                  <button
+                    onClick={closeContinueModal}
+                    style={{
+                      padding: "10px 20px",
+                      backgroundColor: "lightcoral",
+                      border: "1px solid black",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Try again
+                  </button>
+
                 </div>
               )}
             </div>
