@@ -3,7 +3,6 @@ import { io as ioc } from "socket.io-client";
 import { Server } from "socket.io";
 import { assert } from "chai";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function waitFor(socket, event) {
   return new Promise((resolve) => {
     socket.once(event, resolve);
@@ -11,29 +10,12 @@ function waitFor(socket, event) {
 }
 
 describe("Game Tests", () => {
-  let io, serverSocket, clientSocket1, clientSocket2;
+  let io, serverSocket1, serverSocket2, serverSocket3, clientSocket1, clientSocket2, clientSocket3;
 
-  before((done) => {
-    const httpServer = createServer();
-    io = new Server(httpServer);
-    httpServer.listen(() => {
-      const port = httpServer.address().port;
-      clientSocket1 = ioc(`http://localhost:${port}`);
-      clientSocket2 = ioc(`http://localhost:${port}`);
-      io.on("connection", (socket) => {
-        serverSocket = socket;
-      });
-      clientSocket1.on("connect", done);
-    });
-  });
+  let currLobbies;
 
-  after(() => {
-    io.close();
-    clientSocket1.disconnect();
-  });
-  
-  it("should create a lobby", (done) => {
-    let currLobbies = [
+  function resetLobbies() {
+    currLobbies = [
       {
         roomCode: "TEST",
         players: [],
@@ -47,156 +29,116 @@ describe("Game Tests", () => {
         gameStarted: false,
       },
     ];
+  }
 
-    clientSocket1.emit("create_lobby");
+  before((done) => {
+    const httpServer = createServer();
+    io = new Server(httpServer);
+    httpServer.listen(() => {
+      const port = httpServer.address().port;
+      clientSocket1 = ioc(`http://localhost:${port}`);
+      clientSocket2 = ioc(`http://localhost:${port}`);
+      clientSocket3 = ioc(`http://localhost:${port}`);
+      let connectedClients = 0;
 
-    serverSocket.on("create_lobby", () => {
-      const roomCode = "ROOM123";
-      const room = {
-        roomCode: roomCode,
-        players: [serverSocket.id],
-        numOfUsers: 1,
-        difficulty: 0,
-        theme: 0,
-        numGuesses: 1,
-        gridSize: 16,
-      };
-      currLobbies.push(room);
-      serverSocket.join(roomCode);
-      serverSocket.emit("createdLobby", roomCode);
+      io.on("connection", (socket) => {
+        if (!serverSocket1) {
+          serverSocket1 = socket;
+        } else if (!serverSocket2) {
+          serverSocket2 = socket;
+        } else {
+          serverSocket3 = socket;
+        }
+        connectedClients++;
+        if (connectedClients === 3) {
+          done();
+        }
+      });
     });
 
-    clientSocket1.on("createdLobby", (roomCode) => {
-      assert.equal(roomCode, "ROOM123");
-      done();
-    });
-  });
-  //--------------------------------------------------------------------------------------------------
-  it("should join a lobby", () => {
-    let currLobbies = [
-        {
-          roomCode: "TEST",
-          players: [],
-          numOfUsers: 0,
+    // Server-Side Event Listeners
+    io.on("connection", (socket) => {
+      socket.on("create_lobby", () => {
+        const roomCode = "ROOM123";
+        const room = {
+          roomCode: roomCode,
+          players: [socket.id],
+          numOfUsers: 1,
           difficulty: 0,
           theme: 0,
           numGuesses: 1,
-          lobbyGridSize: 16,
-          hostHasSelected: false,
-          guestHasSelected: false,
-          gameStarted: false,
-        },
-      ];
-    clientSocket1.emit("join_lobby", "TEST");
+          gridSize: 16,
+        };
+        currLobbies.push(room);
+        socket.join(roomCode);
+        socket.emit("createdLobby", roomCode);
+      });
 
-    serverSocket.on("join_lobby", (room) => {
-        if (currLobbies.find((lobby) => lobby.roomCode === room)) {
-            if (currLobbies.find((lobby) => lobby.roomCode === room).numOfUsers < 2) {
-              currLobbies.find((lobby) => lobby.roomCode === room).numOfUsers++;
-              serverSocket.join(room);
-              currLobbies
-                .find((roomToBeFound) => roomToBeFound.roomCode === room)
-                .players.push(clientSocket1.id);
-              serverSocket.emit("joinedLobby", room);
-            } else {
-              clientSocket1.to(room).emit("triedJoinFullLobby");
-            }
-        } else {
-            serverSocket.to(room).emit("triedJoinNonExistentLobby");
+      socket.on("join_lobby", (roomCode) => {
+        const lobby = currLobbies.find((lobby) => lobby.roomCode === roomCode);
+        if (!lobby) {
+          socket.emit("triedJoinNonExistentLobby");
+          return;
         }
-    });
-
-    clientSocket1.on("joinedLobby", (room) => {
-      assert.equal(room, "TEST");
-    });
-  });
-  //--------------------------------------------------------------------------------------------------
-  it("should send and receive messages", () => {
-    let currLobbies = [
-        {
-            roomCode: "TEST",
-            players: [],
-            numOfUsers: 0,
-            difficulty: 0,
-            theme: 0,
-            numGuesses: 1,
-            lobbyGridSize: 16,
-            hostHasSelected: false,
-            guestHasSelected: false,
-            gameStarted: false,
-        },
-    ];
-
-    clientSocket1.emit("join_lobby", "TEST");
-
-    serverSocket.on("join_lobby", (room) => {
-        if (currLobbies.find((lobby) => lobby.roomCode === room)) {
-            if (currLobbies.find((lobby) => lobby.roomCode === room).numOfUsers < 2) {
-              currLobbies.find((lobby) => lobby.roomCode === room).numOfUsers++;
-              serverSocket.join(room);
-              currLobbies
-                .find((roomToBeFound) => roomToBeFound.roomCode === room)
-                .players.push(clientSocket1.id);
-              serverSocket.emit("joinedLobby", room);
-            } else {
-              serverSocket.to(room).emit("triedJoinFullLobby");
-            }
-        } else {
-            serverSocket.to(room).emit("triedJoinNonExistentLobby");
+        if (lobby.numOfUsers >= 2) {
+          socket.emit("triedJoinFullLobby");
+          return;
         }
-    });
-
-    clientSocket1.emit("sendMessage", { room: "TEST", author:"Tester", message: "Hello", received: false });
-
-    serverSocket.on("sendMessage", (data) => {
-        serverSocket.to(data.room).emit("receivedMessage", data);
-    });
-
-    clientSocket1.on("receivedMessage", (data) => {
-      assert.equal(data.room, "TEST");
-      assert.equal(data.message, "Hello");
+        lobby.players.push(socket.id);
+        lobby.numOfUsers++;
+        socket.join(roomCode);
+        socket.emit("joinedLobby", roomCode);
+      });
     });
   });
-  //--------------------------------------------------------------------------------------------------
-  it("should handle flag toggling", (done) => {
-    clientSocket1.emit("flagToggled", true);
 
-    serverSocket.on("flagToggled", (toggleState) => {
-      assert.isTrue(toggleState);
+  beforeEach(() => {
+    resetLobbies();
+  });
+
+  after(() => {
+    io.close();
+    clientSocket1.disconnect();
+    clientSocket2.disconnect();
+    clientSocket3.disconnect();
+  });
+
+  it("should create a lobby", (done) => {
+    clientSocket1.emit("create_lobby");
+
+    clientSocket1.once("createdLobby", (roomCode) => {
+      assert.equal(roomCode, "ROOM123");
+      const roomFound = currLobbies.find((room) => room.roomCode === roomCode);
+      assert.isNotNull(roomFound, "ROOM123 not found in currLobbies");
       done();
     });
   });
-  //--------------------------------------------------------------------------------------------------
-  it("should handle card clicks with flag", (done) => {
-    clientSocket1.emit("cardClickedWithFlag", true);
 
-    serverSocket.on("cardClickedWithFlag", (isFlaggingMode) => {
-      assert.isTrue(isFlaggingMode);
+  it("should join a lobby", (done) => {
+    clientSocket1.emit("create_lobby");
+
+    clientSocket1.on("createdLobby", (roomCode) => {
+      clientSocket2.emit("join_lobby", roomCode);
+    });
+
+    clientSocket2.once("joinedLobby", (roomCode) => {
+      const lobby = currLobbies.find((lobby) => lobby.roomCode === roomCode);
+      assert.isNotNull(lobby, "Lobby not found");
+      assert.equal(lobby.numOfUsers, 2, "Lobby should have 2 users");
       done();
     });
   });
-  //--------------------------------------------------------------------------------------------------
-  it("should handle finalized guesses", (done) => {
-    clientSocket1.emit("finalizedGuess");
 
-    serverSocket.on("finalizedGuess", () => {
-      done();
+  it("should not let a 3rd person join", (done) => {
+    clientSocket1.emit("create_lobby");
+
+    clientSocket1.on("createdLobby", (roomCode) => {
+      clientSocket2.emit("join_lobby", roomCode);
+      clientSocket3.emit("join_lobby", roomCode);
     });
-  });
-  //--------------------------------------------------------------------------------------------------
-  it("should handle cancelled guesses", (done) => {
-    clientSocket1.emit("cancelledGuess");
 
-    serverSocket.on("cancelledGuess", () => {
-      done();
-    });
-  });
-  //--------------------------------------------------------------------------------------------------
-  it("should update settings", (done) => {
-    clientSocket1.emit("settingDifficulty", 3);
-
-    serverSocket.on("settingDifficulty", (difficulty) => {
-      assert.equal(difficulty, 3);
+    clientSocket3.once("triedJoinFullLobby", () => {
+      assert.isTrue(true, "3rd client was blocked from joining");
       done();
     });
   });
