@@ -18,7 +18,7 @@ const Lobby = (props) => {
   const [numGuess, setNumOfGuesses] = useState<number>(1);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [gridSize, setGridSize] = useState<number>(16);
-
+  // waa
   const locationNames = [
     "Aberdeen Inverness",
     "Dundee B",
