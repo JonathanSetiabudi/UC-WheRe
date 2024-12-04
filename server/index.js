@@ -266,7 +266,11 @@ io.on("connection", (socket) => {
     const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
     console.log("updating theme setting to ", data.boardTheme);
     room.theme = data.boardTheme;
-    const updatedData = { room: data.room, boardTheme: room.theme };
+    const updatedData = {
+      room: data.room,
+      boardTheme: room.theme,
+      gameBaord: room.gameBoard,
+    };
     socket.emit("finishedUpdatingTheme", updatedData);
   });
 
@@ -276,7 +280,7 @@ io.on("connection", (socket) => {
     console.log("updating number of guesses to ", data.numGuess);
     room.numGuesses = data.numGuess;
     const updatedData = { room: data.room, numGuess: room.numGuesses };
-    socket.to(data.room).emit("finishedUpdatingGuesses", updatedData);
+    socket.to(lobbyCode).emit("finishedUpdatingGuesses", updatedData);
   });
 
   /*
@@ -300,8 +304,12 @@ io.on("connection", (socket) => {
     console.log("updating gridSize to ", data.gridSize);
     room.lobbyGridSize = data.gridSize;
 
-    const updatedData = { room: data.room, gridSize: room.lobbyGridSize };
-    socket.emit("finishedUpdatingGridSize", updatedData);
+    const updatedData = {
+      room: data.room,
+      gridSize: room.lobbyGridSize,
+      gameBoard: room.gameBoard,
+    };
+    socket.to(lobbyCode).emit("finishedUpdatingGridSize", updatedData);
   });
 
   socket.on("testEcho", (data) => {

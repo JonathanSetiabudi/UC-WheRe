@@ -18,7 +18,9 @@ const Lobby = (props) => {
   const [numGuess, setNumOfGuesses] = useState<number>(1);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [gridSize, setGridSize] = useState<number>(16);
-  // waa
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [gameBoard, setGameBoard] = useState<LocationClass[]>([]);
+
   const locationNames = [
     "Aberdeen Inverness",
     "Dundee B",
@@ -176,7 +178,6 @@ const Lobby = (props) => {
   let locationMasterArray: LocationClass[] = [];
   let arrayByTheme: LocationClass[] = [];
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let gameBoard: LocationClass[] = [];
 
   for (let i = 0; i < 28; i++) {
     const location = new LocationClass(
@@ -214,6 +215,7 @@ const Lobby = (props) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     socket.on("finishedUpdatingTheme", (updatedData) => {
       setTheme(updatedData.boardTheme);
+      setGameBoard(updatedData.gameBoard);
     });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     socket.on("finishedUpdatingGuesses", (updatedData) => {
@@ -222,6 +224,7 @@ const Lobby = (props) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     socket.on("finishedUpdatingGridSize", (updatedData) => {
       setGridSize(updatedData.gridSize);
+      setGameBoard(updatedData.gameBoard);
     });
   });
 
@@ -271,8 +274,12 @@ const Lobby = (props) => {
   const onThemeChange = (newTheme) => {
     setTheme(newTheme);
     locationByTheme(newTheme);
-    gameBoard = getRandomItems(arrayByTheme, gridSize);
-    const data = { room: props.room, boardTheme: newTheme };
+    setGameBoard(getRandomItems(arrayByTheme, gridSize));
+    const data = {
+      room: props.room,
+      boardTheme: newTheme,
+      gameBoard: gameBoard,
+    };
     socket.emit("settingTheme", data);
   };
   // @ts-expect-error - TS complains about the type of newNumGuesses, but we alr know it's a number
@@ -284,8 +291,12 @@ const Lobby = (props) => {
   // @ts-expect-error - TS complains about the type of newGridSize, but we alr know it's a number
   const onGridChange = (newGridSize) => {
     setGridSize(newGridSize);
-    gameBoard = getRandomItems(arrayByTheme, newGridSize);
-    const data = { room: props.room, gridSize: newGridSize };
+    setGameBoard(getRandomItems(arrayByTheme, gridSize));
+    const data = {
+      room: props.room,
+      gridSize: newGridSize,
+      gameBoard: gameBoard,
+    };
     socket.emit("settingGridSize", data);
   };
 
