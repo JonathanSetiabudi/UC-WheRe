@@ -330,7 +330,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("settingNumberOfGuesses", (data) => {
-    console.log(`lobby ${data.room} updating number of guesses to `, data.numGuesses);
+    console.log(
+      `lobby ${data.room} updating number of guesses to `,
+      data.numGuesses,
+    );
     io.to(data.room).emit("setNumGuesses", data.numGuesses);
   });
 

@@ -15,7 +15,12 @@ interface LobbyProps {
   setNumGuesses: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const Lobby: React.FC<LobbyProps> = ({ room, isHost, setGridSize, setNumGuesses }) => {
+const Lobby: React.FC<LobbyProps> = ({
+  room,
+  isHost,
+  setGridSize,
+  setNumGuesses,
+}) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [playersInLobby, setPlayerCount] = useState<number>(0);
   const [boardDifficulty, setDifficulty] = useState<number>(0);

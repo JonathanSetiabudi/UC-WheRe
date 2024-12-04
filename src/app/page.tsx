@@ -198,19 +198,15 @@ export default function Home() {
                 room={room}
                 isHost={isHost}
               />
-              <Game 
-                room={room} 
-                gridSize={gridSize} 
-                numGuesses={numGuesses}
-              />
+              <Game room={room} gridSize={gridSize} numGuesses={numGuesses} />
             </div>
           ) : (
             <div>
-              <Lobby 
+              <Lobby
                 room={room}
-                isHost={isHost} 
-                setGridSize={setGridSize} 
-                setNumGuesses={setNumGuesses} 
+                isHost={isHost}
+                setGridSize={setGridSize}
+                setNumGuesses={setNumGuesses}
               />
 
               <br></br>
