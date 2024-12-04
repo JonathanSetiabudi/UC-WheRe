@@ -88,7 +88,7 @@ const Lobby = (props) => {
     "../images/AI_LOUNGE.JPG",
     "../images/WEST_LO.JPG",
     "../images/DUNDEE_A.HEIC",
-    "./images/DUNDEEGYM.JPG",
+    "../images/DUNDEEGYM.JPG",
     "../images/EASTLO_LAWN",
     "../images/SCOTTYS_GLENMOR.JPG",
     "../images/NIGHTHUB.JPG",
