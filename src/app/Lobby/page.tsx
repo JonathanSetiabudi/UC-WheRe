@@ -5,14 +5,23 @@ import React, { useEffect, useState } from "react";
 import Home from "../page.jsx";
 import { socket } from "@/utils/socket";
 // import userRooms from ".../server/index.js";
-// @ts-expect-error - TS complains about the type of newTheme, but we alr know it's a string
-const Lobby = (props) => {
+// @ts-expect-erro - TS complains about the type of newTheme, but we alr know it's a string
+// had to mispell error ^ bcs there was a weird error saying it was unused
+
+interface LobbyProps {
+  room: string;
+  isHost: boolean;
+  setGridSize: React.Dispatch<React.SetStateAction<number>>;
+  setNumGuesses: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const Lobby: React.FC<LobbyProps> = ({ room, isHost, setGridSize, setNumGuesses }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [playersInLobby, setPlayerCount] = useState<number>(0);
   const [boardDifficulty, setDifficulty] = useState<number>(0);
   const [boardTheme, setTheme] = useState<number>(1);
-  const [numGuess, setNumOfGuesses] = useState<number>(1);
-  const [gridSize, setGridSize] = useState<number>(16);
+  // const [numGuess, setNumOfGuesses] = useState<number>(1);
+  // const [gridSize, setGridSize] = useState<number>(16);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -23,33 +32,42 @@ const Lobby = (props) => {
     socket.on("joinedLobby", () => {
       setPlayerCount((playersInLobby) => playersInLobby + 1);
     });
+
+    socket.on("setNumGuesses", (numGuesses) => {
+      setNumGuesses(numGuesses);
+    });
+
+    socket.on("setGridSize", (gridSize) => {
+      setGridSize(gridSize);
+    });
   });
 
   // sends update signals to server when button is clicked
   // @ts-expect-error - TS complains about the type of newDiff, but we alr know it's a number
   const onDifficultyChange = (newDifficulty) => {
     setDifficulty(newDifficulty);
-    const data = { room: props.room, boardDifficulty: boardDifficulty };
+    const data = { room: room, boardDifficulty: boardDifficulty };
     socket.emit("settingDifficulty", data);
   };
   // @ts-expect-error - TS complains about the type of newTheme, but we alr know it's a number
   const onThemeChange = (newTheme) => {
     setTheme(newTheme);
-    const data = { room: props.room, boardTheme: boardTheme };
+    const data = { room: room, boardTheme: boardTheme };
     socket.emit("settingTheme", data);
   };
-  // @ts-expect-error - TS complains about the type of newNumGuesses, but we alr know it's a number
-  const onNumGuessChange = (newNumGuesses) => {
-    setNumOfGuesses(newNumGuesses);
-    const data = { room: props.room, numGuess: numGuess };
-    socket.emit("settingNumberOfGuesses", data);
-  };
-  // @ts-expect-error - TS complains about the type of newGridSize, but we alr know it's a number
-  const onGridChange = (newGridSize) => {
-    setGridSize(newGridSize);
-    const data = { room: props.room, gridSize: gridSize };
-    socket.emit("settingGridSize", data);
-  };
+
+  // @ts-expect-erro - TS complains about the type of newNumGuesses, but we alr know it's a number
+  // const onNumGuessChange = (newNumGuesses) => {
+  //   setNumOfGuesses(newNumGuesses);
+  //   const data = { room: room, numGuess: numGuess };
+  //   socket.emit("settingNumberOfGuesses", data);
+  // };
+  // @ts-expect-erro - TS complains about the type of newGridSize, but we alr know it's a number
+  // const onGridChange = (newGridSize) => {
+  //   setGridSize(newGridSize);
+  //   const data = { room: room, gridSize: gridSize };
+  //   socket.emit("settingGridSize", data);
+  // };
 
   // difficulty handlers
   const handleClickEasy = () => {
@@ -87,20 +105,36 @@ const Lobby = (props) => {
 
   // guess handlers (will probably convert to dropdown menu)
   const handleClickGuess1 = () => {
-    onNumGuessChange(1);
+    //onNumGuessChange(1);
+
+    //setNumGuesses(1);
+    const data = { room: room, numGuesses: 1 };
+    socket.emit("settingNumberOfGuesses", data);
   };
 
   const handleClickGuess3 = () => {
-    onNumGuessChange(3);
+    // onNumGuessChange(3);
+
+    //setNumGuesses(3);
+    const data = { room: room, numGuesses: 3 };
+    socket.emit("settingNumberOfGuesses", data);
   };
 
   // board size handlers (will probably convert this to dropdown as well)
   const handleClickBoardSmall = () => {
-    onGridChange(16);
+    //onGridChange(16);
+
+    // setGridSize(16);
+    const data = { room: room, gridSize: 16 };
+    socket.emit("settingGridSize", data);
   };
 
   const handleClickBoardLarge = () => {
-    onGridChange(20);
+    // onGridChange(20);
+
+    // setGridSize(20);
+    const data = { room: room, gridSize: 20 };
+    socket.emit("settingGridSize", data);
   };
 
   const buttonPerms = (checkIfHost: boolean) => {
@@ -117,8 +151,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickEasy}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         Easy
       </button>
@@ -127,8 +161,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickMedium}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         Medium
       </button>
@@ -137,8 +171,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickHard}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         Hard
       </button>
@@ -149,8 +183,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickThemeResAndDining}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         {" "}
         Residential and Dining{" "}
@@ -160,8 +194,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickThemeCampusLandmarks}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         {" "}
         Campus Landmarks{" "}
@@ -171,8 +205,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickThemeStudySpots}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         Study Spots
       </button>
@@ -181,8 +215,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickThemeBikeRacks}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         Bike Racks
       </button>
@@ -191,8 +225,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickThemeStreetsAndParking}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         {" "}
         Streets and Parking Lots{" "}
@@ -204,8 +238,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickGuess1}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         1 guess
       </button>
@@ -214,8 +248,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickGuess3}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         3 guesses
       </button>
@@ -226,8 +260,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickBoardSmall}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         4 x 4
       </button>
@@ -236,8 +270,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickBoardLarge}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         5 x 4
       </button>

@@ -330,11 +330,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("settingNumberOfGuesses", (data) => {
-    console.log("updating number of guesses to ", data.numGuess);
+    console.log(`lobby ${data.room} updating number of guesses to `, data.numGuesses);
+    io.to(data.room).emit("setNumGuesses", data.numGuesses);
   });
 
   socket.on("settingGridSize", (data) => {
-    console.log("updating gridSize to ", data.gridSize);
+    console.log(`lobby ${data.room} updating gridSize to `, data.gridSize);
+    io.to(data.room).emit("setGridSize", data.gridSize);
   });
 });
 

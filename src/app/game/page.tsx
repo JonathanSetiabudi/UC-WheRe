@@ -7,11 +7,13 @@ import Location from "../objects/Location";
 
 interface GameProps {
   room: string;
+  gridSize: number;
+  numGuesses: number;
 }
 
-const Game: React.FC<GameProps> = ({ room }) => {
+const Game: React.FC<GameProps> = ({ room, gridSize, numGuesses }) => {
   // initialize gameCards
-  const gameCards: Location[] = Array.from({ length: 16 }, (_, i) => {
+  const gameCards: Location[] = Array.from({ length: gridSize }, (_, i) => {
     return new Location(
       `Location ${i + 1}`,
       `Description ${i + 1}`,
@@ -23,7 +25,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
 
   const [locations, setLocations] = useState<Location[]>(gameCards); // re-render gameCards
   const [isSelectionMode, setIsSelectionMode] = useState<boolean>(true);
-  const [numGuesses, setNumGuesses] = useState<number>(3); // num. guesses a player can make
+  const [numGuessesLeft, setNumGuessesLeft] = useState<number>(numGuesses); // num. guesses a player can make
   const [isFlaggingMode, setIsFlaggingMode] = useState<boolean>(true); // flagging mode is true on default
   const [playerHasSelected, setPlayerHasSelected] = useState<boolean>(false);
   const [playerIsReady, setPlayerIsReady] = useState<boolean>(false);
@@ -161,6 +163,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
 
     socket.on("launchGame", () => {
       setIsSelectionMode(false);
+      setIsModalOpen(false);
     });
 
     socket.on("waitingForOtherReady", () => {
@@ -177,10 +180,10 @@ const Game: React.FC<GameProps> = ({ room }) => {
     });
 
     socket.on("incorrectGuess", () => {
-      setNumGuesses((prevNumGuesses) => {
-        const newNumGuesses = prevNumGuesses - 1;
+      setNumGuessesLeft((prevNumGuessesLeft) => {
+        const newNumGuessesLeft = prevNumGuessesLeft - 1;
 
-        if (newNumGuesses !== 0) {
+        if (newNumGuessesLeft !== 0) {
           //alert("You guessed wrong! Try again");
           setContinueModal(true);
         } else {
@@ -188,7 +191,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
           socket.emit("ranOutOfGuesses", room);
         }
 
-        return newNumGuesses;
+        return newNumGuessesLeft;
       });
     });
 
@@ -396,7 +399,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
                         Are you sure you want to select: {guessedLocation?.name}{" "}
                         as your guess?
                       </p>
-                      <p>Guesses Left: {numGuesses} </p>
+                      <p>Guesses Left: {numGuessesLeft} </p>
                       <div
                         style={{
                           display: "flex",
@@ -450,7 +453,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
                   }}
                 >
                   <h1>You guessed wrong</h1>
-                  <p>Guesses Left: {numGuesses} </p>
+                  <p>Guesses Left: {numGuessesLeft} </p>
 
                   <button
                     onClick={closeContinueModal}
