@@ -316,7 +316,6 @@ const Lobby = (props) => {
   // @ts-expect-error - TS complains about the type of newGridSize, but we alr know it's a number
   const onGridChange = (newGridSize) => {
     setGridSize(newGridSize);
-    // alert(gridSize);
     setGameBoard(getRandomItems(arrayByTheme, gridSize));
     const data = {
       room: props.room,
@@ -368,36 +367,20 @@ const Lobby = (props) => {
 
   // guess handlers (will probably convert to dropdown menu)
   const handleClickGuess1 = () => {
-    //onNumGuessChange(1);
-
-    //setNumGuesses(1);
-    const data = { room: props.room, numGuesses: 1 };
-    socket.emit("settingNumberOfGuesses", data);
+    onNumGuessChange(1);
   };
 
   const handleClickGuess3 = () => {
-    // onNumGuessChange(3);
-
-    //setNumGuesses(3);
-    const data = { room: props.room, numGuesses: 3 };
-    socket.emit("settingNumberOfGuesses", data);
+    onNumGuessChange(3);
   };
 
   // board size handlers (will probably convert this to dropdown as well)
   const handleClickBoardSmall = () => {
-    //onGridChange(16);
-
-    // setGridSize(16);
-    const data = { room: props.room, gridSize: 16 };
-    socket.emit("settingGridSize", data);
+    onGridChange(16);
   };
 
   const handleClickBoardLarge = () => {
-    // onGridChange(20);
-
-    // setGridSize(20);
-    const data = { room: props.room, gridSize: 20 };
-    socket.emit("settingGridSize", data);
+    onGridChange(20);
   };
 
   const buttonPerms = (checkIfHost: boolean) => {
