@@ -73,7 +73,8 @@ io.on("connection", (socket) => {
       difficulty: 0,
       theme: 0,
       numGuesses: 1,
-      gridSize: 16,
+      // gridSize: 16,
+      lobbyGridSize: 16,
     };
     currLobbies.push(room);
     console.log(`User(${socket.id}) created room: ${roomCode}`);

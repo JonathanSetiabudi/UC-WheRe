@@ -13,7 +13,7 @@ const Lobby = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [boardDifficulty, setDifficulty] = useState<number>(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [boardTheme, setTheme] = useState<number>(1);
+  const [boardTheme, setTheme] = useState<number>(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [numGuess, setNumOfGuesses] = useState<number>(1);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -179,6 +179,16 @@ const Lobby = (props) => {
   let arrayByTheme: LocationClass[] = [];
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
+  for (let i = 0; i < gridSize; i++) {
+    const location = new LocationClass(
+      locationNames[i],
+      descriptions[i],
+      filePaths[i],
+      "Residential and Dining",
+    );
+    arrayByTheme.push(location);
+  }
+
   for (let i = 0; i < 28; i++) {
     const location = new LocationClass(
       locationNames[i],
@@ -291,6 +301,7 @@ const Lobby = (props) => {
   // @ts-expect-error - TS complains about the type of newGridSize, but we alr know it's a number
   const onGridChange = (newGridSize) => {
     setGridSize(newGridSize);
+    // alert(gridSize);
     setGameBoard(getRandomItems(arrayByTheme, gridSize));
     const data = {
       room: props.room,
