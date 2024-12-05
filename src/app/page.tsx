@@ -21,8 +21,8 @@ export default function Home() {
   const [lobbyNotExistent, setLobbyNotExistent] = useState<boolean>(false);
   const [isEmptyUsername, setIsEmptyUsername] = useState<boolean>(false);
   const [isHost, setIsHost] = useState<boolean>(false);
-  const [gridSize, setGridSize] = useState<number>(16);
-  const [numGuesses, setNumGuesses] = useState<number>(1);
+  // const [gridSize, setGridSize] = useState<number>(16);
+  // const [numGuesses, setNumGuesses] = useState<number>(1);
 
   // @ts-expect-error - TS complains about the type of e, but don't worry about it
   const onUsernameChange = (e) => {
@@ -198,15 +198,13 @@ export default function Home() {
                 room={room}
                 isHost={isHost}
               />
-              <Game room={room} gridSize={gridSize} numGuesses={numGuesses} />
+              <Game room={room}  />
             </div>
           ) : (
             <div>
               <Lobby
                 room={room}
                 isHost={isHost}
-                setGridSize={setGridSize}
-                setNumGuesses={setNumGuesses}
               />
 
               <br></br>

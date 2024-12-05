@@ -53,8 +53,9 @@ currLobbies = [
     theme: 0,
     numGuesses: 1,
     lobbyGridSize: 16,
-    hostHasSelected: false,
-    guestHasSelected: false,
+    gameBoard: [],
+    // hostHasSelected: false,
+    // guestHasSelected: false,
     gameStarted: false,
   },
 ];
@@ -77,7 +78,6 @@ io.on("connection", (socket) => {
       difficulty: 0,
       theme: 0,
       numGuesses: 1,
-      // gridSize: 16,
       lobbyGridSize: 16,
     };
     currLobbies.push(room);
@@ -223,6 +223,7 @@ io.on("connection", (socket) => {
     if (theLobby) {
       if (theLobby.numOfUsers === 2) {
         io.to(room).emit("successStartGame");
+        io.to(socket.id).emit("tryUpdateGameBoard"); // emit to host since host has lobby settings in local
         theLobby.gameStarted = true;
         console.log(
           `Host User(${socket.id}) successsfully started a game in lobby: ${room}`,
@@ -321,6 +322,17 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("doUpdateGameBoard", (data) => {
+    const lobbyCode = data.room;
+    const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
+
+      if (room) {
+        room.gameBoard = data.gameBoard;
+
+        socket.emit("finishedUpdatingGameBoard", room.gameBoard);  
+      }
+  });
+
   //upon receiving a settingDifficulty, settingTheme, settingNumGuesses, or settingGridSize
   // event, log "updating ____ setting" and the new difficulty setting
 
@@ -329,7 +341,12 @@ io.on("connection", (socket) => {
     const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
     console.log("updating difficulty setting to ", data.boardDifficulty);
     room.difficulty = data.boardDifficulty;
-    const updatedData = { room: data.room, boardDifficulty: room.difficulty };
+    room.gameBoard = data.gameBoard;
+    const updatedData = { 
+      room: data.room, 
+      boardDifficulty: room.difficulty, 
+      gameBoard: room.gameBoard,
+    };
     socket.emit("finishedUpdatingDifficulty", updatedData);
   });
 
@@ -338,10 +355,11 @@ io.on("connection", (socket) => {
     const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
     console.log("updating theme setting to ", data.boardTheme);
     room.theme = data.boardTheme;
+    room.gameBoard = data.gameBoard;
     const updatedData = {
       room: data.room,
       boardTheme: room.theme,
-      gameBaord: room.gameBoard,
+      gameBoard: room.gameBoard,
     };
     socket.emit("finishedUpdatingTheme", updatedData);
   });

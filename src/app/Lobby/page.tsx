@@ -251,6 +251,21 @@ const Lobby = (props) => {
       setGridSize(updatedData.gridSize);
       setGameBoard(updatedData.gameBoard);
     });
+
+    socket.on("tryUpdateGameBoard", () => {
+      const data = {
+        room: props.room,
+        gameBoard: gameBoard,
+      };
+      socket.emit("doUpdateGameBoard", data);
+    });
+
+    return () => {
+      // Cleanup event listeners when component unmounts
+      socket.off("finishedUpdatingTheme");
+      socket.off("finishedUpdatingGridSize");
+      socket.off("finishedUpdatingGuesses");
+    };
   });
 
   const locationByTheme = (theme: number) => {
@@ -303,7 +318,7 @@ const Lobby = (props) => {
     const data = {
       room: props.room,
       boardTheme: newTheme,
-      gameBoard: gameBoard,
+      gameBoard: getRandomItems(arrayByTheme, gridSize),
     };
     socket.emit("settingTheme", data);
   };
@@ -320,7 +335,7 @@ const Lobby = (props) => {
     const data = {
       room: props.room,
       gridSize: newGridSize,
-      gameBoard: gameBoard,
+      gameBoard: getRandomItems(arrayByTheme, gridSize),
     };
     socket.emit("settingGridSize", data);
   };

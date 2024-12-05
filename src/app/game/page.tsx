@@ -7,24 +7,38 @@ import Location from "../objects/Location";
 
 interface GameProps {
   room: string;
-  gridSize: number;
-  numGuesses: number;
+  // gridSize: number;
+  // numGuesses: number;
 }
 
-const Game: React.FC<GameProps> = ({ room, gridSize, numGuesses }) => {
+const Game: React.FC<GameProps> = ({ room  }) => {
+  const [gameCards, setGameCards] = useState<Location[]>([]);
+  const [numGuessesLeft, setNumGuessesLeft] = useState<number>(1); // num. guesses a player can make
+  const [gridSize, setGridSize] = useState<number>(16);
+
   // initialize gameCards
-  const gameCards: Location[] = Array.from({ length: gridSize }, (_, i) => {
-    return new Location(
-      `Location ${i + 1}`,
-      `Description ${i + 1}`,
-      `image${i + 1}.jpg`,
-      "Default",
-    );
-  });
+  const initializeGameCards = () => {
+    const newGameCards: Location[] = []; 
+
+    for (let i = 0; i < gridSize; i++) {
+      const location = new Location(
+        `Location ${i + 1}`,
+        `Description ${i + 1}`,
+        `image${i + 1}.jpg`,
+        "Default",
+      );
+      newGameCards.push(location); 
+    }
+  
+    setGameCards(newGameCards); 
+  };
+
+  // const reRenderGameCards = () => {
+  //   setGameCards()
+  // };
 
   const [locations, setLocations] = useState<Location[]>(gameCards); // re-render gameCards
   const [isSelectionMode, setIsSelectionMode] = useState<boolean>(true);
-  const [numGuessesLeft, setNumGuessesLeft] = useState<number>(numGuesses); // num. guesses a player can make
   const [isFlaggingMode, setIsFlaggingMode] = useState<boolean>(true); // flagging mode is true on default
   const [playerHasSelected, setPlayerHasSelected] = useState<boolean>(false);
   const [playerIsReady, setPlayerIsReady] = useState<boolean>(false);
@@ -159,6 +173,26 @@ const Game: React.FC<GameProps> = ({ room, gridSize, numGuesses }) => {
 
   useEffect(() => {
     socket.connect();
+    initializeGameCards();
+
+    socket.on("finishedUpdatingGameBoard", (data) => {
+      // reRenderGameCards();
+      setGameCards(data.gameBoard);
+    });
+
+    socket.on("finishedUpdatingGuesses", (data) => {
+      setNumGuessesLeft(data.numGuesses);
+      setGameCards(data.gameBoard);
+
+    }); 
+
+    socket.on("finishedUpdatingGridSize", (data) => {
+      setGridSize(data.gridSize);
+      setGameCards(data.gameBoard);
+
+
+      // re-render board
+    }); 
 
     socket.on("launchGame", () => {
       setIsSelectionMode(false);
