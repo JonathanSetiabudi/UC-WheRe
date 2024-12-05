@@ -71,7 +71,6 @@ const Lobby = (props) => {
     "SRC",
     "UCR Sign",
     "Multidisciplinary Research Building",
-    "Multidisciplinary Research Building",
     "UCPD",
     "Bournes Hall",
     "HUMSS",
@@ -250,14 +249,6 @@ const Lobby = (props) => {
     socket.on("finishedUpdatingGridSize", (updatedData) => {
       setGridSize(updatedData.gridSize);
       setGameBoard(updatedData.gameBoard);
-    });
-
-    socket.on("tryUpdateGameBoard", () => {
-      const data = {
-        room: props.room,
-        gameBoard: gameBoard,
-      };
-      socket.emit("doUpdateGameBoard", data);
     });
 
     return () => {

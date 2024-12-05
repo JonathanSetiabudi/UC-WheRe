@@ -223,7 +223,7 @@ io.on("connection", (socket) => {
     if (theLobby) {
       if (theLobby.numOfUsers === 2) {
         io.to(room).emit("successStartGame");
-        io.to(socket.id).emit("tryUpdateGameBoard"); // emit to host since host has lobby settings in local
+        io.to(room).emit("updateGameBoard", theLobby.gameBoard);
         theLobby.gameStarted = true;
         console.log(
           `Host User(${socket.id}) successsfully started a game in lobby: ${room}`,
@@ -329,7 +329,7 @@ io.on("connection", (socket) => {
     if (room) {
       room.gameBoard = data.gameBoard;
 
-      io.to(room).emit("finishedUpdatingGameBoard", room.gameBoard);
+      io.to(room).emit("updatingGameBoard", room.gameBoard);
     }
   });
 
@@ -361,7 +361,7 @@ io.on("connection", (socket) => {
       boardTheme: room.theme,
       gameBoard: room.gameBoard,
     };
-    socket.emit("finishedUpdatingTheme", updatedData);
+    io.emit("finishedUpdatingTheme", updatedData);
   });
 
   socket.on("settingNumberOfGuesses", (data) => {
@@ -373,20 +373,6 @@ io.on("connection", (socket) => {
     socket.to(lobbyCode).emit("finishedUpdatingGuesses", updatedData);
   });
 
-  /*
-  socket.on("settingGridSize", (data) => {
-  const lobbyCode = data.room;
-  const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
-
-  // Update the correct property 'lobbyGridSize' instead of 'gridSize'
-  console.log("updating gridSize to ", data.gridSize);
-  room.lobbyGridSize = data.gridSize;
-
-  // Emit the updated data with the correct property name 'lobbyGridSize'
-  const updatedData = { room: data.room, gridSize: room.lobbyGridSize };
-  socket.emit("finishedUpdatingGridSize", updatedData);
-});
-*/
   socket.on("settingGridSize", (data) => {
     const lobbyCode = data.room;
     const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);

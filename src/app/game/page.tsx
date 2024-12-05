@@ -7,23 +7,24 @@ import Location from "../objects/Location";
 
 interface GameProps {
   room: string;
+  gameBoard: Location[];
   // gridSize: number;
   // numGuesses: number;
 }
 
-let gameCards: Location[] = [];
+const initialCards: Location[] = [];
 // initialize gameCards
-for (let i = 0; i < 16; i++) {
+for (let i = 0; i < 20; i++) {
   const card = new Location(
     `Location ${i + 1}`,
     `Description ${i + 1}`,
     `image${i + 1}.jpg`,
     "Default",
   );
-  gameCards.push(card);
+  initialCards.push(card);
 }
 
-const Game: React.FC<GameProps> = ({ room }) => {
+const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
   const [numGuessesLeft, setNumGuessesLeft] = useState<number>(1); // num. guesses a player can make
   // const [gridSize, setGridSize] = useState<number>(16);
 
@@ -39,13 +40,62 @@ const Game: React.FC<GameProps> = ({ room }) => {
   const [showGameResult, setShowGameResult] = useState<boolean>(false);
   const [continueModal, setContinueModal] = useState<boolean>(false); // ugly modal to notify player to keep playing while numguesses > 0
 
+  useEffect(() => {
+
+    socket.on("finishedUpdatingGuesses", (data) => {
+      setNumGuessesLeft(data.numGuesses);
+    });
+
+    socket.on("launchGame", () => {
+      setIsSelectionMode(false);
+      setIsModalOpen(false);
+    });
+
+    socket.on("waitingForOtherReady", () => {
+      //alert("Waiting for other player to ready up to start.");
+    });
+
+    socket.on("victory", () => {
+      setPlayerWon(true);
+      setShowGameResult(true);
+    });
+
+    socket.on("defeat", () => {
+      setShowGameResult(true);
+    });
+
+    socket.on("incorrectGuess", () => {
+      setNumGuessesLeft((prevNumGuessesLeft) => {
+        const newNumGuessesLeft = prevNumGuessesLeft - 1;
+
+        if (newNumGuessesLeft !== 0) {
+          //alert("You guessed wrong! Try again");
+          setContinueModal(true);
+        } else {
+          //alert("You guessed wrong and ran out of guesses");
+          socket.emit("ranOutOfGuesses", room);
+        }
+
+        return newNumGuessesLeft;
+      });
+    });
+
+    return () => {
+      // socket.off("launchGame");
+      // socket.off("waitingForOtherReady");
+      socket.off("victory");
+      socket.off("defeat");
+      socket.off("incorrectGuess");
+    };
+  }, [room]);
+
   const select_HC = (index: number) => {
     // if new card clicked is the same as current hidden card, do nothing
-    if (hiddenCard && gameCards[index] === hiddenCard) {
+    if (hiddenCard && gameBoard[index] === hiddenCard) {
       return;
     } else {
       // for loop of updated location array
-      const updatedCards = gameCards.map((card, i) => {
+      const updatedCards = gameBoard.map((card, i) => {
         // if location at i is selected location, make it selected
         if (i === index) {
           card.isSelected_HC = true; //{ ...location, isSelected_HC: true };
@@ -58,18 +108,16 @@ const Game: React.FC<GameProps> = ({ room }) => {
         return card;
       });
 
-      gameCards = updatedCards;
+      gameBoard = updatedCards;
       setHiddenCard(updatedCards[index]);
       setPlayerHasSelected(true); // checker for modal
 
-      socket.emit("setHiddenCard", { room, hiddenCard: gameCards[index] });
+      socket.emit("setHiddenCard", { room, hiddenCard: gameBoard[index] });
     }
   };
 
   const toggleFlag = (index: number) => {
-    const updatedCards = [...gameCards];
-    updatedCards[index].toggleFlag(); // calls .toggleFlag() from location class
-    gameCards = updatedCards;
+    gameBoard[index].toggleFlag(); // calls .toggleFlag() from location class
   };
 
   const handleClickOnReady = () => {
@@ -104,7 +152,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
         toggleFlag(index);
       } else {
         // if clicked in guessing mode, guess the card
-        setGuessedCard(gameCards[index]);
+        setGuessedCard(gameBoard[index]);
         setIsModalOpen(true);
       }
     }
@@ -161,68 +209,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
     );
   };
 
-  useEffect(() => {
-    socket.connect();
-
-    socket.on("finishedUpdatingGameBoard", (data) => {
-      // reRenderGameCards();
-      gameCards = data.gameBoard;
-    });
-
-    socket.on("finishedUpdatingGuesses", (data) => {
-      setNumGuessesLeft(data.numGuesses);
-      gameCards = data.gameBoard;
-    });
-
-    socket.on("finishedUpdatingGridSize", (data) => {
-      // setGridSize(data.gridSize);
-      gameCards = data.gameBoard;
-
-      // re-render board
-    });
-
-    socket.on("launchGame", () => {
-      setIsSelectionMode(false);
-      setIsModalOpen(false);
-    });
-
-    socket.on("waitingForOtherReady", () => {
-      //alert("Waiting for other player to ready up to start.");
-    });
-
-    socket.on("victory", () => {
-      setPlayerWon(true);
-      setShowGameResult(true);
-    });
-
-    socket.on("defeat", () => {
-      setShowGameResult(true);
-    });
-
-    socket.on("incorrectGuess", () => {
-      setNumGuessesLeft((prevNumGuessesLeft) => {
-        const newNumGuessesLeft = prevNumGuessesLeft - 1;
-
-        if (newNumGuessesLeft !== 0) {
-          //alert("You guessed wrong! Try again");
-          setContinueModal(true);
-        } else {
-          //alert("You guessed wrong and ran out of guesses");
-          socket.emit("ranOutOfGuesses", room);
-        }
-
-        return newNumGuessesLeft;
-      });
-    });
-
-    return () => {
-      // socket.off("launchGame");
-      // socket.off("waitingForOtherReady");
-      socket.off("victory");
-      socket.off("defeat");
-      socket.off("incorrectGuess");
-    };
-  }, [room]);
+  
 
   return (
     <div
@@ -246,7 +233,7 @@ const Game: React.FC<GameProps> = ({ room }) => {
             }}
           >
             {/* render each card as a button */}
-            {gameCards.map((card, index) => (
+            {gameBoard.map((card, index) => (
               <button
                 key={index}
                 onClick={() => handleClickOnGrid(index)}
@@ -373,6 +360,13 @@ const Game: React.FC<GameProps> = ({ room }) => {
             </div>
           ) : (
             <div>
+              <h1>{`Number of guesses left: ${numGuessesLeft}`}</h1>
+              <div>
+                <h2>Selected Card: {hiddenCard?.name}</h2>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={hiddenCard?.img} alt={hiddenCard?.name} /> 
+                <h3>Card Description: {hiddenCard?.description}</h3>
+              </div>
               {/* display mode status */}
               {!isFlaggingMode ? (
                 <h1>Currently in Guessing Mode</h1>
