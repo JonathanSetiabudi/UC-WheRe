@@ -194,7 +194,9 @@ const Lobby = (props) => {
   let arrayByTheme: LocationClass[] = [];
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-  for (let i = 0; i < gridSize; i++) {
+
+
+  for (let i = 0; i < 28; i++) {
     const location = new LocationClass(
       locationNames[i],
       descriptions[i],
@@ -314,11 +316,12 @@ const Lobby = (props) => {
   const onThemeChange = (newTheme) => {
     setTheme(newTheme);
     locationByTheme(newTheme);
-    setGameBoard(getRandomItems(arrayByTheme, gridSize));
+    const newBoard = getRandomItems(arrayByTheme, gridSize);
+    setGameBoard(newBoard);
     const data = {
       room: props.room,
       boardTheme: newTheme,
-      gameBoard: getRandomItems(arrayByTheme, gridSize),
+      gameBoard: newBoard,
     };
     socket.emit("settingTheme", data);
   };
@@ -331,11 +334,12 @@ const Lobby = (props) => {
   // @ts-expect-error - TS complains about the type of newGridSize, but we alr know it's a number
   const onGridChange = (newGridSize) => {
     setGridSize(newGridSize);
-    setGameBoard(getRandomItems(arrayByTheme, gridSize));
+    const newBoard = getRandomItems(arrayByTheme, newGridSize);
+    setGameBoard(newBoard);
     const data = {
       room: props.room,
       gridSize: newGridSize,
-      gameBoard: getRandomItems(arrayByTheme, gridSize),
+      gameBoard: newBoard,
     };
     socket.emit("settingGridSize", data);
   };

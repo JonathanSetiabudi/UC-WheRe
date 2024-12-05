@@ -329,7 +329,7 @@ io.on("connection", (socket) => {
       if (room) {
         room.gameBoard = data.gameBoard;
 
-        socket.emit("finishedUpdatingGameBoard", room.gameBoard);  
+        io.to(room).emit("finishedUpdatingGameBoard", room.gameBoard);  
       }
   });
 
@@ -394,6 +394,7 @@ io.on("connection", (socket) => {
 
     console.log("updating gridSize to ", data.gridSize);
     room.lobbyGridSize = data.gridSize;
+    room.gameBoard = data.gameBoard;
 
 
     const updatedData = {
@@ -401,7 +402,7 @@ io.on("connection", (socket) => {
       gridSize: room.lobbyGridSize,
       gameBoard: room.gameBoard,
     };
-    socket.to(lobbyCode).emit("finishedUpdatingGridSize", updatedData);
+    io.to(lobbyCode).emit("finishedUpdatingGridSize", updatedData);
   });
 
 
@@ -414,6 +415,7 @@ io.on("connection", (socket) => {
     console.log("theme: ", roomData.theme);
     console.log("number of guesses: ", roomData.numGuesses);
     console.log("size of grid: ", roomData.lobbyGridSize);
+    console.log("game board: ", roomData.gameBoard);
   });
 });
 
