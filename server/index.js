@@ -370,9 +370,35 @@ io.on("connection", (socket) => {
 });
 */
   socket.on("settingGridSize", (data) => {
+    const lobbyCode = data.room;
+    const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
+
+
     console.log("updating gridSize to ", data.gridSize);
+    room.lobbyGridSize = data.gridSize;
+
+
+    const updatedData = {
+      room: data.room,
+      gridSize: room.lobbyGridSize,
+      gameBoard: room.gameBoard,
+    };
+    socket.to(lobbyCode).emit("finishedUpdatingGridSize", updatedData);
+  });
+
+
+  socket.on("testEcho", (data) => {
+    const lobbyCode = data.room;
+    const roomData = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
+    console.log("current settings: room", lobbyCode);
+    console.log("players in lobby:", roomData.numOfUsers);
+    console.log("difficulty: ", roomData.difficulty);
+    console.log("theme: ", roomData.theme);
+    console.log("number of guesses: ", roomData.numGuesses);
+    console.log("size of grid: ", roomData.lobbyGridSize);
   });
 });
+
 
 server.listen(8080, () => {
   console.log("listening on 8080");
