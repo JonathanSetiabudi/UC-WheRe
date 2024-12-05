@@ -21,13 +21,13 @@ const Game: React.FC<GameProps> = ({ room  }) => {
     const newGameCards: Location[] = []; 
 
     for (let i = 0; i < gridSize; i++) {
-      const location = new Location(
+      const card = new Location(
         `Location ${i + 1}`,
         `Description ${i + 1}`,
         `image${i + 1}.jpg`,
         "Default",
       );
-      newGameCards.push(location); 
+      newGameCards.push(card); 
     }
   
     setGameCards(newGameCards); 
@@ -37,13 +37,13 @@ const Game: React.FC<GameProps> = ({ room  }) => {
   //   setGameCards()
   // };
 
-  const [locations, setLocations] = useState<Location[]>(gameCards); // re-render gameCards
+  //const [locations, setLocations] = useState<Location[]>(gameCards); // re-render gameCards
   const [isSelectionMode, setIsSelectionMode] = useState<boolean>(true);
   const [isFlaggingMode, setIsFlaggingMode] = useState<boolean>(true); // flagging mode is true on default
   const [playerHasSelected, setPlayerHasSelected] = useState<boolean>(false);
   const [playerIsReady, setPlayerIsReady] = useState<boolean>(false);
   const [hiddenCard, setHiddenCard] = useState<Location | null>(null);
-  const [guessedLocation, setGuessedLocation] = useState<Location | null>(null);
+  const [guessedCard, setGuessedCard] = useState<Location | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // pop up screen is not open (false) on default
   const [playerWon, setPlayerWon] = useState<boolean>(false);
   const [showGameResult, setShowGameResult] = useState<boolean>(false);
@@ -51,35 +51,35 @@ const Game: React.FC<GameProps> = ({ room  }) => {
 
   const select_HC = (index: number) => {
     // if new card clicked is the same as current hidden card, do nothing
-    if (hiddenCard && locations[index] === hiddenCard) {
+    if (hiddenCard && gameCards[index] === hiddenCard) {
       return;
     } else {
       // for loop of updated location array
-      const updatedCards = locations.map((location, i) => {
+      const updatedCards = gameCards.map((card, i) => {
         // if location at i is selected location, make it selected
         if (i === index) {
-          location.isSelected_HC = true; //{ ...location, isSelected_HC: true };
+          card.isSelected_HC = true; //{ ...location, isSelected_HC: true };
         }
         // else (even previously selected cards) deselect it
         else {
-          location.isSelected_HC = false; //{ ...location, isSelected_HC: false };
+          card.isSelected_HC = false; //{ ...location, isSelected_HC: false };
         }
 
-        return location;
+        return card;
       });
 
-      setLocations(updatedCards);
+      setGameCards(updatedCards);
       setHiddenCard(updatedCards[index]);
       setPlayerHasSelected(true); // checker for modal
 
-      socket.emit("setHiddenCard", { room, hiddenCard: locations[index] });
+      socket.emit("setHiddenCard", { room, hiddenCard: gameCards[index] });
     }
   };
 
   const toggleFlag = (index: number) => {
-    const updatedCard = [...locations];
+    const updatedCard = [...gameCards];
     updatedCard[index].toggleFlag(); // calls .toggleFlag() from location class
-    setLocations(updatedCard);
+    setGameCards(updatedCard);
   };
 
   const handleClickOnReady = () => {
@@ -114,29 +114,29 @@ const Game: React.FC<GameProps> = ({ room  }) => {
         toggleFlag(index);
       } else {
         // if clicked in guessing mode, guess the card
-        setGuessedLocation(locations[index]);
+        setGuessedCard(gameCards[index]);
         setIsModalOpen(true);
       }
     }
   };
 
   const finalizeGuess = () => {
-    if (guessedLocation && guessedLocation.name) {
+    if (guessedCard && guessedCard.name) {
       setIsModalOpen(false); // close pop up after finalizing guess
       socket.emit("finalizedGuess", {
         room,
-        guessedCardName: guessedLocation.name,
+        guessedCardName: guessedCard.name,
       });
     } else {
       console.log(
-        "ERRROR: guessedLocation is undefined or does not have a name property.",
+        "ERRROR: guessedCard is undefined or does not have a name property.",
       );
     }
   };
 
   const cancelGuess = () => {
     setIsModalOpen(false); // close pop up to cancel guess
-    setGuessedLocation(null); // de-selects card
+    setGuessedCard(null); // de-selects card
   };
 
   const closeContinueModal = () => {
@@ -260,15 +260,15 @@ const Game: React.FC<GameProps> = ({ room  }) => {
             }}
           >
             {/* render each card as a button */}
-            {locations.map((location, index) => (
+            {gameCards.map((card, index) => (
               <button
                 key={index}
                 onClick={() => handleClickOnGrid(index)}
                 style={{
                   padding: "20px",
-                  backgroundColor: location.isSelected_HC
+                  backgroundColor: card.isSelected_HC
                     ? "#0000FF"
-                    : location.isFlagged
+                    : card.isFlagged
                       ? "#ff0000"
                       : "#666e78",
                   border: "1px solid black",
@@ -277,7 +277,7 @@ const Game: React.FC<GameProps> = ({ room  }) => {
                   textAlign: "center",
                 }}
               >
-                {location.name}
+                {card.name}
               </button>
             ))}
           </div>
@@ -429,7 +429,7 @@ const Game: React.FC<GameProps> = ({ room  }) => {
                     <h3>Confirm Your Selection</h3>
                     <div>
                       <p>
-                        Are you sure you want to select: {guessedLocation?.name}{" "}
+                        Are you sure you want to select: {guessedCard?.name}{" "}
                         as your guess?
                       </p>
                       <p>Guesses Left: {numGuessesLeft} </p>
