@@ -194,8 +194,6 @@ const Lobby = (props) => {
   let arrayByTheme: LocationClass[] = [];
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-
-
   for (let i = 0; i < 28; i++) {
     const location = new LocationClass(
       locationNames[i],

@@ -11,31 +11,21 @@ interface GameProps {
   // numGuesses: number;
 }
 
-const Game: React.FC<GameProps> = ({ room  }) => {
-  const [gameCards, setGameCards] = useState<Location[]>([]);
+let gameCards: Location[] = [];
+// initialize gameCards
+for (let i = 0; i < 16; i++) {
+  const card = new Location(
+    `Location ${i + 1}`,
+    `Description ${i + 1}`,
+    `image${i + 1}.jpg`,
+    "Default",
+  );
+  gameCards.push(card);
+}
+
+const Game: React.FC<GameProps> = ({ room }) => {
   const [numGuessesLeft, setNumGuessesLeft] = useState<number>(1); // num. guesses a player can make
-  const [gridSize, setGridSize] = useState<number>(16);
-
-  // initialize gameCards
-  const initializeGameCards = () => {
-    const newGameCards: Location[] = []; 
-
-    for (let i = 0; i < gridSize; i++) {
-      const card = new Location(
-        `Location ${i + 1}`,
-        `Description ${i + 1}`,
-        `image${i + 1}.jpg`,
-        "Default",
-      );
-      newGameCards.push(card); 
-    }
-  
-    setGameCards(newGameCards); 
-  };
-
-  // const reRenderGameCards = () => {
-  //   setGameCards()
-  // };
+  // const [gridSize, setGridSize] = useState<number>(16);
 
   //const [locations, setLocations] = useState<Location[]>(gameCards); // re-render gameCards
   const [isSelectionMode, setIsSelectionMode] = useState<boolean>(true);
@@ -68,7 +58,7 @@ const Game: React.FC<GameProps> = ({ room  }) => {
         return card;
       });
 
-      setGameCards(updatedCards);
+      gameCards = updatedCards;
       setHiddenCard(updatedCards[index]);
       setPlayerHasSelected(true); // checker for modal
 
@@ -77,9 +67,9 @@ const Game: React.FC<GameProps> = ({ room  }) => {
   };
 
   const toggleFlag = (index: number) => {
-    const updatedCard = [...gameCards];
-    updatedCard[index].toggleFlag(); // calls .toggleFlag() from location class
-    setGameCards(updatedCard);
+    const updatedCards = [...gameCards];
+    updatedCards[index].toggleFlag(); // calls .toggleFlag() from location class
+    gameCards = updatedCards;
   };
 
   const handleClickOnReady = () => {
@@ -173,26 +163,23 @@ const Game: React.FC<GameProps> = ({ room  }) => {
 
   useEffect(() => {
     socket.connect();
-    initializeGameCards();
 
     socket.on("finishedUpdatingGameBoard", (data) => {
       // reRenderGameCards();
-      setGameCards(data.gameBoard);
+      gameCards = data.gameBoard;
     });
 
     socket.on("finishedUpdatingGuesses", (data) => {
       setNumGuessesLeft(data.numGuesses);
-      setGameCards(data.gameBoard);
-
-    }); 
+      gameCards = data.gameBoard;
+    });
 
     socket.on("finishedUpdatingGridSize", (data) => {
-      setGridSize(data.gridSize);
-      setGameCards(data.gameBoard);
-
+      // setGridSize(data.gridSize);
+      gameCards = data.gameBoard;
 
       // re-render board
-    }); 
+    });
 
     socket.on("launchGame", () => {
       setIsSelectionMode(false);
@@ -235,8 +222,7 @@ const Game: React.FC<GameProps> = ({ room  }) => {
       socket.off("defeat");
       socket.off("incorrectGuess");
     };
-  }, [room, gameCards, gridSize]);
-  // }, []);
+  }, [room]);
 
   return (
     <div
@@ -429,8 +415,8 @@ const Game: React.FC<GameProps> = ({ room  }) => {
                     <h3>Confirm Your Selection</h3>
                     <div>
                       <p>
-                        Are you sure you want to select: {guessedCard?.name}{" "}
-                        as your guess?
+                        Are you sure you want to select: {guessedCard?.name} as
+                        your guess?
                       </p>
                       <p>Guesses Left: {numGuessesLeft} </p>
                       <div

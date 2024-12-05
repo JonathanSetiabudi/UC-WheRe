@@ -326,11 +326,11 @@ io.on("connection", (socket) => {
     const lobbyCode = data.room;
     const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
 
-      if (room) {
-        room.gameBoard = data.gameBoard;
+    if (room) {
+      room.gameBoard = data.gameBoard;
 
-        io.to(room).emit("finishedUpdatingGameBoard", room.gameBoard);  
-      }
+      io.to(room).emit("finishedUpdatingGameBoard", room.gameBoard);
+    }
   });
 
   //upon receiving a settingDifficulty, settingTheme, settingNumGuesses, or settingGridSize
@@ -342,9 +342,9 @@ io.on("connection", (socket) => {
     console.log("updating difficulty setting to ", data.boardDifficulty);
     room.difficulty = data.boardDifficulty;
     room.gameBoard = data.gameBoard;
-    const updatedData = { 
-      room: data.room, 
-      boardDifficulty: room.difficulty, 
+    const updatedData = {
+      room: data.room,
+      boardDifficulty: room.difficulty,
       gameBoard: room.gameBoard,
     };
     socket.emit("finishedUpdatingDifficulty", updatedData);
@@ -391,11 +391,9 @@ io.on("connection", (socket) => {
     const lobbyCode = data.room;
     const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
 
-
     console.log("updating gridSize to ", data.gridSize);
     room.lobbyGridSize = data.gridSize;
     room.gameBoard = data.gameBoard;
-
 
     const updatedData = {
       room: data.room,
@@ -404,7 +402,6 @@ io.on("connection", (socket) => {
     };
     io.to(lobbyCode).emit("finishedUpdatingGridSize", updatedData);
   });
-
 
   socket.on("testEcho", (data) => {
     const lobbyCode = data.room;
@@ -418,7 +415,6 @@ io.on("connection", (socket) => {
     console.log("game board: ", roomData.gameBoard);
   });
 });
-
 
 server.listen(8080, () => {
   console.log("listening on 8080");
