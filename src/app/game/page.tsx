@@ -23,13 +23,23 @@ const Game: React.FC<GameProps> = ({ room, gridSize, numGuesses }) => {
     );
   });
 
+  const defaultLocation = new Location(
+    "Default Location",
+    "Default Description",
+    "default.jpg",
+    1,
+    "Default",
+  );
+
   const [locations, setLocations] = useState<Location[]>(gameCards); // re-render gameCards
   const [isSelectionMode, setIsSelectionMode] = useState<boolean>(true);
   const [numGuessesLeft, setNumGuessesLeft] = useState<number>(numGuesses); // num. guesses a player can make
   const [isFlaggingMode, setIsFlaggingMode] = useState<boolean>(true); // flagging mode is true on default
   const [playerHasSelected, setPlayerHasSelected] = useState<boolean>(false);
   const [playerIsReady, setPlayerIsReady] = useState<boolean>(false);
-  const [hiddenCard, setHiddenCard] = useState<Location | null>(null);
+  const [hiddenCard, setHiddenCard] = useState<Location | null>(
+    defaultLocation,
+  );
   const [guessedLocation, setGuessedLocation] = useState<Location | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // pop up screen is not open (false) on default
   const [playerWon, setPlayerWon] = useState<boolean>(false);
@@ -234,7 +244,7 @@ const Game: React.FC<GameProps> = ({ room, gridSize, numGuesses }) => {
                 style={{
                   padding: "20px",
                   backgroundColor: location.isSelected_HC
-                    ? "#0000FF"
+                    ? "#10c0c6"
                     : location.isFlagged
                       ? "#ff0000"
                       : "#666e78",
@@ -354,6 +364,12 @@ const Game: React.FC<GameProps> = ({ room, gridSize, numGuesses }) => {
             </div>
           ) : (
             <div>
+              <h1>{`Number of guesses left: ${numGuessesLeft}`}</h1>
+              <div>
+                <h2>Selected Card: {hiddenCard?.name}</h2>
+                {/* <Image src={hiddenCard?.img} alt={hiddenCard?.name} /> */}
+                <h3>Card Description: {hiddenCard?.description}</h3>
+              </div>
               {/* display mode status */}
               {!isFlaggingMode ? (
                 <h1>Currently in Guessing Mode</h1>
