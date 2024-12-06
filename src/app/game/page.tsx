@@ -349,7 +349,7 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
                         color: "white",
                       }}
                     >
-                      <p>Waiting for other player to ready up...</p>
+                      <p>Waiting for other player to get ready...</p>
                     </div>
                   )}
                 </div>
@@ -361,7 +361,7 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
               <div>
                 <h2>Selected Card: {hiddenCard?.name}</h2>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={hiddenCard?.img} alt={hiddenCard?.name} />
+                <img src={hiddenCard?.img} alt="filler alt text" />
                 <h3>Card Description: {hiddenCard?.description}</h3>
               </div>
               {/* display mode status */}
