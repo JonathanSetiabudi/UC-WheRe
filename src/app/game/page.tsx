@@ -12,23 +12,21 @@ interface GameProps {
   // numGuesses: number;
 }
 
-const initialCards: Location[] = [];
-// initialize gameCards
-for (let i = 0; i < 20; i++) {
-  const card = new Location(
-    `Location ${i + 1}`,
-    `Description ${i + 1}`,
-    `../images${i + 1}.jpg`,
-    "Default",
-  );
-  initialCards.push(card);
-}
+// const initialCards: Location[] = [];
+// // initialize gameCards
+// for (let i = 0; i < 20; i++) {
+//   const card = new Location(
+//     `Location ${i + 1}`,
+//     `Description ${i + 1}`,
+//     `image${i + 1}.jpg`,
+//     "Default",
+//   );
+//   initialCards.push(card);
+// }
 
 const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
   const [numGuessesLeft, setNumGuessesLeft] = useState<number>(1); // num. guesses a player can make
-  // const [gridSize, setGridSize] = useState<number>(16);
-
-  //const [locations, setLocations] = useState<Location[]>(gameCards); // re-render gameCards
+  const [gameCards, setGameCards] = useState<Location[]>(gameBoard);
   const [isSelectionMode, setIsSelectionMode] = useState<boolean>(true);
   const [isFlaggingMode, setIsFlaggingMode] = useState<boolean>(true); // flagging mode is true on default
   const [playerHasSelected, setPlayerHasSelected] = useState<boolean>(false);
@@ -90,11 +88,11 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
 
   const select_HC = (index: number) => {
     // if new card clicked is the same as current hidden card, do nothing
-    if (hiddenCard && gameBoard[index] === hiddenCard) {
+    if (hiddenCard && gameCards[index] === hiddenCard) {
       return;
     } else {
       // for loop of updated location array
-      const updatedCards = gameBoard.map((card, i) => {
+      const updatedCards = gameCards.map((card, i) => {
         // if location at i is selected location, make it selected
         if (i === index) {
           card.isSelected_HC = true; //{ ...location, isSelected_HC: true };
@@ -107,16 +105,18 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
         return card;
       });
 
-      gameBoard = updatedCards;
+      setGameCards(updatedCards);
       setHiddenCard(updatedCards[index]);
       setPlayerHasSelected(true); // checker for modal
 
-      socket.emit("setHiddenCard", { room, hiddenCard: gameBoard[index] });
+      socket.emit("setHiddenCard", { room, hiddenCard: gameCards[index] });
     }
   };
 
   const toggleFlag = (index: number) => {
-    gameBoard[index].toggleFlag(); // calls .toggleFlag() from location class
+    const updatedCards = [...gameCards];
+    updatedCards[index].toggleFlag();
+    setGameCards(updatedCards);
   };
 
   const handleClickOnReady = () => {
@@ -151,7 +151,7 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
         toggleFlag(index);
       } else {
         // if clicked in guessing mode, guess the card
-        setGuessedCard(gameBoard[index]);
+        setGuessedCard(gameCards[index]);
         setIsModalOpen(true);
       }
     }
@@ -230,7 +230,7 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
             }}
           >
             {/* render each card as a button */}
-            {gameBoard.map((card, index) => (
+            {gameCards.map((card, index) => (
               <button
                 key={index}
                 onClick={() => handleClickOnGrid(index)}

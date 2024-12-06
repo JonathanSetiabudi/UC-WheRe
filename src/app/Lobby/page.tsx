@@ -4,39 +4,12 @@ import React, { useEffect, useState } from "react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Home from "../page.jsx";
 import { socket } from "@/utils/socket";
-import LocationClass from "../objects/Location";
-
+import Location from "../objects/Location";
 // import userRooms from ".../server/index.js";
 // @ts-expect-erro - TS complains about the type of newTheme, but we alr know it's a string
 // had to mispell error ^ bcs there was a weird error saying it was unused
 
-// interface LobbyProps {
-//   room: string;
-//   isHost: boolean;
-//   setGridSize: React.Dispatch<React.SetStateAction<number>>;
-//   setNumGuesses: React.Dispatch<React.SetStateAction<number>>;
-// }
-
-// const Lobby: React.FC<LobbyProps> = ({
-//   room,
-//   isHost,
-//   setGridSize,
-//   setNumGuesses,
-// }) => {
 const Lobby = (props) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [playersInLobby, setPlayerCount] = useState<number>(0);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [boardDifficulty, setDifficulty] = useState<number>(0);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [boardTheme, setTheme] = useState<number>(0);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [numGuess, setNumOfGuesses] = useState<number>(1);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [gridSize, setGridSize] = useState<number>(16);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [gameBoard, setGameBoard] = useState<LocationClass[]>([]);
-
   const locationNames = [
     "Aberdeen Inverness",
     "Dundee B",
@@ -191,12 +164,24 @@ const Lobby = (props) => {
     "The Statistics Building at UCR houses classrooms, research labs, and faculty offices for the Department of Statistics. It provides a collaborative environment for students and faculty to engage in data analysis, research projects, and academic pursuits related to statistical theory and applications.",
   ];
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, prefer-const
-  let locationMasterArray: LocationClass[] = [];
-  let arrayByTheme: LocationClass[] = [];
+  let locationMasterArray: Location[] = [];
+  let arrayByTheme: Location[] = [];
+  // let initialCards: Location[] = [];
+  // // initialize gameCards
+
+  // for (let i = 0; i < 16; i++) {
+  //   const card = new Location(
+  //     locationNames[i],
+  //     descriptions[i],
+  //     filePaths[i],
+  //     "Residential and Dining",
+  //   );
+  //   initialCards.push(card);
+  // }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
   for (let i = 0; i < 28; i++) {
-    const location = new LocationClass(
+    const location = new Location(
       locationNames[i],
       descriptions[i],
       filePaths[i],
@@ -206,7 +191,7 @@ const Lobby = (props) => {
   }
 
   for (let i = 0; i < 28; i++) {
-    const location = new LocationClass(
+    const location = new Location(
       locationNames[i],
       descriptions[i],
       filePaths[i],
@@ -216,7 +201,7 @@ const Lobby = (props) => {
   }
 
   for (let j = 28; j < 48; j++) {
-    const location = new LocationClass(
+    const location = new Location(
       locationNames[j],
       descriptions[j],
       filePaths[j],
@@ -224,6 +209,33 @@ const Lobby = (props) => {
     );
     locationMasterArray.push(location);
   }
+
+  const initialGameBoard = [];
+
+  for (let i = 0; i < 16; i++) {
+    initialGameBoard.push(arrayByTheme[i]);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [playersInLobby, setPlayerCount] = useState<number>(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [boardDifficulty, setDifficulty] = useState<number>(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [boardTheme, setTheme] = useState<number>(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [numGuess, setNumOfGuesses] = useState<number>(1);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [gridSize, setGridSize] = useState<number>(16);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [gameBoard, setGameBoard] = useState<Location[]>(
+    getRandomItems(arrayByTheme, 16),
+  );
+
+  const data = {
+    room: props.room,
+    gameBoard: getRandomItems(arrayByTheme, 16),
+  };
+  socket.emit("doUpdateGameBoard", data);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -234,6 +246,11 @@ const Lobby = (props) => {
     socket.on("joinedLobby", () => {
       setPlayerCount((playersInLobby) => playersInLobby + 1);
     });
+
+    socket.on("updatingGameBoard", (gameBoard) => {
+      setGameBoard(gameBoard);
+    });
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     socket.on("finishedUpdatingDifficulty", (updatedData) => {
       setDifficulty(updatedData.boardDifficulty);
@@ -259,7 +276,7 @@ const Lobby = (props) => {
       socket.off("finishedUpdatingGridSize");
       socket.off("finishedUpdatingGuesses");
     };
-  });
+  }, []);
 
   const locationByTheme = (theme: number) => {
     arrayByTheme = [];
