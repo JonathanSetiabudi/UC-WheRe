@@ -121,8 +121,7 @@ Figma: https://www.figma.com/design/VmG7uA7jlvptvLS0uReVXZ/cs100?node-id=0-1&t=X
 </br>
 The changes include removing the User class, creating a Home class, removing the Guess class, and placing the functions/responsibilities inside the game class. Our reasoning for removing the user class was that the User was an "up in the air" idea, and after careful consideration, we felt there was no need for it. Replacing its user class was the Home/Start Screen class. This was to follow the _Single Responsibility Principle_ better. This way, the lobby won't have two responsibilities: creating/joining a lobby and configuring the game settings for the lobby. We put the create/joining lobby responsibilities inside the Home class while leaving the remaining stuff inside the Lobby class. This will help us separate the code better as Lobby seemed saturated with too many responsibilities so spreading some of the code to the Home component helps with that. Another change we made was just to move the Guess class functionality to within the Game class. It seemed unnecessary to create such a small class for something that wouldn't violate the _Single Responsibility Principle_. This way we also would better follow _SOLID_ Principles as the two classes wouldn't have similar responsibilities.
 
-
-> ## Final deliverable
+## Final deliverable
 >
 > All group members will give a demo to the reader during lab time. You should schedule your demo on Calendly with the same reader who took your second scrum meeting. The reader will check the demo and the project GitHub repository and ask a few questions to all the team members.
 > Before the demo, you should do the following:
@@ -138,7 +137,7 @@ The changes include removing the User class, creating a Home class, removing the
 
 ## Installation/Usage
 
-> Instructions on installing and running your application
+For the time being, these are the the instructions to play the game locally. Clone/fork this repo. Once you do, download Node.js. Afterwards, run "npm install" which will download dependencies. From there, run split terminals and have one run "npm run server" and "npm run dev" in one terminal per command. there should be a button under where you entered "npm run dev" labelled "https://localhost:3000" and from there you are able to use our game. In the near future, we'd like to make this game online for others to learn the campus through this game.
 
 ## Testing
 
