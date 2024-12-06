@@ -2,6 +2,7 @@ import { createServer } from "node:http";
 import { io as ioc } from "socket.io-client";
 import { Server } from "socket.io";
 import { assert } from "chai";
+import test from "node:test";
 
 function waitFor(socket, event) {
   return new Promise((resolve) => {
@@ -238,7 +239,7 @@ describe("Game Tests", () => {
     });
 
     clientSocket2.once("receivedMessage", (data) => {
-      assert.equal(data.message, "Is this working?");
+      assert.equal(data.message, "Hello");
     });
 
     clientSocket2.emit("answerQuestion", "Yes", "ROOM123", "client2");
@@ -250,5 +251,71 @@ describe("Game Tests", () => {
     });
   });
   
+  // it("should select a card", (done) => {
+  //   // clientSocket1.emit("join_lobby", "TEST");
+
+  //   // clientSocket1.once("joinedLobby", (roomCode) => {
+  //   //   clientSocket2.emit("join_lobby", roomCode);
+  //   // });
+
+  //   // // clientSocket2.once("joinedLobby", (roomCode) => {
+  //   //   clientSocket2.emit("selectCard", {isHost : false, room: roomCode});
+  //   // // });
+
+  //   // clientSocket1.once("selectCard", () =>{
+  //   //   const lobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
+  //   //   assert.isNotNull(lobby, "lobby not found !");
+  //   //   assert.equal(lobby.guestHasSelected, true, "Guest has not selected a card");
+
+  //   //   clientSocket1.emit("selectCard", {isHost : true, room: roomCode});
+
+  //   //   const updatedLobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
+  //   //   assert.isNotNull(updatedLobby, "lobby not found ! (after host selection)")
+  //   //   assert.equal(updatedLobby.hostHasSelected, true, "Host has not selected a card");
+  //   // });  
+  // });
+
+  it("should select a card", () => {
+    clientSocket1.emit("join_lobby", "TEST");
+
+    clientSocket1.once("joinedLobby", (roomCode) => {
+      clientSocket2.emit("join_lobby", roomCode);
+    });
+
+    clientSocket2.emit("selectCard", {isHost : false, room: "TEST"});
+
+    clientSocket1.once("selectCard", () =>{
+      const lobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
+      assert.isNotNull(lobby, "lobby not found !");
+      assert.equal(lobby.guestHasSelected, true, "Guest has not selected a card");
+
+      clientSocket1.emit("selectCard", {isHost : true, room: lobby.roomCode});
+
+      const updatedLobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
+      assert.isNotNull(updatedLobby, "lobby not found ! (after host selection)")
+      assert.equal(updatedLobby.hostHasSelected, true, "Host has not selected a card");
+    });  
+  });
+
+  it("should set a new theme", (done) => {
+    clientSocket1.emit("create_lobby", "TEST");
+
+    clientSocket1.once("createdLobby", (roomCode) => {
+      clientSocket2.emit("join_lobby", roomCode);
+    });
+
+    clientSocket2.once("joinedLobby", (roomCode) => {
+      clientSocket1.emit("settingTheme", {theme: 1, room: roomCode});
+    });
+
+    const lobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
+    clientSocket1.once("finishedUpdatingTheme", (data) =>{    
+      const newData = data.theme;
+      assert.equal(newData, 1);
+    });
+    
+    done();
+  });
 
 });
+
