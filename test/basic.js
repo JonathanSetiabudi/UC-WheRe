@@ -370,7 +370,7 @@ describe("Game Tests", () => {
     done();
   });
 
-  it("should finalize a guess", (done) =>{
+  it("should finalize a guess", (done) => {
     clientSocket1.emit("create_lobby", "TEST");
 
     clientSocket1.once("createdLobby", (roomCode) => {
@@ -384,7 +384,7 @@ describe("Game Tests", () => {
     done();
   });
 
-  it("should cancel a guess", (done) =>{
+  it("should cancel a guess", (done) => {
     clientSocket1.emit("create_lobby", "TEST");
 
     clientSocket1.once("createdLobby", (roomCode) => {
@@ -398,5 +398,34 @@ describe("Game Tests", () => {
     done();
   });
 
+  it("should handle clicks for both flagging and guessing", (done) => {
+    clientSocket1.emit("create_lobby", "TEST");
+
+    clientSocket1.once("createdLobby", (roomCode) => {
+      clientSocket2.emit("join_lobby", roomCode);
+    });
+
+    clientSocket2.once("joinedLobby", (roomCode) => {
+      clientSocket1.emit("cardClickedWithFlag", true);
+    });    
+    clientSocket2.emit("cardClickedWithFlag", false);
+    done();
+  });
+
+  it("should handle a location's flag being toggled on and off", (done) => {
+    clientSocket1.emit("create_lobby", "TEST");
+
+    clientSocket1.once("createdLobby", (roomCode) => {
+      clientSocket2.emit("join_lobby", roomCode);
+    });
+
+    clientSocket2.once("joinedLobby", (roomCode) => {
+      const lobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
+      lobby.
+      clientSocket1.emit("flagToggled", true);
+    }); 
+    clientSocket2.emit("cardClickedWithFlag", false);
+    done();
+  });
   
 });
