@@ -89,19 +89,19 @@ const Messages = ({
 
   return (
     <div>
-      <div className="mb-4 text-3xl" data-test="message-log-header">
+      <div className="mb-2 text-3xl text-gray-800" data-test="message-log-header">
         Message Log
       </div>
-      <div className="chat-body">
+      <div className="rounded-lg">
         <ul>
           {messageLog.map((messageData, index) => {
             return (
-              <form key={index}>
-                {`${messageData.author}:${messageData.message}`}
+              <form className="text-gray-800" key={index}>
+                {`${messageData.author}: ${messageData.message}`}
                 <br />
                 {messageData.received ? (
                   <div>
-                    <button
+                    <button className="bg-ucwhere-green px-1 text-white rounded-sm m-2 enabled:hover:bg-emerald-400"
                       type="button"
                       name={`yes_no${index}`}
                       onClick={() =>
@@ -110,7 +110,7 @@ const Messages = ({
                     >
                       Yes
                     </button>
-                    <button
+                    <button className="bg-ucwhere-red px-1 text-white rounded-sm enabled:hover:bg-rose-500"
                       type="button"
                       name={`yes_no${index}`}
                       onClick={() =>
@@ -130,7 +130,7 @@ const Messages = ({
       </div>
       <div className="chat-footer">
         <form>
-          <button
+          <button className="text-ucwhere-light-blue"
             onClick={sendMessage}
             data-test="send-message-button"
             disabled={!canMessage}
@@ -138,7 +138,7 @@ const Messages = ({
             &#9658;
           </button>
           <input
-            className="text-black"
+            className="text-black p-1 pl-3 rounded-md mb-5"
             onChange={onChange}
             value={message}
             type="text"
@@ -148,7 +148,7 @@ const Messages = ({
           <br />
 
           <button
-            className="text-2xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue"
+            className="text-xl bg-ucwhere-red p-2 mb-2 rounded-md text-white enabled:hover:bg-rose-500 "
             data-test="leave-button"
             onClick={leave}
           >

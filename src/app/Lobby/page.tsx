@@ -354,9 +354,17 @@ const Lobby = (props) => {
   //   onDifficultyChange(2);
   // };
 
+  const [buttonColor, setButtonColor] = useState('blue');
+
+  const toggleButtonColor = () => {
+    // Toggle between two colors, e.g., blue and green
+    setButtonColor((prevColor) => (prevColor === 'blue' ? 'green' : 'blue'));
+  };
+
   // theme handlers
   const handleClickThemeResAndDining = () => {
     onThemeChange(0);
+    toggleButtonColor();
   };
 
   const handleClickThemeCampusLandmarks = () => {
@@ -438,13 +446,13 @@ const Lobby = (props) => {
       </button> */}
 
       {/* <br></br> */}
-      <div className="mb-2">
+      <div className="mb-2" ref="theme">
       <p className="text-xl text-gray-800">Select a theme:</p>
 
       <button
         onClick={handleClickThemeResAndDining}
         disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        className={`${buttonPerms(props.isHost)}`}
       >
         {" "}
         Residential and Dining{" "}
@@ -455,7 +463,7 @@ const Lobby = (props) => {
       <button
         onClick={handleClickThemeCampusLandmarks}
         disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        className={`${buttonPerms(props.isHost)}  `}
       >
         {" "}
         Campus Landmarks{" "}
@@ -499,7 +507,7 @@ const Lobby = (props) => {
       <button
         onClick={handleClickGuess1}
         disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        className={`${buttonPerms(props.isHost)}`}
       >
         1 guess
       </button>
@@ -509,7 +517,7 @@ const Lobby = (props) => {
       <button
         onClick={handleClickGuess3}
         disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        className={`${buttonPerms(props.isHost)}`}
       >
         3 guesses
       </button>
