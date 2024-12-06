@@ -301,9 +301,7 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
                             cursor: "pointer",
                           }}
                         >
-                          {/* // eslint-disable-next-line
-                          react/no-unescaped-entities  */}
-                          I'm Ready
+                          I&apos;m Ready!
                         </button>
                       </div>
                     </div>
