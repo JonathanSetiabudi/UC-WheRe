@@ -46,13 +46,16 @@ currLobbies = [
   {
     roomCode: "TEST",
     players: [],
+    readyStatus: {},
+    hiddenCards: {},
     numOfUsers: 0,
     difficulty: 0,
     theme: 0,
     numGuesses: 1,
     lobbyGridSize: 16,
-    hostHasSelected: false,
-    guestHasSelected: false,
+    gameBoard: [],
+    // hostHasSelected: false,
+    // guestHasSelected: false,
     gameStarted: false,
   },
 ];
@@ -69,11 +72,13 @@ io.on("connection", (socket) => {
     let room = {
       roomCode: roomCode,
       players: [socket.id],
+      readyStatus: { [socket.id]: false },
+      hiddenCards: { [socket.id]: null },
       numOfUsers: 1,
       difficulty: 0,
       theme: 0,
       numGuesses: 1,
-      gridSize: 16,
+      lobbyGridSize: 16,
     };
     currLobbies.push(room);
     console.log(`User(${socket.id}) created room: ${roomCode}`);
@@ -95,7 +100,7 @@ io.on("connection", (socket) => {
         if (
           currLobbies.find((lobby) => lobby.roomCode === room).numOfUsers === 2
         ) {
-          console.log(`room (${room}) is now full`);
+          console.log(`Lobby (${room}) is now full`);
         }
         console.log(
           `Players in ${room}`,
@@ -157,6 +162,18 @@ io.on("connection", (socket) => {
       roomToChange.players = roomToChange.players.filter(
         (player) => player !== socket.id,
       );
+
+      delete roomToChange.readyStatus[socket.id]; // del room's readiness status
+
+      if (roomToChange.gameStarted) {
+        const oppID = roomToChange.players.find((id) => id !== socket.id);
+
+        io.to(oppID).emit("victory");
+        console.log(
+          `Player ${oppID} wins as they are the only player left in lobby ${roomToChange}`,
+        );
+      }
+
       if (
         currLobbies.find((lobby) => lobby.roomCode === roomToDecrement)
           .numOfUsers === 0 &&
@@ -182,23 +199,31 @@ io.on("connection", (socket) => {
     socket.to(room).emit("receivedAnswer", answer, author);
   });
 
-  socket.on("selectCard", (data) => {
-    if (data.isHost === true) {
-      currLobbies.find(
-        (lobby) => lobby.roomCode === data.room,
-      ).hostHasSelected = true;
+  socket.on("setHiddenCard", ({ room, hiddenCard }) => {
+    const theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
+    if (theLobby) {
+      if (!theLobby.hiddenCards) {
+        theLobby.hiddenCards = {};
+      }
+
+      theLobby.hiddenCards[socket.id] = hiddenCard;
+      console.log(
+        `Player ${socket.id} set their hidden card to ${hiddenCard.name}`,
+      );
+      //console.log(`Player ${socket.id} set their hidden card`);
     } else {
-      currLobbies.find(
-        (lobby) => lobby.roomCode === data.room,
-      ).guestHasSelected = true;
+      console.log(
+        `Player ${socket.id} tried to set their hidden card in non-existent lobby`,
+      );
     }
   });
 
   socket.on("tryStartGame", (room) => {
-    theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
+    const theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
     if (theLobby) {
       if (theLobby.numOfUsers === 2) {
         io.to(room).emit("successStartGame");
+        io.to(room).emit("updateGameBoard", theLobby.gameBoard);
         theLobby.gameStarted = true;
         console.log(
           `Host User(${socket.id}) successsfully started a game in lobby: ${room}`,
@@ -216,31 +241,96 @@ io.on("connection", (socket) => {
     }
   });
 
-  // on receiving a flagToggled event, logs the message "(insert location here later)'s flag
-  // toggled ON" when toggleState is true and "(insert location here later)'s flag toggled OFF"
-  // when toggleState is off
-  socket.on("flagToggled", (toggleState) => {
-    if (toggleState) {
-      console.log("(insert location here later)'s flag toggled ON");
+  socket.on("tryLaunchGame", (room) => {
+    const theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
+    if (theLobby) {
+      if (!room.readyStatus) {
+        room.readyStatus = {};
+      }
+
+      theLobby.readyStatus[socket.id] = true; // set readyStatus to true
+      console.log(`Player ${socket.id} in room ${room} is ready`);
+
+      const allReady = Object.values(theLobby.readyStatus).every(
+        (status) => status === true,
+      );
+      if (allReady) {
+        io.to(room).emit("launchGame");
+        console.log(`2/2 players in room ${room} are ready. Launching game`);
+      } else {
+        io.to(room).emit("waitingForOtherReady");
+        console.log(`1/2 players in ${room} are ready. Cannot launch game`);
+      }
     } else {
-      console.log("(insert location here later)'s flag toggled OFF");
+      console.log(
+        `User(${socket.id}) tried to launch game in a non-existent lobby: ${room}`,
+      );
     }
   });
 
-  socket.on("cardClickedWithFlag", (isFlaggingMode) => {
-    if (isFlaggingMode) {
-      console.log("(insert location here later) was clicked with flag");
+  socket.on("playerCancelledReady", (room) => {
+    const theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
+    if (theLobby) {
+      theLobby.readyStatus[socket.id] = false; // player is no longer ready
+      console.log(`Player ${socket.id} in room ${room} is no longer ready`);
     } else {
-      console.log("(insert location here later) was clicked with guess");
+      console.log(
+        `User(${socket.id}) tried to cancel ready in a non-existent lobby: ${room}`,
+      );
     }
   });
 
-  socket.on("finalizedGuess", () => {
-    console.log("(player) finalized their guess");
+  socket.on("finalizedGuess", ({ room, guessedCardName }) => {
+    //console.log(`Player ${socket.id} finalized their guess`);
+    const theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
+    if (theLobby) {
+      //console.log("Hidden Cards:", theLobby.hiddenCards);
+
+      const oppID = theLobby.players.find((id) => id !== socket.id);
+      const oppCard = theLobby.hiddenCards[oppID];
+
+      if (guessedCardName === oppCard.name) {
+        io.to(socket.id).emit("victory");
+        io.to(oppID).emit("defeat");
+        console.log(`Player ${socket.id} won by guessing right!`);
+      } else {
+        io.to(socket.id).emit("incorrectGuess");
+        console.log(
+          `Player ${socket.id} guessed incorrectly. Decrementing numGuesses available`,
+        );
+      }
+    } else {
+      console.log(
+        `User(${socket.id}) tried to finalize guess in a non-existent lobby: ${room}`,
+      );
+    }
   });
 
-  socket.on("cancelledGuess", () => {
-    console.log("(player) cancelled their guess");
+  socket.on("ranOutOfGuesses", (room) => {
+    const theLobby = currLobbies.find((lobby) => lobby.roomCode === room);
+    if (theLobby) {
+      const oppID = theLobby.players.find((id) => id !== socket.id);
+
+      io.to(socket.id).emit("defeat");
+      io.to(oppID).emit("victory");
+
+      console.log(`Player ${socket.id} ran out of guesses and lost!`);
+    } else {
+      console.log(
+        `User(${socket.id}) ran out of guesses in a non-existent lobby: ${room}`,
+      );
+    }
+  });
+
+  socket.on("doUpdateGameBoard", (data) => {
+    const lobbyCode = data.room;
+    const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
+
+    if (room) {
+      room.gameBoard = data.gameBoard;
+
+      io.to(room).emit("updatingGameBoard", room.gameBoard);
+    }
   });
 
   //upon receiving a settingDifficulty, settingTheme, settingNumGuesses, or settingGridSize
@@ -251,7 +341,12 @@ io.on("connection", (socket) => {
     const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
     console.log("updating difficulty setting to ", data.boardDifficulty);
     room.difficulty = data.boardDifficulty;
-    const updatedData = { room: data.room, boardDifficulty: room.difficulty };
+    room.gameBoard = data.gameBoard;
+    const updatedData = {
+      room: data.room,
+      boardDifficulty: room.difficulty,
+      gameBoard: room.gameBoard,
+    };
     socket.emit("finishedUpdatingDifficulty", updatedData);
   });
 
@@ -260,12 +355,13 @@ io.on("connection", (socket) => {
     const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
     console.log("updating theme setting to ", data.boardTheme);
     room.theme = data.boardTheme;
+    room.gameBoard = data.gameBoard;
     const updatedData = {
       room: data.room,
       boardTheme: room.theme,
-      gameBaord: room.gameBoard,
+      gameBoard: room.gameBoard,
     };
-    socket.emit("finishedUpdatingTheme", updatedData);
+    io.emit("finishedUpdatingTheme", updatedData);
   });
 
   socket.on("settingNumberOfGuesses", (data) => {
@@ -283,13 +379,14 @@ io.on("connection", (socket) => {
 
     console.log("updating gridSize to ", data.gridSize);
     room.lobbyGridSize = data.gridSize;
+    room.gameBoard = data.gameBoard;
 
     const updatedData = {
       room: data.room,
       gridSize: room.lobbyGridSize,
       gameBoard: room.gameBoard,
     };
-    socket.to(lobbyCode).emit("finishedUpdatingGridSize", updatedData);
+    io.to(lobbyCode).emit("finishedUpdatingGridSize", updatedData);
   });
 
   socket.on("testEcho", (data) => {
@@ -301,6 +398,7 @@ io.on("connection", (socket) => {
     console.log("theme: ", roomData.theme);
     console.log("number of guesses: ", roomData.numGuesses);
     console.log("size of grid: ", roomData.lobbyGridSize);
+    console.log("game board: ", roomData.gameBoard);
   });
 });
 

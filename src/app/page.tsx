@@ -7,11 +7,25 @@ import Image from "next/image";
 import Orange from "../../public/assets/orange.svg";
 import Game from "../app/game/page";
 import Lobby from "./Lobby/page";
+import Location from "./objects/Location";
+
+const initialCards: Location[] = [];
+// initialize gameCards
+for (let i = 0; i < 20; i++) {
+  const card = new Location(
+    `Location ${i + 1}`,
+    `Description ${i + 1}`,
+    `image${i + 1}.jpg`,
+    "Default",
+  );
+  initialCards.push(card);
+}
 
 export default function Home() {
   socket.connect();
 
   //react states for username and room
+  const [gameBoard, setGameBoard] = useState(initialCards);
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
   const [showLobby, setShowLobby] = useState<boolean>(false);
@@ -21,6 +35,61 @@ export default function Home() {
   const [lobbyNotExistent, setLobbyNotExistent] = useState<boolean>(false);
   const [isEmptyUsername, setIsEmptyUsername] = useState<boolean>(false);
   const [isHost, setIsHost] = useState<boolean>(false);
+  // const [gridSize, setGridSize] = useState<number>(16);
+  // const [numGuesses, setNumGuesses] = useState<number>(1);
+  useEffect(() => {
+    socket.connect();
+
+    socket.on("createdLobby", (data) => {
+      setRoom(data);
+      setIsHost(true);
+    });
+
+    socket.on("joinedLobby", (data) => {
+      setRoom(data);
+      setShowLobby(true);
+      setLobbyIsFull(true);
+    });
+
+    socket.on("hostLeft", () => {
+      leave();
+    });
+
+    socket.on("guestLeftMidGame", () => {
+      leave();
+    });
+
+    socket.on("triedJoinFullLobby", () => {
+      setShowErrorModal(true);
+      // setLobbyIsFull(true);
+    });
+
+    socket.on("triedJoinNonExistentLobby", () => {
+      setShowErrorModal(true);
+      setLobbyNotExistent(true);
+    });
+
+    socket.on("successStartGame", () => {
+      setShowGame(true);
+    });
+
+    socket.on("failStartGame", () => {
+      setShowErrorModal(true);
+    });
+
+    socket.on("updateGameBoard", (data) => {
+      setGameBoard(data);
+    });
+
+    return () => {
+      setLobbyIsFull(false);
+
+      socket.emit("leave", room);
+
+      socket.disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // @ts-expect-error - TS complains about the type of e, but don't worry about it
   const onUsernameChange = (e) => {
@@ -76,56 +145,6 @@ export default function Home() {
       ? "text-black hover:bg-blue-200"
       : "text-gray-400 cursor-not-allowed";
   };
-
-  useEffect(() => {
-    socket.connect();
-
-    socket.on("createdLobby", (data) => {
-      setRoom(data);
-      setIsHost(true);
-    });
-
-    socket.on("joinedLobby", (data) => {
-      setRoom(data);
-      setShowLobby(true);
-      setLobbyIsFull(true);
-    });
-
-    socket.on("hostLeft", () => {
-      leave();
-    });
-
-    socket.on("guestLeftMidGame", () => {
-      leave();
-    });
-
-    socket.on("triedJoinFullLobby", () => {
-      setShowErrorModal(true);
-      // setLobbyIsFull(true);
-    });
-
-    socket.on("triedJoinNonExistentLobby", () => {
-      setShowErrorModal(true);
-      setLobbyNotExistent(true);
-    });
-
-    socket.on("successStartGame", () => {
-      setShowGame(true);
-    });
-
-    socket.on("failStartGame", () => {
-      setShowErrorModal(true);
-    });
-
-    return () => {
-      setLobbyIsFull(false);
-
-      socket.emit("leave", room);
-
-      socket.disconnect();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#FFF8D2";
@@ -196,7 +215,7 @@ export default function Home() {
                 room={room}
                 isHost={isHost}
               />
-              <Game />
+              <Game room={room} gameBoard={gameBoard} />
             </div>
           ) : (
             <div>

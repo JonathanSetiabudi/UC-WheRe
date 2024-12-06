@@ -5,15 +5,31 @@ import React, { useEffect, useState } from "react";
 import Home from "../page.jsx";
 import { socket } from "@/utils/socket";
 import LocationClass from "../objects/Location";
+
 // import userRooms from ".../server/index.js";
-// @ts-expect-error - TS complains about the type of newTheme, but we alr know it's a string
+// @ts-expect-erro - TS complains about the type of newTheme, but we alr know it's a string
+// had to mispell error ^ bcs there was a weird error saying it was unused
+
+// interface LobbyProps {
+//   room: string;
+//   isHost: boolean;
+//   setGridSize: React.Dispatch<React.SetStateAction<number>>;
+//   setNumGuesses: React.Dispatch<React.SetStateAction<number>>;
+// }
+
+// const Lobby: React.FC<LobbyProps> = ({
+//   room,
+//   isHost,
+//   setGridSize,
+//   setNumGuesses,
+// }) => {
 const Lobby = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [playersInLobby, setPlayerCount] = useState<number>(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [boardDifficulty, setDifficulty] = useState<number>(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [boardTheme, setTheme] = useState<number>(1);
+  const [boardTheme, setTheme] = useState<number>(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [numGuess, setNumOfGuesses] = useState<number>(1);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -56,7 +72,6 @@ const Lobby = (props) => {
     "SRC",
     "UCR Sign",
     "Multidisciplinary Research Building",
-    "Multidisciplinary Research Building",
     "UCPD",
     "Bournes Hall",
     "HUMSS",
@@ -74,54 +89,55 @@ const Lobby = (props) => {
   ];
 
   const filePaths = [
-    "../images/AI_BUILDINGS.HEIC",
-    "../images/DUNDEE_B.HEIC",
-    "../images/PENTLANDHILLS.HEIC",
-    "../images/GLENMOR.JPG",
-    "../images/NORTHDISTRICT.HEIC",
-    "../images/BANNOCKBURN_SIGN.HEIC",
-    "../images/INTERNATIONALVILLAGE.JPG",
-    "../images/GLASCOW.HEIC",
-    "../images/LOTHIAN_RESTAURANT.JPG",
-    "../images/GLENMOR_POOL.HEIC",
-    "../images/DUNDEE_STUDYROOM.JPG",
-    "../images/AI_LOUNGE.JPG",
-    "../images/WEST_LO.JPG",
-    "../images/DUNDEE_A.HEIC",
-    "../images/DUNDEEGYM.JPG",
-    "../images/EASTLO_LAWN",
-    "../images/SCOTTYS_GLENMOR.JPG",
-    "../images/NIGHTHUB.JPG",
-    "../images/THEBARN_DAYTIME.HEIC",
-    "../images/HABIT.JPG",
-    "../images/COFFEEBEAN.JPG",
-    "../images/GETAWAYCAFE.JPG",
-    "../images/ASPB_SCOTTYS.JPG",
-    "../images/SCOTTYS_GLASCOW.JPG",
-    "../images/BYTES.JPG",
-    "../images/EMERBEES.HEIC",
-    "../images/IVANS.HEIC",
-    "../images/NOODS.JPG",
-    "../images/SCOTTY_STATUE.HEIC",
-    "../images/BELLTOWER.HEIC",
-    "../images/BARNES_AND_NOBLE.HEIC",
-    "../images/SRC.HEIC",
-    "../images/UCRSIGN.JPG",
-    "../images/MRB.HEIC",
-    "../images/POLICE_DEPARTMENT.HEIC",
-    "../images/BOURNES_HALL.HEIC",
-    "../images/HUMSS.HEIC",
-    "../images/SSC.HEIC",
-    "../images/CHASS_N.HEIC",
-    "../images/CHASS_S.HEIC",
-    "../images/ARTS_BUILDING.HEIC",
-    "../images/UNI_THEATRE.HEIC",
-    "../images/UNIVERSITYLECTUREHALL.HEIC",
-    "../images/PIERCE_HALL.HEIC",
-    "../images/SKYE_HALL.HEIC",
-    "../images/CAREER_CENTER.HEIC",
-    "../images/AI_BOWL.JPG",
-    "../images/STATISTICS.HEIC",
+    ///images/NOODS.jpg
+    "/images/AI_BUILDINGS.HEIC",
+    "/images/DUNDEE_B.HEIC",
+    "/images/PENTLANDHILLS.HEIC",
+    "/images/GLENMOR.JPG",
+    "/images/NORTHDISTRICT.HEIC",
+    "/images/BANNOCKBURN_SIGN.HEIC",
+    "/images/INTERNATIONALVILLAGE.JPG",
+    "/images/GLASGOW.HEIC",
+    "/images/LOTHIAN_RESTAURANT.JPG",
+    "/images/GLENMOR_POOL.HEIC",
+    "/images/DUNDEE_STUDYROOM.JPG",
+    "/images/AI_LOUNGE.JPG",
+    "/images/WEST_LO.JPG",
+    "/images/DUNDEE_A.HEIC",
+    "/images/DUNDEEGYM.JPG",
+    "/images/EASTLO_LAWN",
+    "/images/SCOTTYS_GLENMOR.JPG",
+    "/images/NIGHTHUB.JPG",
+    "/images/THEBARN_DAYTIME.HEIC",
+    "/images/HABIT.JPG",
+    "/images/COFFEEBEAN.JPG",
+    "/images/GETAWAYCAFE.JPG",
+    "/images/ASPB_SCOTTYS.JPG",
+    "/images/SCOTTYS_GLASGOW.JPG",
+    "/images/BYTES.JPG",
+    "/images/EMERBEES.HEIC",
+    "/images/IVANS.HEIC",
+    "/images/NOODS.JPG",
+    "/images/SCOTTY_STATUE.HEIC",
+    "/images/BELLTOWER.HEIC",
+    "/images/BARNES_AND_NOBLE.HEIC",
+    "/images/SRC.HEIC",
+    "/images/UCRSIGN.JPG",
+    "/images/MRB.HEIC",
+    "/images/POLICE_DEPARTMENT.HEIC",
+    "/images/BOURNES_HALL.HEIC",
+    "/images/HUMSS.HEIC",
+    "/images/SSC.HEIC",
+    "/images/CHASS_N.HEIC",
+    "/images/CHASS_S.HEIC",
+    "/images/ARTS_BUILDING.HEIC",
+    "/images/UNI_THEATRE.HEIC",
+    "/images/UNIVERSITYLECTUREHALL.HEIC",
+    "/images/PIERCE_HALL.HEIC",
+    "/images/SKYE_HALL.HEIC",
+    "/images/CAREER_CENTER.HEIC",
+    "/images/AI_BOWL.JPG",
+    "/images/STATISTICS.HEIC",
   ];
 
   const descriptions = [
@@ -186,6 +202,16 @@ const Lobby = (props) => {
       filePaths[i],
       "Residential and Dining",
     );
+    arrayByTheme.push(location);
+  }
+
+  for (let i = 0; i < 28; i++) {
+    const location = new LocationClass(
+      locationNames[i],
+      descriptions[i],
+      filePaths[i],
+      "Residential and Dining",
+    );
     locationMasterArray.push(location);
   }
 
@@ -226,6 +252,13 @@ const Lobby = (props) => {
       setGridSize(updatedData.gridSize);
       setGameBoard(updatedData.gameBoard);
     });
+
+    return () => {
+      // Cleanup event listeners when component unmounts
+      socket.off("finishedUpdatingTheme");
+      socket.off("finishedUpdatingGridSize");
+      socket.off("finishedUpdatingGuesses");
+    };
   });
 
   const locationByTheme = (theme: number) => {
@@ -274,11 +307,12 @@ const Lobby = (props) => {
   const onThemeChange = (newTheme) => {
     setTheme(newTheme);
     locationByTheme(newTheme);
-    setGameBoard(getRandomItems(arrayByTheme, gridSize));
+    const newBoard = getRandomItems(arrayByTheme, gridSize);
+    setGameBoard(newBoard);
     const data = {
       room: props.room,
       boardTheme: newTheme,
-      gameBoard: gameBoard,
+      gameBoard: newBoard,
     };
     socket.emit("settingTheme", data);
   };
@@ -291,11 +325,12 @@ const Lobby = (props) => {
   // @ts-expect-error - TS complains about the type of newGridSize, but we alr know it's a number
   const onGridChange = (newGridSize) => {
     setGridSize(newGridSize);
-    setGameBoard(getRandomItems(arrayByTheme, gridSize));
+    const newBoard = getRandomItems(arrayByTheme, newGridSize);
+    setGameBoard(newBoard);
     const data = {
       room: props.room,
       gridSize: newGridSize,
-      gameBoard: gameBoard,
+      gameBoard: newBoard,
     };
     socket.emit("settingGridSize", data);
   };
@@ -376,8 +411,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickEasy}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         Easy
       </button>
@@ -386,8 +421,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickMedium}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         Medium
       </button>
@@ -396,8 +431,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickHard}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         Hard
       </button> */}
@@ -430,8 +465,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickThemeStudySpots}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         Study Spots
       </button>
@@ -440,8 +475,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickThemeBikeRacks}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         Bike Racks
       </button>
@@ -450,8 +485,8 @@ const Lobby = (props) => {
 
       <button
         onClick={handleClickThemeStreetsAndParking}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        disabled={!isHost}
+        className={buttonPerms(isHost)}
       >
         {" "}
         Streets and Parking Lots{" "}
