@@ -337,7 +337,10 @@ describe("Game Tests", () => {
     });
 
     clientSocket2.once("joinedLobby", (roomCode) => {
-      clientSocket1.emit("settingNumberOfGuesses", { numGuesses: 3, room: roomCode });
+      clientSocket1.emit("settingNumberOfGuesses", {
+        numGuesses: 3,
+        room: roomCode,
+      });
     });
 
     const lobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
@@ -366,4 +369,34 @@ describe("Game Tests", () => {
     });
     done();
   });
+
+  it("should finalize a guess", (done) =>{
+    clientSocket1.emit("create_lobby", "TEST");
+
+    clientSocket1.once("createdLobby", (roomCode) => {
+      clientSocket2.emit("join_lobby", roomCode);
+    });
+
+    clientSocket2.once("joinedLobby", (roomCode) => {
+      clientSocket1.emit("finalizedGuess");
+    });
+    clientSocket2.emit("finalizedGuess");
+    done();
+  });
+
+  it("should cancel a guess", (done) =>{
+    clientSocket1.emit("create_lobby", "TEST");
+
+    clientSocket1.once("createdLobby", (roomCode) => {
+      clientSocket2.emit("join_lobby", roomCode);
+    });
+
+    clientSocket2.once("joinedLobby", (roomCode) => {
+      clientSocket1.emit("cancelledGuess");
+    });
+    clientSocket2.emit("cancelledGuess");
+    done();
+  });
+
+  
 });
