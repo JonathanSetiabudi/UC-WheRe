@@ -301,7 +301,7 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
                             cursor: "pointer",
                           }}
                         >
-                          I'm Ready!
+                          I'm Ready
                         </button>
                       </div>
                     </div>
