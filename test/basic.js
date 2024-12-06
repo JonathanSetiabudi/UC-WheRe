@@ -95,6 +95,44 @@ describe("Game Tests", () => {
         socket.join(roomCode);
         socket.emit("joinedLobby", roomCode);
       });
+
+      socket.on("leave", (room) => {
+        console.log(`User(${socket.id}) disconnected from lobby: ${room}`);
+        socket.leave(room);
+        const roomToChange = currLobbies.find((lobby) =>
+          lobby.players.includes(socket.id),
+        );
+        if (roomToChange) {
+          const roomToDecrement = roomToChange.roomCode;
+          roomToChange.numOfUsers--;
+          if (roomToChange.players[0] === socket.id) {
+            socket.to(roomToChange.roomCode).emit("hostLeft");
+          } else if (roomToChange.gameStarted === true) {
+            socket.to(roomToChange.roomCode).emit("guestLeftMidGame");
+          } else {
+            roomToChange.players = roomToChange.players.filter(
+              (player) => player !== socket.id,
+            );
+          }
+          if (roomToChange.numOfUsers === 0 && roomToChange.roomCode !== "TEST") {
+            currLobbies = currLobbies.filter(
+              (lobby) => lobby.roomCode !== roomToChange.roomCode,
+            );
+            console.log(`Lobby ${roomToDecrement} has been deleted`);
+          }
+        }
+      });
+
+      socket.on("sendMessage", (data) => {
+        console.log("I AM BEING RECIEVED", data);
+        socket.to(data.room).emit("receivedMessage", data);
+      });
+
+      socket.on("answerQuestion", (answer, room, author) => {
+        console.log("Answer received", answer);
+        socket.to(room).emit("receivedAnswer", answer, author);
+      });
+
     });
   });
 
@@ -148,4 +186,69 @@ describe("Game Tests", () => {
       done();
     });
   });
+
+  it("should delete a lobby when the host leaves", (done) => {
+    clientSocket1.emit("create_lobby");
+
+    clientSocket1.once("createdLobby", (roomCode) => {
+      clientSocket2.emit("join_lobby", roomCode);
+    });
+
+    clientSocket1.emit("leave", "ROOM123");
+
+    clientSocket2.once("hostLeft", () => {
+      const lobby = currLobbies.find((lobby) => lobby.roomCode === "ROOM123");
+      assert.isUndefined(lobby, "Lobby was not deleted");
+      done();
+    });
+  });
+
+  it("should keep the lobby when a guest leaves", () => {
+    clientSocket1.emit("create_lobby");
+
+    clientSocket1.once("createdLobby", (roomCode) => {
+      assert.equal(roomCode, "ROOM123");
+      const roomFound = currLobbies.find((room) => room.roomCode === roomCode);
+      assert.isNotNull(roomFound, "ROOM123 not found in currLobbies");
+    });
+
+    clientSocket2.emit("join_lobby", "ROOM123");
+
+    clientSocket2.once("joinedLobby", (roomCode) => {
+      const lobby = currLobbies.find((lobby) => lobby.roomCode === roomCode);
+      assert.isNotNull(lobby, "Lobby not found");
+
+    });
+
+    clientSocket2.emit("leave", "ROOM123");
+
+    const lobby = currLobbies.find((lobby) => lobby.roomCode === "ROOM123");
+    assert.isNotNull(lobby, "Lobby was deleted");
+  });
+
+  it("should send/receive a message and an answer", (done) => {
+    clientSocket1.emit("create_lobby");
+
+    clientSocket1.once("createdLobby", (roomCode) => {
+      clientSocket2.emit("join_lobby", roomCode);
+    });
+
+    clientSocket2.once("joinedLobby", (roomCode) => {
+      clientSocket1.emit("sendMessage", { room: roomCode, message: "Hello" });
+    });
+
+    clientSocket2.once("receivedMessage", (data) => {
+      assert.equal(data.message, "Is this working?");
+    });
+
+    clientSocket2.emit("answerQuestion", "Yes", "ROOM123", "client2");
+
+    clientSocket1.once("receivedAnswer", (answer, author) => {
+      assert.equal(answer, "Yes");
+      assert.equal(author, "client2");
+      done();
+    });
+  });
+  
+
 });

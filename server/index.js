@@ -170,12 +170,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  // socket.on("launchGame", (data) => {
-  //   if (currLobbies.find((lobby) => lobby.roomCode === data.room)
-  //     .numOfUsers === 2) {
-  //   }
-  // });
-
   //on receiving a sendMessage event, logs the message "I AM BEING RECIEVED" and the data
   //then emits the receivedMessage event to the room with the message
   socket.on("sendMessage", (data) => {
@@ -279,20 +273,6 @@ io.on("connection", (socket) => {
     socket.to(data.room).emit("finishedUpdatingGuesses", updatedData);
   });
 
-  /*
-  socket.on("settingGridSize", (data) => {
-  const lobbyCode = data.room;
-  const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
-
-  // Update the correct property 'lobbyGridSize' instead of 'gridSize'
-  console.log("updating gridSize to ", data.gridSize);
-  room.lobbyGridSize = data.gridSize;
-
-  // Emit the updated data with the correct property name 'lobbyGridSize'
-  const updatedData = { room: data.room, gridSize: room.lobbyGridSize };
-  socket.emit("finishedUpdatingGridSize", updatedData);
-});
-*/
   socket.on("settingGridSize", (data) => {
     const lobbyCode = data.room;
     const room = currLobbies.find((lobby) => lobby.roomCode === lobbyCode);
