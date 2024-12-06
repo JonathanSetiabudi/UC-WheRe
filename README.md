@@ -129,6 +129,7 @@ Figma: https://www.figma.com/design/VmG7uA7jlvptvLS0uReVXZ/cs100?node-id=0-1&t=X
 The changes include removing the User class, creating a Home class, removing the Guess class, and placing the functions/responsibilities inside the game class. Our reasoning for removing the user class was that the User was an "up in the air" idea, and after careful consideration, we felt there was no need for it. Replacing its user class was the Home/Start Screen class. This was to follow the _Single Responsibility Principle_ better. This way, the lobby won't have two responsibilities: creating/joining a lobby and configuring the game settings for the lobby. We put the create/joining lobby responsibilities inside the Home class while leaving the remaining stuff inside the Lobby class. This will help us separate the code better as Lobby seemed saturated with too many responsibilities so spreading some of the code to the Home component helps with that. Another change we made was just to move the Guess class functionality to within the Game class. It seemed unnecessary to create such a small class for something that wouldn't violate the _Single Responsibility Principle_. This way we also would better follow _SOLID_ Principles as the two classes wouldn't have similar responsibilities.
 
 ## Final deliverable
+
 ## Screenshots
 
 ![image](https://github.com/user-attachments/assets/1349d796-4e22-42a4-952b-bbb0705d0978)
@@ -146,7 +147,7 @@ This is the guest side of the lobby screen. The buttons are disabled for the gue
 </br>
 ![image](https://github.com/user-attachments/assets/d3fb75c6-5cbd-4196-9bef-23ba65bf87f1)
 </br>
-This is the selection screen, allowing you to select your card. 
+This is the selection screen, allowing you to select your card.
 </br>
 ![image](https://github.com/user-attachments/assets/fcad00ee-0bde-49f4-9a4d-f8b4dad28704)
 </br>
@@ -179,17 +180,6 @@ When you choose to guess, there is a confirmation screen.
 </br>
 And then a small victory screen.
 
-
-
-
-
-
-
-
-
-
-
-
 ## Installation/Usage
 
 For the time being, these are the the instructions to play the game locally. Clone/fork this repo. Once you do, download Node.js. Afterwards, run "npm install" which will download dependencies. From there, run split terminals and have one run "npm run server" and "npm run dev" in one terminal per command. there should be a button under where you entered "npm run dev" labelled "https://localhost:3000" and from there you are able to use our game. In the near future, we'd like to make this game online for others to learn the campus through this game.
@@ -197,10 +187,9 @@ For the time being, these are the the instructions to play the game locally. Clo
 ## Testing
 
 > Screenshot of (Mocha and Chai) Testing output
-> 
+>
 > ![image](https://github.com/user-attachments/assets/ae606819-17a4-4a61-8bbd-891683e1cc5c)
-
 
 How was your project tested/validated?
 
-Our project implemented Mocha and Chai, which are JavaScript testing frameworks in order to test the functionality of the backend components of our server. Mocha was used to structure and execute each test, while Chai's assertion output capabilities allowed us to check and validate the behavior of each function within the server. Additionally, we used Husky, Prettier, and ESLint to ensure that all of our pushed code followed a standardized format and rules, which kept all of our code consistent and stable across all versions and throughout our development process. 
+Our project implemented Mocha and Chai, which are JavaScript testing frameworks in order to test the functionality of the backend components of our server. Mocha was used to structure and execute each test, while Chai's assertion output capabilities allowed us to check and validate the behavior of each function within the server. Additionally, we used Husky, Prettier, and ESLint to ensure that all of our pushed code followed a standardized format and rules, which kept all of our code consistent and stable across all versions and throughout our development process.
