@@ -395,8 +395,8 @@ const Lobby = (props) => {
 
   const buttonPerms = (checkIfHost: boolean) => {
     return checkIfHost
-      ? "text-black hover:bg-blue-200"
-      : "text-gray-400 cursor-not-allowed";
+      ? "bg-ucwhere-light-blue p-2 m-0.5 rounded-md text-white hover:text-ucwhere-blue"
+      : "bg-ucwhere-light-blue p-2 m-0.5 rounded-md text-white cursor-not-allowed";
   };
 
   const handleTestEcho = () => {
@@ -404,7 +404,7 @@ const Lobby = (props) => {
   };
 
   return (
-    <div>
+    <div >
       {/* <br></br>
 
       <p>Set your difficulty:</p>
@@ -437,9 +437,9 @@ const Lobby = (props) => {
         Hard
       </button> */}
 
-      <br></br>
-
-      <p>Select a theme:</p>
+      {/* <br></br> */}
+      <div className="mb-2">
+      <p className="text-xl text-gray-800">Select a theme:</p>
 
       <button
         onClick={handleClickThemeResAndDining}
@@ -460,7 +460,7 @@ const Lobby = (props) => {
         {" "}
         Campus Landmarks{" "}
       </button>
-
+      </div>
       {/* <br></br>
 
       <button
@@ -492,9 +492,9 @@ const Lobby = (props) => {
         Streets and Parking Lots{" "}
       </button> */}
 
-      <br></br>
-
-      <p>How many guesses?</p>
+      {/* <br></br> */}
+      <div className="mb-2">
+      <p className="text-xl text-gray-800">How many guesses?</p>
 
       <button
         onClick={handleClickGuess1}
@@ -504,7 +504,7 @@ const Lobby = (props) => {
         1 guess
       </button>
 
-      <br></br>
+      {/* <br></br> */}
 
       <button
         onClick={handleClickGuess3}
@@ -513,10 +513,10 @@ const Lobby = (props) => {
       >
         3 guesses
       </button>
+        </div>
+      {/* <br></br> */}
 
-      <br></br>
-
-      <p>Set your board size:</p>
+      <p className="text-xl text-gray-800">Set your board size:</p>
 
       <button
         onClick={handleClickBoardSmall}
@@ -526,7 +526,7 @@ const Lobby = (props) => {
         4 x 4
       </button>
 
-      <br></br>
+      {/* <br></br> */}
 
       <button
         onClick={handleClickBoardLarge}

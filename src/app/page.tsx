@@ -198,8 +198,8 @@ export default function Home() {
           <Image src={Orange} alt="Orange" />
         </div>
       ) : (
-        <div className="bg-ucwhere-orange p-5 font-jersey text-white">
-          <div className="text-2xl">Room:{room}</div>
+        <div className="p-5 font-jersey text-white flex flex-col justify-center items-center">
+          <div className="text-2xl bg-ucwhere-orange p-2 rounded-lg">Room:{room}</div>
           <a
             href="http://localhost:3000"
             target="_blank"
@@ -224,17 +224,17 @@ export default function Home() {
               <br></br>
 
               <button
-                className="text-2xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue"
+                className="text-2xl text-white bg-ucwhere-red text-ucwhere-light-blue hover:bg-rose-500 p-2 rounded-md m-2"
                 data-test="leave-button"
                 onClick={leave}
               >
                 Leave
               </button>
 
-              <br></br>
+              {/* <br></br> */}
 
               <button
-                className={buttonPerms(isHost)}
+                className={`${buttonPerms(isHost)} text-white text-2xl bg-ucwhere-green hover:bg-emerald-500 p-2 rounded-md`}
                 disabled={!isHost}
                 onClick={doStartGame}
               >
