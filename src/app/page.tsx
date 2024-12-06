@@ -199,7 +199,7 @@ export default function Home() {
         </div>
       ) : (
         <div className="p-5 font-jersey text-white flex flex-col justify-center items-center">
-          <div className="text-2xl bg-ucwhere-orange p-2 rounded-lg">Room:{room}</div>
+          <div className="text-2xl bg-ucwhere-orange p-2 rounded-lg">Room: {room}</div>
           <a
             href="http://localhost:3000"
             target="_blank"
@@ -246,42 +246,31 @@ export default function Home() {
       )}
 
       {showErrorModal && (
-        <div
+        <div className = "bg-ucwhere-blue p-6 font-jersey text-lg text-gray-800 border-2 border-gray-700 text-white rounded-lg"
           style={{
             position: "fixed",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            backgroundColor: "#32426d",
-            padding: "20px",
-            border: "2px solid black",
-            borderRadius: "10px",
             zIndex: 1000,
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
           }}
         >
-          {lobbyIsFull && <p>Lobby you are attempting to join is full</p>}
+          {lobbyIsFull && <p>Lobby you are attempting to join is full.</p>}
           {lobbyNotExistent && (
-            <p>Lobby you are attempting to join is non-existent</p>
+            <p>Lobby you are attempting to join is non-existent.</p>
           )}
-          {isEmptyUsername && <p>You must input a username to play</p>}
-          {showLobby && !lobbyIsFull && <p>Not enough players to start game</p>}
+          {isEmptyUsername && <p>You must input a username to play.</p>}
+          {showLobby && !lobbyIsFull && <p>Not enough players to start game.</p>}
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-around",
-              marginTop: "20px",
-            }}
-          >
-            <button
+          <div>
+            <button className="px-3 py-1 rounded-lg mt-2 bg-ucwhere-red hover:bg-rose-500 text-white"
               onClick={leaveError}
               style={{
-                padding: "10px 20px",
-                backgroundColor: "#32426d",
-                border: "1px solid black",
-                borderRadius: "5px",
-                cursor: "pointer",
+                // padding: "10px 20px",
+                // backgroundColor: "#32426d",
+                // border: "1px solid black",
+                // borderRadius: "5px",
               }}
             >
               Cancel

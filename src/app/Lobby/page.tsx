@@ -521,7 +521,7 @@ const Lobby = (props) => {
       <button
         onClick={handleClickBoardSmall}
         disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        className={`${buttonPerms(props.isHost)}`}
       >
         4 x 4
       </button>
@@ -535,10 +535,10 @@ const Lobby = (props) => {
       >
         5 x 4
       </button>
-
+      <br></br>
       <p>tester button for lobby settings:</p>
 
-      <br></br>
+      {/* <br></br> */}
       <button onClick={handleTestEcho}>click for echo !</button>
     </div>
   );
