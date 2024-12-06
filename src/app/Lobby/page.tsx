@@ -354,17 +354,18 @@ const Lobby = (props) => {
   //   onDifficultyChange(2);
   // };
 
-  const [buttonColor, setButtonColor] = useState('blue');
-
-  const toggleButtonColor = () => {
-    // Toggle between two colors, e.g., blue and green
-    setButtonColor((prevColor) => (prevColor === 'blue' ? 'green' : 'blue'));
-  };
-
   // theme handlers
+  // const [active, setActive] = useState('b1');
+  // const [buttonColor, setButtonColor] = useState('blue-900');
+
+  // const toggleButtonColor = () => {
+  //   // Toggle between two colors, e.g., blue and green
+  //   setButtonColor((prevColor) => (prevColor === 'blue-900' ? 'green-900' : 'blue-900'));
+  // };
+
   const handleClickThemeResAndDining = () => {
     onThemeChange(0);
-    toggleButtonColor();
+    // setActive('b1');
   };
 
   const handleClickThemeCampusLandmarks = () => {
@@ -446,13 +447,16 @@ const Lobby = (props) => {
       </button> */}
 
       {/* <br></br> */}
-      <div className="mb-2" ref="theme">
+      <div className="mb-2">
       <p className="text-xl text-gray-800">Select a theme:</p>
 
       <button
         onClick={handleClickThemeResAndDining}
         disabled={!props.isHost}
         className={`${buttonPerms(props.isHost)}`}
+        style={{
+          
+        }}
       >
         {" "}
         Residential and Dining{" "}
@@ -463,7 +467,7 @@ const Lobby = (props) => {
       <button
         onClick={handleClickThemeCampusLandmarks}
         disabled={!props.isHost}
-        className={`${buttonPerms(props.isHost)}  `}
+        className={`${buttonPerms(props.isHost)}`}
       >
         {" "}
         Campus Landmarks{" "}
