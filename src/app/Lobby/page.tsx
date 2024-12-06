@@ -372,8 +372,17 @@ const Lobby = (props) => {
   // };
 
   // theme handlers
+  // const [active, setActive] = useState('b1');
+  // const [buttonColor, setButtonColor] = useState('blue-900');
+
+  // const toggleButtonColor = () => {
+  //   // Toggle between two colors, e.g., blue and green
+  //   setButtonColor((prevColor) => (prevColor === 'blue-900' ? 'green-900' : 'blue-900'));
+  // };
+
   const handleClickThemeResAndDining = () => {
     onThemeChange(0);
+    // setActive('b1');
   };
 
   const handleClickThemeCampusLandmarks = () => {
@@ -412,8 +421,8 @@ const Lobby = (props) => {
 
   const buttonPerms = (checkIfHost: boolean) => {
     return checkIfHost
-      ? "text-black hover:bg-blue-200"
-      : "text-gray-400 cursor-not-allowed";
+      ? "bg-ucwhere-light-blue p-2 m-0.5 rounded-md text-white hover:text-ucwhere-blue"
+      : "bg-ucwhere-light-blue p-2 m-0.5 rounded-md text-white cursor-not-allowed";
   };
 
   const handleTestEcho = () => {
@@ -454,30 +463,31 @@ const Lobby = (props) => {
         Hard
       </button> */}
 
-      <br></br>
+      {/* <br></br> */}
+      <div className="mb-2">
+        <p className="text-xl text-gray-800">Select a theme:</p>
 
-      <p>Select a theme:</p>
+        <button
+          onClick={handleClickThemeResAndDining}
+          disabled={!props.isHost}
+          className={`${buttonPerms(props.isHost)}`}
+          style={{}}
+        >
+          {" "}
+          Residential and Dining{" "}
+        </button>
 
-      <button
-        onClick={handleClickThemeResAndDining}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
-      >
-        {" "}
-        Residential and Dining{" "}
-      </button>
+        <br></br>
 
-      <br></br>
-
-      <button
-        onClick={handleClickThemeCampusLandmarks}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
-      >
-        {" "}
-        Campus Landmarks{" "}
-      </button>
-
+        <button
+          onClick={handleClickThemeCampusLandmarks}
+          disabled={!props.isHost}
+          className={`${buttonPerms(props.isHost)}`}
+        >
+          {" "}
+          Campus Landmarks{" "}
+        </button>
+      </div>
       {/* <br></br>
 
       <button
@@ -509,41 +519,41 @@ const Lobby = (props) => {
         Streets and Parking Lots{" "}
       </button> */}
 
-      <br></br>
+      {/* <br></br> */}
+      <div className="mb-2">
+        <p className="text-xl text-gray-800">How many guesses?</p>
 
-      <p>How many guesses?</p>
+        <button
+          onClick={handleClickGuess1}
+          disabled={!props.isHost}
+          className={`${buttonPerms(props.isHost)}`}
+        >
+          1 guess
+        </button>
 
-      <button
-        onClick={handleClickGuess1}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
-      >
-        1 guess
-      </button>
+        {/* <br></br> */}
 
-      <br></br>
+        <button
+          onClick={handleClickGuess3}
+          disabled={!props.isHost}
+          className={`${buttonPerms(props.isHost)}`}
+        >
+          3 guesses
+        </button>
+      </div>
+      {/* <br></br> */}
 
-      <button
-        onClick={handleClickGuess3}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
-      >
-        3 guesses
-      </button>
-
-      <br></br>
-
-      <p>Set your board size:</p>
+      <p className="text-xl text-gray-800">Set your board size:</p>
 
       <button
         onClick={handleClickBoardSmall}
         disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        className={`${buttonPerms(props.isHost)}`}
       >
         4 x 4
       </button>
 
-      <br></br>
+      {/* <br></br> */}
 
       <button
         onClick={handleClickBoardLarge}
@@ -552,10 +562,10 @@ const Lobby = (props) => {
       >
         5 x 4
       </button>
-
+      <br></br>
       <p>tester button for lobby settings:</p>
 
-      <br></br>
+      {/* <br></br> */}
       <button onClick={handleTestEcho}>click for echo !</button>
     </div>
   );

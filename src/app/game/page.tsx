@@ -185,6 +185,7 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
   const ResultScreen = () => {
     return (
       <div
+        className="flex-cols flex items-center justify-center"
         style={{
           display: "flex",
           flexDirection: "column",
@@ -195,12 +196,12 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
       >
         {playerWon ? (
           <div>
-            <h1>VICTORY</h1>
+            <h1 className="text-9xl text-ucwhere-green">VICTORY</h1>
             {/*<p>You guessed right! Woohoo!</p>*/}
           </div>
         ) : (
           <div>
-            <h1>DEFEAT</h1>
+            <h1 className="text-9xl text-ucwhere-red">DEFEAT</h1>
             {/* <p>The other player guessed your card! Better luck next time!</p> */}
           </div>
         )}
@@ -209,26 +210,17 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
   };
 
   return (
-    <div
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-    >
+    <div className="flex-cols flex items-center">
       {!showGameResult ? (
         <div>
           {isSelectionMode && (
             <div>
-              <h1>Select your card!</h1>
+              <h1 className="p-3 text-2xl text-gray-800">Select your card!</h1>
             </div>
           )}
 
           {/* board display */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: "10px",
-              width: "fit-content",
-            }}
-          >
+          <div className="mx-80 mb-7 flex grid grid-cols-4 items-center justify-center gap-2">
             {/* render each card as a button */}
             {gameCards.map((card, index) => (
               <button
@@ -237,11 +229,11 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
                 style={{
                   padding: "20px",
                   backgroundColor: card.isSelected_HC
-                    ? "#0000FF"
+                    ? "#6584A8"
                     : card.isFlagged
                       ? "#ff0000"
-                      : "#666e78",
-                  border: "1px solid black",
+                      : "#9DBBD7",
+                  // border: "1px solid black",
                   borderRadius: "5px",
                   cursor: "pointer",
                   textAlign: "center",
@@ -255,18 +247,10 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
           {isSelectionMode ? (
             <div>
               <button
+                className="m-3 rounded-lg bg-ucwhere-green p-2 text-xl hover:bg-emerald-500"
                 onClick={handleClickOnReady}
-                style={{
-                  marginBottom: "20px",
-                  padding: "10px 20px",
-                  backgroundColor: "#70cf73",
-                  border: "3px black",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  textAlign: "center",
-                }}
               >
-                Ready
+                Ready!
               </button>
 
               {isModalOpen && (
@@ -276,17 +260,18 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
                     top: "50%",
                     left: "50%",
                     transform: "translate(-50%, -50%)",
-                    backgroundColor: "#32426d",
+                    backgroundColor: "#9DBBD7",
                     padding: "20px",
-                    border: "2px solid black",
+                    border: "2px solid",
                     borderRadius: "10px",
+                    borderColor: "#6584A8",
                     zIndex: 1000,
                     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
                   }}
                 >
                   {playerHasSelected ? (
-                    <div>
-                      <h3>Confirm Your Selection</h3>
+                    <div className="px-5">
+                      <h3 className="text-2xl">Confirm Your Selection</h3>
                       <p>Are you sure you are ready?</p>
                       <p>The card you have selected is: {hiddenCard?.name}</p>
                       <div
@@ -300,8 +285,7 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
                           onClick={cancelReady}
                           style={{
                             padding: "10px 20px",
-                            backgroundColor: "lightcoral",
-                            border: "1px solid black",
+                            backgroundColor: "#FF7A7A",
                             borderRadius: "5px",
                             cursor: "pointer",
                           }}
@@ -312,13 +296,12 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
                           onClick={playerPressedReady}
                           style={{
                             padding: "10px 20px",
-                            backgroundColor: "lightgreen",
-                            border: "1px solid black",
+                            backgroundColor: "#9BE48E",
                             borderRadius: "5px",
                             cursor: "pointer",
                           }}
                         >
-                          Im Ready
+                          I&apos;m Ready!
                         </button>
                       </div>
                     </div>
@@ -330,7 +313,7 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
                         style={{
                           padding: "10px 20px",
                           backgroundColor: "lightcoral",
-                          border: "1px solid black",
+                          border: "1px solid",
                           borderRadius: "5px",
                           cursor: "pointer",
                         }}
@@ -357,18 +340,32 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
             </div>
           ) : (
             <div>
-              <h1>{`Number of guesses left: ${numGuessesLeft}`}</h1>
-              <div>
-                <h2>Selected Card: {hiddenCard?.name}</h2>
+              <h1 className="m-5 text-xl text-gray-800">{`Number of guesses left: ${numGuessesLeft}`}</h1>
+              <div className="flex flex-col items-center justify-center text-gray-800">
+                <h2 className="m-4 text-xl">
+                  Selected Card: {hiddenCard?.name}
+                </h2>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={hiddenCard?.img} alt="filler alt text" />
-                <h3>Card Description: {hiddenCard?.description}</h3>
+                <img
+                  className="mb-5 rounded-md"
+                  src={hiddenCard?.img}
+                  width="200"
+                  height="200"
+                  alt="{hiddenCard?.img}"
+                />
+                <h3 className="w-6/12 text-lg">
+                  Card Description: {hiddenCard?.description}
+                </h3>
               </div>
               {/* display mode status */}
               {!isFlaggingMode ? (
-                <h1>Currently in Guessing Mode</h1>
+                <h1 className="p-3 pt-5 text-lg text-gray-800">
+                  Currently in Guessing Mode
+                </h1>
               ) : (
-                <h1>Currently in Flagging Mode</h1>
+                <h1 className="p-3 pt-5 text-lg text-gray-800">
+                  Currently in Flagging Mode
+                </h1>
               )}
 
               {/* toggle button between modes*/}
@@ -377,8 +374,7 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
                 style={{
                   marginBottom: "20px",
                   padding: "10px 20px",
-                  backgroundColor: isFlaggingMode ? "#bf4240" : "#008080",
-                  border: "1px solid black",
+                  backgroundColor: isFlaggingMode ? "#FF7A7A" : "#9BE48E",
                   borderRadius: "5px",
                   cursor: "pointer",
                 }}

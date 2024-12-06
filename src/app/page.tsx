@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { socket } from "@/utils/socket";
 import Messages from "./messages/page";
 import Image from "next/image";
-import Orange from "../../public/assets/orange.svg";
+import Scotty from "../../public/assets/bear.svg";
+import Norm from "../../public/assets/norm.svg";
 import Game from "../app/game/page";
 import Lobby from "./Lobby/page";
 import Location from "./objects/Location";
@@ -349,11 +350,16 @@ export default function Home() {
           >
             Join a Lobby
           </button>
-          <Image src={Orange} alt="Orange" />
+          <div className="grid grid-cols-2 gap-5 p-10">
+            <Image src={Scotty} width="230" height="230" alt="Scotty" />
+            <Image src={Norm} width="200" height="200" alt="norm" />
+          </div>
         </div>
       ) : (
-        <div className="bg-ucwhere-orange p-5 font-jersey text-white">
-          <div className="text-2xl">Room:{room}</div>
+        <div className="flex flex-col items-center justify-center p-5 font-jersey text-white">
+          <div className="rounded-lg bg-ucwhere-orange p-2 text-2xl">
+            Room: {room}
+          </div>
           <a
             href="http://localhost:3000"
             target="_blank"
@@ -378,17 +384,17 @@ export default function Home() {
               <br></br>
 
               <button
-                className="text-2xl text-ucwhere-light-blue enabled:hover:text-ucwhere-blue"
+                className="m-2 rounded-md bg-ucwhere-red p-2 text-2xl text-ucwhere-light-blue text-white hover:bg-rose-500"
                 data-test="leave-button"
                 onClick={leave}
               >
                 Leave
               </button>
 
-              <br></br>
+              {/* <br></br> */}
 
               <button
-                className={buttonPerms(isHost)}
+                className={`${buttonPerms(isHost)} rounded-md bg-ucwhere-green p-2 text-2xl text-white hover:bg-emerald-500`}
                 disabled={!isHost}
                 onClick={doStartGame}
               >
@@ -401,42 +407,37 @@ export default function Home() {
 
       {showErrorModal && (
         <div
+          className="rounded-lg border-2 border-gray-700 bg-ucwhere-blue p-6 font-jersey text-lg text-gray-800 text-white"
           style={{
             position: "fixed",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            backgroundColor: "#32426d",
-            padding: "20px",
-            border: "2px solid black",
-            borderRadius: "10px",
             zIndex: 1000,
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
           }}
         >
-          {lobbyIsFull && <p>Lobby you are attempting to join is full</p>}
+          {lobbyIsFull && <p>Lobby you are attempting to join is full.</p>}
           {lobbyNotExistent && (
-            <p>Lobby you are attempting to join is non-existent</p>
+            <p>Lobby you are attempting to join is non-existent.</p>
           )}
-          {isEmptyUsername && <p>You must input a username to play</p>}
-          {showLobby && !lobbyIsFull && <p>Not enough players to start game</p>}
+          {isEmptyUsername && <p>You must input a username to play.</p>}
+          {showLobby && !lobbyIsFull && (
+            <p>Not enough players to start game.</p>
+          )}
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-around",
-              marginTop: "20px",
-            }}
-          >
+          <div>
             <button
+              className="mt-2 rounded-lg bg-ucwhere-red px-3 py-1 text-white hover:bg-rose-500"
               onClick={leaveError}
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "#32426d",
-                border: "1px solid black",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
+              style={
+                {
+                  // padding: "10px 20px",
+                  // backgroundColor: "#32426d",
+                  // border: "1px solid black",
+                  // borderRadius: "5px",
+                }
+              }
             >
               Cancel
             </button>
