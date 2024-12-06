@@ -210,6 +210,12 @@ const Lobby = (props) => {
     locationMasterArray.push(location);
   }
 
+  const initialGameBoard = [];
+
+  for (let i = 0; i < 16; i++) {
+    initialGameBoard.push(arrayByTheme[i]);
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [playersInLobby, setPlayerCount] = useState<number>(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
