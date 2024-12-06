@@ -426,7 +426,7 @@ describe("Game Tests", () => {
     clientSocket2.emit("cardClickedWithFlag", false);
     done();
   });
-  
+
   it("should try to start a game", (done) => {
     let numInLobby = 0;
     clientSocket1.emit("create_lobby", "TEST");
@@ -440,9 +440,12 @@ describe("Game Tests", () => {
       const lobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
       const startStatus = lobby.gameStarted;
       assert.equal(startStatus, true);
-      clientSocket1.emit("tryStartGame", {numOfUsers: numInLobby, gameStarted: startStatus});
-    }); 
-    clientSocket2.once("successStartGame", () =>{
+      clientSocket1.emit("tryStartGame", {
+        numOfUsers: numInLobby,
+        gameStarted: startStatus,
+      });
+    });
+    clientSocket2.once("successStartGame", () => {
       done();
     });
     done();

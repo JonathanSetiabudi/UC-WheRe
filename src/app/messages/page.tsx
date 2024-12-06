@@ -89,7 +89,10 @@ const Messages = ({
 
   return (
     <div>
-      <div className="mb-2 text-3xl text-gray-800" data-test="message-log-header">
+      <div
+        className="mb-2 text-3xl text-gray-800"
+        data-test="message-log-header"
+      >
         Message Log
       </div>
       <div className="rounded-lg">
@@ -101,7 +104,8 @@ const Messages = ({
                 <br />
                 {messageData.received ? (
                   <div>
-                    <button className="bg-ucwhere-green px-1 text-white rounded-sm m-2 enabled:hover:bg-emerald-400"
+                    <button
+                      className="m-2 rounded-sm bg-ucwhere-green px-1 text-white enabled:hover:bg-emerald-400"
                       type="button"
                       name={`yes_no${index}`}
                       onClick={() =>
@@ -110,7 +114,8 @@ const Messages = ({
                     >
                       Yes
                     </button>
-                    <button className="bg-ucwhere-red px-1 text-white rounded-sm enabled:hover:bg-rose-500"
+                    <button
+                      className="rounded-sm bg-ucwhere-red px-1 text-white enabled:hover:bg-rose-500"
                       type="button"
                       name={`yes_no${index}`}
                       onClick={() =>
@@ -130,7 +135,8 @@ const Messages = ({
       </div>
       <div className="chat-footer">
         <form>
-          <button className="text-ucwhere-light-blue"
+          <button
+            className="text-ucwhere-light-blue"
             onClick={sendMessage}
             data-test="send-message-button"
             disabled={!canMessage}
@@ -138,7 +144,7 @@ const Messages = ({
             &#9658;
           </button>
           <input
-            className="text-black p-1 pl-3 rounded-md mb-5"
+            className="mb-5 rounded-md p-1 pl-3 text-black"
             onChange={onChange}
             value={message}
             type="text"
@@ -148,7 +154,7 @@ const Messages = ({
           <br />
 
           <button
-            className="text-xl bg-ucwhere-red p-2 mb-2 rounded-md text-white enabled:hover:bg-rose-500 "
+            className="mb-2 rounded-md bg-ucwhere-red p-2 text-xl text-white enabled:hover:bg-rose-500"
             data-test="leave-button"
             onClick={leave}
           >

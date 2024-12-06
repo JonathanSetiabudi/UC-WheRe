@@ -413,7 +413,7 @@ const Lobby = (props) => {
   };
 
   return (
-    <div >
+    <div>
       {/* <br></br>
 
       <p>Set your difficulty:</p>
@@ -448,30 +448,28 @@ const Lobby = (props) => {
 
       {/* <br></br> */}
       <div className="mb-2">
-      <p className="text-xl text-gray-800">Select a theme:</p>
+        <p className="text-xl text-gray-800">Select a theme:</p>
 
-      <button
-        onClick={handleClickThemeResAndDining}
-        disabled={!props.isHost}
-        className={`${buttonPerms(props.isHost)}`}
-        style={{
-          
-        }}
-      >
-        {" "}
-        Residential and Dining{" "}
-      </button>
+        <button
+          onClick={handleClickThemeResAndDining}
+          disabled={!props.isHost}
+          className={`${buttonPerms(props.isHost)}`}
+          style={{}}
+        >
+          {" "}
+          Residential and Dining{" "}
+        </button>
 
-      <br></br>
+        <br></br>
 
-      <button
-        onClick={handleClickThemeCampusLandmarks}
-        disabled={!props.isHost}
-        className={`${buttonPerms(props.isHost)}`}
-      >
-        {" "}
-        Campus Landmarks{" "}
-      </button>
+        <button
+          onClick={handleClickThemeCampusLandmarks}
+          disabled={!props.isHost}
+          className={`${buttonPerms(props.isHost)}`}
+        >
+          {" "}
+          Campus Landmarks{" "}
+        </button>
       </div>
       {/* <br></br>
 
@@ -506,26 +504,26 @@ const Lobby = (props) => {
 
       {/* <br></br> */}
       <div className="mb-2">
-      <p className="text-xl text-gray-800">How many guesses?</p>
+        <p className="text-xl text-gray-800">How many guesses?</p>
 
-      <button
-        onClick={handleClickGuess1}
-        disabled={!props.isHost}
-        className={`${buttonPerms(props.isHost)}`}
-      >
-        1 guess
-      </button>
+        <button
+          onClick={handleClickGuess1}
+          disabled={!props.isHost}
+          className={`${buttonPerms(props.isHost)}`}
+        >
+          1 guess
+        </button>
 
-      {/* <br></br> */}
+        {/* <br></br> */}
 
-      <button
-        onClick={handleClickGuess3}
-        disabled={!props.isHost}
-        className={`${buttonPerms(props.isHost)}`}
-      >
-        3 guesses
-      </button>
-        </div>
+        <button
+          onClick={handleClickGuess3}
+          disabled={!props.isHost}
+          className={`${buttonPerms(props.isHost)}`}
+        >
+          3 guesses
+        </button>
+      </div>
       {/* <br></br> */}
 
       <p className="text-xl text-gray-800">Set your board size:</p>

@@ -184,7 +184,8 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
 
   const ResultScreen = () => {
     return (
-      <div className = "flex flex-cols justify-center items-center"
+      <div
+        className="flex-cols flex items-center justify-center"
         style={{
           display: "flex",
           flexDirection: "column",
@@ -195,12 +196,12 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
       >
         {playerWon ? (
           <div>
-            <h1 className ="text-9xl text-ucwhere-green">VICTORY</h1>
+            <h1 className="text-9xl text-ucwhere-green">VICTORY</h1>
             {/*<p>You guessed right! Woohoo!</p>*/}
           </div>
         ) : (
           <div>
-            <h1 className ="text-9xl text-ucwhere-red">DEFEAT</h1>
+            <h1 className="text-9xl text-ucwhere-red">DEFEAT</h1>
             {/* <p>The other player guessed your card! Better luck next time!</p> */}
           </div>
         )}
@@ -209,19 +210,17 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
   };
 
   return (
-    <div className = "flex flex-cols items-center"
-    >
+    <div className="flex-cols flex items-center">
       {!showGameResult ? (
         <div>
           {isSelectionMode && (
             <div>
-              <h1 className="text-2xl p-3 text-gray-800 ">Select your card!</h1>
+              <h1 className="p-3 text-2xl text-gray-800">Select your card!</h1>
             </div>
           )}
 
           {/* board display */}
-          <div className="grid grid-cols-4 flex justify-center items-center gap-2 mx-80 mb-7"
-          >
+          <div className="mx-80 mb-7 flex grid grid-cols-4 items-center justify-center gap-2">
             {/* render each card as a button */}
             {gameBoard.map((card, index) => (
               <button
@@ -247,7 +246,8 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
 
           {isSelectionMode ? (
             <div>
-              <button className="bg-ucwhere-green m-3 p-2 hover:bg-emerald-500 text-xl rounded-lg"
+              <button
+                className="m-3 rounded-lg bg-ucwhere-green p-2 text-xl hover:bg-emerald-500"
                 onClick={handleClickOnReady}
               >
                 Ready!
@@ -288,7 +288,6 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
                             backgroundColor: "#FF7A7A",
                             borderRadius: "5px",
                             cursor: "pointer",
-                            
                           }}
                         >
                           Cancel
@@ -341,18 +340,32 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
             </div>
           ) : (
             <div>
-              <h1 className="text-gray-800 text-xl m-5">{`Number of guesses left: ${numGuessesLeft}`}</h1>
-              <div className="text-gray-800 flex flex-col justify-center items-center">
-                <h2 className= "text-xl m-4">Selected Card: {hiddenCard?.name}</h2>
+              <h1 className="m-5 text-xl text-gray-800">{`Number of guesses left: ${numGuessesLeft}`}</h1>
+              <div className="flex flex-col items-center justify-center text-gray-800">
+                <h2 className="m-4 text-xl">
+                  Selected Card: {hiddenCard?.name}
+                </h2>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="rounded-md mb-5" src={hiddenCard?.img} width="200" height="200" alt="{hiddenCard?.img}" />
-                <h3 className="text-lg w-6/12">Card Description: {hiddenCard?.description}</h3>
+                <img
+                  className="mb-5 rounded-md"
+                  src={hiddenCard?.img}
+                  width="200"
+                  height="200"
+                  alt="{hiddenCard?.img}"
+                />
+                <h3 className="w-6/12 text-lg">
+                  Card Description: {hiddenCard?.description}
+                </h3>
               </div>
               {/* display mode status */}
               {!isFlaggingMode ? (
-                <h1 className="text-lg text-gray-800 p-3 pt-5">Currently in Guessing Mode</h1>
+                <h1 className="p-3 pt-5 text-lg text-gray-800">
+                  Currently in Guessing Mode
+                </h1>
               ) : (
-                <h1 className="text-lg text-gray-800 p-3 pt-5">Currently in Flagging Mode</h1>
+                <h1 className="p-3 pt-5 text-lg text-gray-800">
+                  Currently in Flagging Mode
+                </h1>
               )}
 
               {/* toggle button between modes*/}
@@ -386,7 +399,7 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
                   }}
                 >
                   <div>
-                    <h3 >Confirm Your Selection</h3>
+                    <h3>Confirm Your Selection</h3>
                     <div>
                       <p>
                         Are you sure you want to select: {guessedCard?.name} as
