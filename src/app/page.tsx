@@ -146,8 +146,6 @@ export default function Home() {
       : "text-gray-400 cursor-not-allowed";
   };
 
-  
-
   useEffect(() => {
     document.body.style.backgroundColor = "#FFF8D2";
   }, []);
@@ -221,10 +219,7 @@ export default function Home() {
             </div>
           ) : (
             <div>
-              <Lobby
-                room={room}
-                isHost={isHost}
-              />
+              <Lobby room={room} isHost={isHost} />
 
               <br></br>
 

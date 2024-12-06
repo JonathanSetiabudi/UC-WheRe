@@ -18,7 +18,7 @@ for (let i = 0; i < 20; i++) {
   const card = new Location(
     `Location ${i + 1}`,
     `Description ${i + 1}`,
-    `image${i + 1}.jpg`,
+    `../images${i + 1}.jpg`,
     "Default",
   );
   initialCards.push(card);
@@ -41,7 +41,6 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
   const [continueModal, setContinueModal] = useState<boolean>(false); // ugly modal to notify player to keep playing while numguesses > 0
 
   useEffect(() => {
-
     socket.on("finishedUpdatingGuesses", (data) => {
       setNumGuessesLeft(data.numGuesses);
     });
@@ -209,8 +208,6 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
     );
   };
 
-  
-
   return (
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
@@ -352,7 +349,7 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
                         color: "white",
                       }}
                     >
-                      <p>Waiting for other player to ready up...</p>
+                      <p>Waiting for other player to get ready...</p>
                     </div>
                   )}
                 </div>
@@ -364,7 +361,7 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
               <div>
                 <h2>Selected Card: {hiddenCard?.name}</h2>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={hiddenCard?.img} alt={hiddenCard?.name} /> 
+                <img src={hiddenCard?.img} alt="filler alt text" />
                 <h3>Card Description: {hiddenCard?.description}</h3>
               </div>
               {/* display mode status */}
