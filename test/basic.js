@@ -115,7 +115,10 @@ describe("Game Tests", () => {
               (player) => player !== socket.id,
             );
           }
-          if (roomToChange.numOfUsers === 0 && roomToChange.roomCode !== "TEST") {
+          if (
+            roomToChange.numOfUsers === 0 &&
+            roomToChange.roomCode !== "TEST"
+          ) {
             currLobbies = currLobbies.filter(
               (lobby) => lobby.roomCode !== roomToChange.roomCode,
             );
@@ -133,7 +136,6 @@ describe("Game Tests", () => {
         console.log("Answer received", answer);
         socket.to(room).emit("receivedAnswer", answer, author);
       });
-
     });
   });
 
@@ -218,7 +220,6 @@ describe("Game Tests", () => {
     clientSocket2.once("joinedLobby", (roomCode) => {
       const lobby = currLobbies.find((lobby) => lobby.roomCode === roomCode);
       assert.isNotNull(lobby, "Lobby not found");
-
     });
 
     clientSocket2.emit("leave", "ROOM123");
@@ -250,30 +251,6 @@ describe("Game Tests", () => {
       done();
     });
   });
-  
-  // it("should select a card", (done) => {
-  //   // clientSocket1.emit("join_lobby", "TEST");
-
-  //   // clientSocket1.once("joinedLobby", (roomCode) => {
-  //   //   clientSocket2.emit("join_lobby", roomCode);
-  //   // });
-
-  //   // // clientSocket2.once("joinedLobby", (roomCode) => {
-  //   //   clientSocket2.emit("selectCard", {isHost : false, room: roomCode});
-  //   // // });
-
-  //   // clientSocket1.once("selectCard", () =>{
-  //   //   const lobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
-  //   //   assert.isNotNull(lobby, "lobby not found !");
-  //   //   assert.equal(lobby.guestHasSelected, true, "Guest has not selected a card");
-
-  //   //   clientSocket1.emit("selectCard", {isHost : true, room: roomCode});
-
-  //   //   const updatedLobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
-  //   //   assert.isNotNull(updatedLobby, "lobby not found ! (after host selection)")
-  //   //   assert.equal(updatedLobby.hostHasSelected, true, "Host has not selected a card");
-  //   // });  
-  // });
 
   it("should select a card", () => {
     clientSocket1.emit("join_lobby", "TEST");
@@ -282,19 +259,52 @@ describe("Game Tests", () => {
       clientSocket2.emit("join_lobby", roomCode);
     });
 
-    clientSocket2.emit("selectCard", {isHost : false, room: "TEST"});
+    clientSocket2.emit("selectCard", { isHost: false, room: "TEST" });
 
-    clientSocket1.once("selectCard", () =>{
+    clientSocket1.once("selectCard", () => {
       const lobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
       assert.isNotNull(lobby, "lobby not found !");
-      assert.equal(lobby.guestHasSelected, true, "Guest has not selected a card");
+      assert.equal(
+        lobby.guestHasSelected,
+        true,
+        "Guest has not selected a card",
+      );
 
-      clientSocket1.emit("selectCard", {isHost : true, room: lobby.roomCode});
+      clientSocket1.emit("selectCard", { isHost: true, room: lobby.roomCode });
 
-      const updatedLobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
-      assert.isNotNull(updatedLobby, "lobby not found ! (after host selection)")
-      assert.equal(updatedLobby.hostHasSelected, true, "Host has not selected a card");
-    });  
+      const updatedLobby = currLobbies.find(
+        (lobby) => lobby.roomCode === "TEST",
+      );
+      assert.isNotNull(
+        updatedLobby,
+        "lobby not found ! (after host selection)",
+      );
+      assert.equal(
+        updatedLobby.hostHasSelected,
+        true,
+        "Host has not selected a card",
+      );
+    });
+  });
+
+  it("should set a new difficulty", (done) => {
+    clientSocket1.emit("create_lobby", "TEST");
+
+    clientSocket1.once("createdLobby", (roomCode) => {
+      clientSocket2.emit("join_lobby", roomCode);
+    });
+
+    clientSocket2.once("joinedLobby", (roomCode) => {
+      clientSocket1.emit("settingDifficulty", {difficulty: 1, room: roomCode});
+    });
+
+    const lobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
+    clientSocket1.once("finishedUpdatingDifficulty", (data) =>{    
+      const newData = data.difficulty;
+      assert.equal(newData, 1);
+    });
+    
+    done();
   });
 
   it("should set a new theme", (done) => {
@@ -305,17 +315,15 @@ describe("Game Tests", () => {
     });
 
     clientSocket2.once("joinedLobby", (roomCode) => {
-      clientSocket1.emit("settingTheme", {theme: 1, room: roomCode});
+      clientSocket1.emit("settingTheme", { theme: 1, room: roomCode });
     });
 
     const lobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
-    clientSocket1.once("finishedUpdatingTheme", (data) =>{    
+    clientSocket1.once("finishedUpdatingTheme", (data) => {
       const newData = data.theme;
       assert.equal(newData, 1);
     });
-    
     done();
   });
 
 });
-
