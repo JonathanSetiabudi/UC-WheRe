@@ -30,7 +30,8 @@ Our project adds a twist to the popular game "Guess Who?" (By Hasbro) as instead
 - Socket.io (server communication)
 - Cypress (frontend testing)
 - Mocha (backend testing)
-- Chai (backend testing) 
+- Chai (backend testing)
+- Husky (pre-push hooks & maintenance)
 
 ### Input/Output of Project
 
@@ -202,4 +203,4 @@ For the time being, these are the the instructions to play the game locally. Clo
 
 How was your project tested/validated?
 
-Our project implemented Mocha and Chai, which are JavaScript testing frameworks in order to test the functionality of the backend components of our server. Mocha was used to structure and execute each test, while Chai's assertion output capabilities allowed us to check and validate the behavior of each function within the server.
+Our project implemented Mocha and Chai, which are JavaScript testing frameworks in order to test the functionality of the backend components of our server. Mocha was used to structure and execute each test, while Chai's assertion output capabilities allowed us to check and validate the behavior of each function within the server. Additionally, we used Husky, Prettier, and ESLint to ensure that all of our pushed code followed a standardized format and rules, which kept all of our code consistent and stable across all versions and throughout our development process. 
