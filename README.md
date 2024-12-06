@@ -128,19 +128,66 @@ Figma: https://www.figma.com/design/VmG7uA7jlvptvLS0uReVXZ/cs100?node-id=0-1&t=X
 The changes include removing the User class, creating a Home class, removing the Guess class, and placing the functions/responsibilities inside the game class. Our reasoning for removing the user class was that the User was an "up in the air" idea, and after careful consideration, we felt there was no need for it. Replacing its user class was the Home/Start Screen class. This was to follow the _Single Responsibility Principle_ better. This way, the lobby won't have two responsibilities: creating/joining a lobby and configuring the game settings for the lobby. We put the create/joining lobby responsibilities inside the Home class while leaving the remaining stuff inside the Lobby class. This will help us separate the code better as Lobby seemed saturated with too many responsibilities so spreading some of the code to the Home component helps with that. Another change we made was just to move the Guess class functionality to within the Game class. It seemed unnecessary to create such a small class for something that wouldn't violate the _Single Responsibility Principle_. This way we also would better follow _SOLID_ Principles as the two classes wouldn't have similar responsibilities.
 
 ## Final deliverable
-
->
-> All group members will give a demo to the reader during lab time. You should schedule your demo on Calendly with the same reader who took your second scrum meeting. The reader will check the demo and the project GitHub repository and ask a few questions to all the team members.
-> Before the demo, you should do the following:
-
-> - Complete the sections below (i.e. Screenshots, Installation/Usage, Testing)
-> - Plan one more sprint (that you will not necessarily complete before the end of the quarter). Your In-progress and In-testing columns should be empty (you are not doing more work currently) but your TODO column should have a full sprint plan in it as you have done before. This should include any known bugs (there should be some) or new features you would like to add. These should appear as issues/cards on your Project board.
-> - Make sure your README file and Project board are up-to-date reflecting the current status of your project (e.g. any changes that you have made during the project such as changes to your class diagram). Previous versions should still be visible through your commit history.
-> - Each team member should also submit the Individual Contributions Form on Canvas for this final phase. In this form, you need to fill in the names of all team members, the percentage of work contributed by each member for the final phase, and a description of their contributions. Remember that each team member should submit the form individually.
-
 ## Screenshots
 
-> Screenshots of the input/output after running your application
+![image](https://github.com/user-attachments/assets/1349d796-4e22-42a4-952b-bbb0705d0978)
+![image](https://github.com/user-attachments/assets/acf5c1b3-9add-450d-b5a8-972dd987e56d)
+
+This is our home screen with username and lobby inputs.
+</br>
+![image](https://github.com/user-attachments/assets/ffa491d9-3edd-48a8-9c96-657073388537)
+</br>
+This is the host side of the lobby screen.
+</br>
+![image](https://github.com/user-attachments/assets/668206b8-b2b0-4537-8889-625757c94acd)
+</br>
+This is the guest side of the lobby screen. The buttons are disabled for the guest.
+</br>
+![image](https://github.com/user-attachments/assets/d3fb75c6-5cbd-4196-9bef-23ba65bf87f1)
+</br>
+This is the selection screen, allowing you to select your card. 
+</br>
+![image](https://github.com/user-attachments/assets/fcad00ee-0bde-49f4-9a4d-f8b4dad28704)
+</br>
+The card is highlighted when you click an image.
+</br>
+![image](https://github.com/user-attachments/assets/83eb516b-c3a6-4442-a79e-ac4ac43dcc16)
+![image](https://github.com/user-attachments/assets/b9883089-54bd-496f-a524-29cdf221c711)
+</br>
+When you click ready, this confirmation pops up. If you ready up before your opponent, then it has a waiting message.
+</br>
+![image](https://github.com/user-attachments/assets/a00deba0-2d8f-49e3-9418-ea01765c169b)
+![image](https://github.com/user-attachments/assets/f4694f35-5c35-4991-ad08-8a0f2b6879f6)
+
+This is what the game looks like upon starting. The rest is playing the game.
+![image](https://github.com/user-attachments/assets/65924fe8-54a6-429f-820a-119f1eea35cb)
+![image](https://github.com/user-attachments/assets/0d7e15b9-eb75-4a07-8acd-7b0fc0f3f8b9)
+![image](https://github.com/user-attachments/assets/46ddd35e-591d-4203-970e-00a30f1d7619)
+</br>
+This is the messaging/answering system.
+</br>
+![image](https://github.com/user-attachments/assets/951f6329-0993-4523-9400-94c8103bde51)
+</br>
+Flagged cards are red.
+</br>
+![image](https://github.com/user-attachments/assets/0dbb88ca-ea5d-4eaa-98db-52d3df726b57)
+</br>
+When you choose to guess, there is a confirmation screen.
+</br>
+![image](https://github.com/user-attachments/assets/721f651c-0241-4547-b5f8-00e2a35f8670)
+</br>
+And then a small victory screen.
+
+
+
+
+
+
+
+
+
+
+
 
 ## Installation/Usage
 
