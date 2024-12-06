@@ -295,15 +295,18 @@ describe("Game Tests", () => {
     });
 
     clientSocket2.once("joinedLobby", (roomCode) => {
-      clientSocket1.emit("settingDifficulty", {difficulty: 1, room: roomCode});
+      clientSocket1.emit("settingDifficulty", {
+        difficulty: 1,
+        room: roomCode,
+      });
     });
 
     const lobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
-    clientSocket1.once("finishedUpdatingDifficulty", (data) =>{    
+    clientSocket1.once("finishedUpdatingDifficulty", (data) => {
       const newData = data.difficulty;
       assert.equal(newData, 1);
     });
-    
+
     done();
   });
 
@@ -326,4 +329,41 @@ describe("Game Tests", () => {
     done();
   });
 
+  it("should set a new number of guesses", (done) => {
+    clientSocket1.emit("create_lobby", "TEST");
+
+    clientSocket1.once("createdLobby", (roomCode) => {
+      clientSocket2.emit("join_lobby", roomCode);
+    });
+
+    clientSocket2.once("joinedLobby", (roomCode) => {
+      clientSocket1.emit("settingNumberOfGuesses", { numGuesses: 3, room: roomCode });
+    });
+
+    const lobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
+    clientSocket1.once("finishedUpdatingGuesses", (data) => {
+      const newData = data.numGuesses;
+      assert.equal(newData, 3);
+    });
+    done();
+  });
+
+  it("should set a new grid size", (done) => {
+    clientSocket1.emit("create_lobby", "TEST");
+
+    clientSocket1.once("createdLobby", (roomCode) => {
+      clientSocket2.emit("join_lobby", roomCode);
+    });
+
+    clientSocket2.once("joinedLobby", (roomCode) => {
+      clientSocket1.emit("settingGridsize", { gridSize: 20, room: roomCode });
+    });
+
+    const lobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
+    clientSocket1.once("finishedUpdatingGridSize", (data) => {
+      const newData = data.gridSize;
+      assert.equal(newData, 20);
+    });
+    done();
+  });
 });
