@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { socket } from "@/utils/socket";
 import Messages from "./messages/page";
 import Image from "next/image";
-import Orange from "../../public/assets/orange.svg";
 import Scotty from "../../public/assets/bear.svg";
 import Norm from "../../public/assets/norm.svg";
 import Game from "../app/game/page";
@@ -199,7 +198,6 @@ export default function Home() {
           </button>
           <div className="grid grid-cols-2 gap-5 p-10">
             <Image src={Scotty} width="230" height="230" alt="Scotty" />
-            {/* <Image src={Orange} alt="Orange" /> */}
             <Image src={Norm} width="200" height="200" alt="norm" />
           </div>
         </div>
