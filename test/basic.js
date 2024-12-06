@@ -407,7 +407,7 @@ describe("Game Tests", () => {
 
     clientSocket2.once("joinedLobby", (roomCode) => {
       clientSocket1.emit("cardClickedWithFlag", true);
-    });    
+    });
     clientSocket2.emit("cardClickedWithFlag", false);
     done();
   });
@@ -421,11 +421,30 @@ describe("Game Tests", () => {
 
     clientSocket2.once("joinedLobby", (roomCode) => {
       const lobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
-      lobby.
       clientSocket1.emit("flagToggled", true);
-    }); 
+    });
     clientSocket2.emit("cardClickedWithFlag", false);
     done();
   });
   
+  it("should try to start a game", (done) => {
+    let numInLobby = 0;
+    clientSocket1.emit("create_lobby", "TEST");
+    numInLobby++;
+    clientSocket1.once("createdLobby", (roomCode) => {
+      clientSocket2.emit("join_lobby", roomCode);
+    });
+
+    clientSocket2.once("joinedLobby", (roomCode) => {
+      numInLobby++;
+      const lobby = currLobbies.find((lobby) => lobby.roomCode === "TEST");
+      const startStatus = lobby.gameStarted;
+      assert.equal(startStatus, true);
+      clientSocket1.emit("tryStartGame", {numOfUsers: numInLobby, gameStarted: startStatus});
+    }); 
+    clientSocket2.once("successStartGame", () =>{
+      done();
+    });
+    done();
+  });
 });
