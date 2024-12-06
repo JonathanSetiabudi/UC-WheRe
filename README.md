@@ -29,7 +29,8 @@ Our project adds a twist to the popular game "Guess Who?" (By Hasbro) as instead
 - ESLint (VSCode extension)
 - Socket.io (server communication)
 - Cypress (frontend testing)
-- (some misc js testing framework)
+- Mocha (backend testing)
+- Chai (backend testing) 
 
 ### Input/Output of Project
 
@@ -141,4 +142,11 @@ For the time being, these are the the instructions to play the game locally. Clo
 
 ## Testing
 
-> How was your project tested/validated? If you used CI, you should have a "build passing" badge in this README.
+> Screenshot of (Mocha and Chai) Testing output
+> 
+> ![image](https://github.com/user-attachments/assets/ae606819-17a4-4a61-8bbd-891683e1cc5c)
+
+
+How was your project tested/validated?
+
+Our project implemented Mocha and Chai, which are JavaScript testing frameworks in order to test the functionality of the backend components of our server. Mocha was used to structure and execute each test, while Chai's assertion output capabilities allowed us to check and validate the behavior of each function within the server.
