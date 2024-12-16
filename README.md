@@ -131,53 +131,54 @@ The changes include removing the User class, creating a Home class, removing the
 ## Final deliverable
 ## Screenshots
 
-![image](https://github.com/user-attachments/assets/1349d796-4e22-42a4-952b-bbb0705d0978)
-![image](https://github.com/user-attachments/assets/acf5c1b3-9add-450d-b5a8-972dd987e56d)
-
+![image](https://github.com/user-attachments/assets/bbcca300-6858-41c0-8949-82c141233535)
 This is our home screen with username and lobby inputs.
 </br>
-![image](https://github.com/user-attachments/assets/ffa491d9-3edd-48a8-9c96-657073388537)
+![Screenshot 2024-12-16 123824](https://github.com/user-attachments/assets/ee6369c1-0fdd-4e47-822e-ecd0541d7f3f)
 </br>
 This is the host side of the lobby screen.
 </br>
-![image](https://github.com/user-attachments/assets/668206b8-b2b0-4537-8889-625757c94acd)
+![Screenshot 2024-12-16 124013](https://github.com/user-attachments/assets/cd0fed2e-4031-494a-94b2-2b8daf7d5a8a)
 </br>
 This is the guest side of the lobby screen. The buttons are disabled for the guest.
 </br>
-![image](https://github.com/user-attachments/assets/d3fb75c6-5cbd-4196-9bef-23ba65bf87f1)
+![image](https://github.com/user-attachments/assets/b1e810d0-a288-4069-b508-ac64092f26e2)
 </br>
 This is the selection screen, allowing you to select your card. 
 </br>
-![image](https://github.com/user-attachments/assets/fcad00ee-0bde-49f4-9a4d-f8b4dad28704)
+![image](https://github.com/user-attachments/assets/2bc91fb1-d59e-42d7-8f41-621b4952ff2b)
 </br>
 The card is highlighted when you click an image.
 </br>
-![image](https://github.com/user-attachments/assets/83eb516b-c3a6-4442-a79e-ac4ac43dcc16)
-![image](https://github.com/user-attachments/assets/b9883089-54bd-496f-a524-29cdf221c711)
+![image](https://github.com/user-attachments/assets/5a6b6b72-d9f2-4fe7-b659-4b78ca8159e9)
 </br>
-When you click ready, this confirmation pops up. If you ready up before your opponent, then it has a waiting message.
+When you click ready, this confirmation pops up.
 </br>
-![image](https://github.com/user-attachments/assets/a00deba0-2d8f-49e3-9418-ea01765c169b)
-![image](https://github.com/user-attachments/assets/f4694f35-5c35-4991-ad08-8a0f2b6879f6)
-
+![image](https://github.com/user-attachments/assets/2622f5e4-0998-41e7-8bbc-3ebaa8966462)
+</br>
+If you ready up before your opponent, then it has a waiting message.
+</br>
+![image](https://github.com/user-attachments/assets/bda16a21-be8c-4902-8888-5990fc131315)
+![image](https://github.com/user-attachments/assets/eef2c340-bdb9-4045-b424-453fb3d0701e)
+</br>
 This is what the game looks like upon starting. The rest is playing the game.
-![image](https://github.com/user-attachments/assets/65924fe8-54a6-429f-820a-119f1eea35cb)
-![image](https://github.com/user-attachments/assets/0d7e15b9-eb75-4a07-8acd-7b0fc0f3f8b9)
-![image](https://github.com/user-attachments/assets/46ddd35e-591d-4203-970e-00a30f1d7619)
+![image](https://github.com/user-attachments/assets/e7b2ebf4-4a7e-4b06-ba53-1219e963fdbe)
+![image](https://github.com/user-attachments/assets/403fce6e-24d6-4c97-9161-9498d405c3ec)
+![image](https://github.com/user-attachments/assets/d8e57051-399f-49c3-b113-2cab8b12f58a)
 </br>
 This is the messaging/answering system.
 </br>
-![image](https://github.com/user-attachments/assets/951f6329-0993-4523-9400-94c8103bde51)
+![image](https://github.com/user-attachments/assets/7118ce8c-9d9a-4671-8800-0232d4485f59)
 </br>
 Flagged cards are red.
 </br>
-![image](https://github.com/user-attachments/assets/0dbb88ca-ea5d-4eaa-98db-52d3df726b57)
+![image](https://github.com/user-attachments/assets/58563b63-eea5-4688-aa2e-633b57748313)
 </br>
 When you choose to guess, there is a confirmation screen.
 </br>
-![image](https://github.com/user-attachments/assets/721f651c-0241-4547-b5f8-00e2a35f8670)
+![image](https://github.com/user-attachments/assets/218972b0-92b7-4bda-af94-2fc7a0fa3b65)
 </br>
-And then a small victory screen.
+And then a result screen.
 
 
 
