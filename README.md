@@ -29,7 +29,9 @@ Our project adds a twist to the popular game "Guess Who?" (By Hasbro) as instead
 - ESLint (VSCode extension)
 - Socket.io (server communication)
 - Cypress (frontend testing)
-- (some misc js testing framework)
+- Mocha (backend testing)
+- Chai (backend testing)
+- Husky (pre-push hooks & maintenance)
 
 ### Input/Output of Project
 
@@ -126,24 +128,80 @@ Figma: https://www.figma.com/design/VmG7uA7jlvptvLS0uReVXZ/cs100?node-id=0-1&t=X
 </br>
 The changes include removing the User class, creating a Home class, removing the Guess class, and placing the functions/responsibilities inside the game class. Our reasoning for removing the user class was that the User was an "up in the air" idea, and after careful consideration, we felt there was no need for it. Replacing its user class was the Home/Start Screen class. This was to follow the _Single Responsibility Principle_ better. This way, the lobby won't have two responsibilities: creating/joining a lobby and configuring the game settings for the lobby. We put the create/joining lobby responsibilities inside the Home class while leaving the remaining stuff inside the Lobby class. This will help us separate the code better as Lobby seemed saturated with too many responsibilities so spreading some of the code to the Home component helps with that. Another change we made was just to move the Guess class functionality to within the Game class. It seemed unnecessary to create such a small class for something that wouldn't violate the _Single Responsibility Principle_. This way we also would better follow _SOLID_ Principles as the two classes wouldn't have similar responsibilities.
 
-> ## Final deliverable
->
-> All group members will give a demo to the reader during lab time. You should schedule your demo on Calendly with the same reader who took your second scrum meeting. The reader will check the demo and the project GitHub repository and ask a few questions to all the team members.
-> Before the demo, you should do the following:
-
-> - Complete the sections below (i.e. Screenshots, Installation/Usage, Testing)
-> - Plan one more sprint (that you will not necessarily complete before the end of the quarter). Your In-progress and In-testing columns should be empty (you are not doing more work currently) but your TODO column should have a full sprint plan in it as you have done before. This should include any known bugs (there should be some) or new features you would like to add. These should appear as issues/cards on your Project board.
-> - Make sure your README file and Project board are up-to-date reflecting the current status of your project (e.g. any changes that you have made during the project such as changes to your class diagram). Previous versions should still be visible through your commit history.
-> - Each team member should also submit the Individual Contributions Form on Canvas for this final phase. In this form, you need to fill in the names of all team members, the percentage of work contributed by each member for the final phase, and a description of their contributions. Remember that each team member should submit the form individually.
-
+## Final deliverable
 ## Screenshots
 
-> Screenshots of the input/output after running your application
+![image](https://github.com/user-attachments/assets/bbcca300-6858-41c0-8949-82c141233535)
+This is our home screen with username and lobby inputs.
+</br>
+![Screenshot 2024-12-16 123824](https://github.com/user-attachments/assets/ee6369c1-0fdd-4e47-822e-ecd0541d7f3f)
+</br>
+This is the host side of the lobby screen.
+</br>
+![Screenshot 2024-12-16 124013](https://github.com/user-attachments/assets/cd0fed2e-4031-494a-94b2-2b8daf7d5a8a)
+</br>
+This is the guest side of the lobby screen. The buttons are disabled for the guest.
+</br>
+![image](https://github.com/user-attachments/assets/b1e810d0-a288-4069-b508-ac64092f26e2)
+</br>
+This is the selection screen, allowing you to select your card. 
+</br>
+![image](https://github.com/user-attachments/assets/2bc91fb1-d59e-42d7-8f41-621b4952ff2b)
+</br>
+The card is highlighted when you click an image.
+</br>
+![image](https://github.com/user-attachments/assets/5a6b6b72-d9f2-4fe7-b659-4b78ca8159e9)
+</br>
+When you click ready, this confirmation pops up.
+</br>
+![image](https://github.com/user-attachments/assets/2622f5e4-0998-41e7-8bbc-3ebaa8966462)
+</br>
+If you ready up before your opponent, then it has a waiting message.
+</br>
+![image](https://github.com/user-attachments/assets/bda16a21-be8c-4902-8888-5990fc131315)
+![image](https://github.com/user-attachments/assets/eef2c340-bdb9-4045-b424-453fb3d0701e)
+</br>
+This is what the game looks like upon starting. The rest is playing the game.
+![image](https://github.com/user-attachments/assets/e7b2ebf4-4a7e-4b06-ba53-1219e963fdbe)
+![image](https://github.com/user-attachments/assets/403fce6e-24d6-4c97-9161-9498d405c3ec)
+![image](https://github.com/user-attachments/assets/d8e57051-399f-49c3-b113-2cab8b12f58a)
+</br>
+This is the messaging/answering system.
+</br>
+![image](https://github.com/user-attachments/assets/7118ce8c-9d9a-4671-8800-0232d4485f59)
+</br>
+Flagged cards are red.
+</br>
+![image](https://github.com/user-attachments/assets/58563b63-eea5-4688-aa2e-633b57748313)
+</br>
+When you choose to guess, there is a confirmation screen.
+</br>
+![image](https://github.com/user-attachments/assets/218972b0-92b7-4bda-af94-2fc7a0fa3b65)
+</br>
+And then a result screen.
+
+
+
+
+
+
+
+
+
+
+
 
 ## Installation/Usage
 
-> Instructions on installing and running your application
+For the time being, these are the the instructions to play the game locally. Clone/fork this repo. Once you do, download Node.js. Afterwards, run "npm install" which will download dependencies. From there, run split terminals and have one run "npm run server" and "npm run dev" in one terminal per command. there should be a button under where you entered "npm run dev" labelled "https://localhost:3000" and from there you are able to use our game. In the near future, we'd like to make this game online for others to learn the campus through this game.
 
 ## Testing
 
-> How was your project tested/validated? If you used CI, you should have a "build passing" badge in this README.
+> Screenshot of (Mocha and Chai) Testing output
+> 
+> ![image](https://github.com/user-attachments/assets/ae606819-17a4-4a61-8bbd-891683e1cc5c)
+
+
+How was your project tested/validated?
+
+Our project implemented Mocha and Chai, which are JavaScript testing frameworks in order to test the functionality of the backend components of our server. Mocha was used to structure and execute each test, while Chai's assertion output capabilities allowed us to check and validate the behavior of each function within the server. Additionally, we used Husky, Prettier, and ESLint to ensure that all of our pushed code followed a standardized format and rules, which kept all of our code consistent and stable across all versions and throughout our development process. 
