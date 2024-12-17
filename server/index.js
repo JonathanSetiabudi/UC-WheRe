@@ -67,7 +67,7 @@ io.on("connection", (socket) => {
 
   //on creating a room, logs the message "User created room" and the room id
   //then emits the createdRoom event to the room with the room id
-  socket.on("create_lobby", () => {
+  socket.on("create_lobby", (gameBoard) => {
     const roomCode = generateLobbyCode();
     let room = {
       roomCode: roomCode,
@@ -79,6 +79,7 @@ io.on("connection", (socket) => {
       theme: 0,
       numGuesses: 1,
       lobbyGridSize: 16,
+      gameBoard: gameBoard,
     };
     currLobbies.push(room);
     console.log(`User(${socket.id}) created room: ${roomCode}`);

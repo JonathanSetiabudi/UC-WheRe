@@ -4,39 +4,12 @@ import React, { useEffect, useState } from "react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Home from "../page.jsx";
 import { socket } from "@/utils/socket";
-import LocationClass from "../objects/Location";
-
+import Location from "../objects/Location";
 // import userRooms from ".../server/index.js";
 // @ts-expect-erro - TS complains about the type of newTheme, but we alr know it's a string
 // had to mispell error ^ bcs there was a weird error saying it was unused
 
-// interface LobbyProps {
-//   room: string;
-//   isHost: boolean;
-//   setGridSize: React.Dispatch<React.SetStateAction<number>>;
-//   setNumGuesses: React.Dispatch<React.SetStateAction<number>>;
-// }
-
-// const Lobby: React.FC<LobbyProps> = ({
-//   room,
-//   isHost,
-//   setGridSize,
-//   setNumGuesses,
-// }) => {
 const Lobby = (props) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [playersInLobby, setPlayerCount] = useState<number>(0);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [boardDifficulty, setDifficulty] = useState<number>(0);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [boardTheme, setTheme] = useState<number>(0);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [numGuess, setNumOfGuesses] = useState<number>(1);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [gridSize, setGridSize] = useState<number>(16);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [gameBoard, setGameBoard] = useState<LocationClass[]>([]);
-
   const locationNames = [
     "Aberdeen Inverness",
     "Dundee B",
@@ -191,12 +164,24 @@ const Lobby = (props) => {
     "The Statistics Building at UCR houses classrooms, research labs, and faculty offices for the Department of Statistics. It provides a collaborative environment for students and faculty to engage in data analysis, research projects, and academic pursuits related to statistical theory and applications.",
   ];
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, prefer-const
-  let locationMasterArray: LocationClass[] = [];
-  let arrayByTheme: LocationClass[] = [];
+  let locationMasterArray: Location[] = [];
+  let arrayByTheme: Location[] = [];
+  // let initialCards: Location[] = [];
+  // // initialize gameCards
+
+  // for (let i = 0; i < 16; i++) {
+  //   const card = new Location(
+  //     locationNames[i],
+  //     descriptions[i],
+  //     filePaths[i],
+  //     "Residential and Dining",
+  //   );
+  //   initialCards.push(card);
+  // }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
   for (let i = 0; i < 28; i++) {
-    const location = new LocationClass(
+    const location = new Location(
       locationNames[i],
       descriptions[i],
       filePaths[i],
@@ -206,7 +191,7 @@ const Lobby = (props) => {
   }
 
   for (let i = 0; i < 28; i++) {
-    const location = new LocationClass(
+    const location = new Location(
       locationNames[i],
       descriptions[i],
       filePaths[i],
@@ -216,7 +201,7 @@ const Lobby = (props) => {
   }
 
   for (let j = 28; j < 48; j++) {
-    const location = new LocationClass(
+    const location = new Location(
       locationNames[j],
       descriptions[j],
       filePaths[j],
@@ -224,6 +209,33 @@ const Lobby = (props) => {
     );
     locationMasterArray.push(location);
   }
+
+  const initialGameBoard = [];
+
+  for (let i = 0; i < 16; i++) {
+    initialGameBoard.push(arrayByTheme[i]);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [playersInLobby, setPlayerCount] = useState<number>(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [boardDifficulty, setDifficulty] = useState<number>(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [boardTheme, setTheme] = useState<number>(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [numGuess, setNumOfGuesses] = useState<number>(1);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [gridSize, setGridSize] = useState<number>(16);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [gameBoard, setGameBoard] = useState<Location[]>(
+    getRandomItems(arrayByTheme, 16),
+  );
+
+  const data = {
+    room: props.room,
+    gameBoard: getRandomItems(arrayByTheme, 16),
+  };
+  socket.emit("doUpdateGameBoard", data);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -234,6 +246,11 @@ const Lobby = (props) => {
     socket.on("joinedLobby", () => {
       setPlayerCount((playersInLobby) => playersInLobby + 1);
     });
+
+    socket.on("updatingGameBoard", (gameBoard) => {
+      setGameBoard(gameBoard);
+    });
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     socket.on("finishedUpdatingDifficulty", (updatedData) => {
       setDifficulty(updatedData.boardDifficulty);
@@ -259,7 +276,7 @@ const Lobby = (props) => {
       socket.off("finishedUpdatingGridSize");
       socket.off("finishedUpdatingGuesses");
     };
-  });
+  }, []);
 
   const locationByTheme = (theme: number) => {
     arrayByTheme = [];
@@ -355,8 +372,17 @@ const Lobby = (props) => {
   // };
 
   // theme handlers
+  // const [active, setActive] = useState('b1');
+  // const [buttonColor, setButtonColor] = useState('blue-900');
+
+  // const toggleButtonColor = () => {
+  //   // Toggle between two colors, e.g., blue and green
+  //   setButtonColor((prevColor) => (prevColor === 'blue-900' ? 'green-900' : 'blue-900'));
+  // };
+
   const handleClickThemeResAndDining = () => {
     onThemeChange(0);
+    // setActive('b1');
   };
 
   const handleClickThemeCampusLandmarks = () => {
@@ -395,8 +421,8 @@ const Lobby = (props) => {
 
   const buttonPerms = (checkIfHost: boolean) => {
     return checkIfHost
-      ? "text-black hover:bg-blue-200"
-      : "text-gray-400 cursor-not-allowed";
+      ? "bg-ucwhere-light-blue p-2 m-0.5 rounded-md text-white hover:text-ucwhere-blue"
+      : "bg-ucwhere-light-blue p-2 m-0.5 rounded-md text-white cursor-not-allowed";
   };
 
   const handleTestEcho = () => {
@@ -437,30 +463,31 @@ const Lobby = (props) => {
         Hard
       </button> */}
 
-      <br></br>
+      {/* <br></br> */}
+      <div className="mb-2">
+        <p className="text-xl text-gray-800">Select a theme:</p>
 
-      <p>Select a theme:</p>
+        <button
+          onClick={handleClickThemeResAndDining}
+          disabled={!props.isHost}
+          className={`${buttonPerms(props.isHost)}`}
+          style={{}}
+        >
+          {" "}
+          Residential and Dining{" "}
+        </button>
 
-      <button
-        onClick={handleClickThemeResAndDining}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
-      >
-        {" "}
-        Residential and Dining{" "}
-      </button>
+        <br></br>
 
-      <br></br>
-
-      <button
-        onClick={handleClickThemeCampusLandmarks}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
-      >
-        {" "}
-        Campus Landmarks{" "}
-      </button>
-
+        <button
+          onClick={handleClickThemeCampusLandmarks}
+          disabled={!props.isHost}
+          className={`${buttonPerms(props.isHost)}`}
+        >
+          {" "}
+          Campus Landmarks{" "}
+        </button>
+      </div>
       {/* <br></br>
 
       <button
@@ -492,41 +519,41 @@ const Lobby = (props) => {
         Streets and Parking Lots{" "}
       </button> */}
 
-      <br></br>
+      {/* <br></br> */}
+      <div className="mb-2">
+        <p className="text-xl text-gray-800">How many guesses?</p>
 
-      <p>How many guesses?</p>
+        <button
+          onClick={handleClickGuess1}
+          disabled={!props.isHost}
+          className={`${buttonPerms(props.isHost)}`}
+        >
+          1 guess
+        </button>
 
-      <button
-        onClick={handleClickGuess1}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
-      >
-        1 guess
-      </button>
+        {/* <br></br> */}
 
-      <br></br>
+        <button
+          onClick={handleClickGuess3}
+          disabled={!props.isHost}
+          className={`${buttonPerms(props.isHost)}`}
+        >
+          3 guesses
+        </button>
+      </div>
+      {/* <br></br> */}
 
-      <button
-        onClick={handleClickGuess3}
-        disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
-      >
-        3 guesses
-      </button>
-
-      <br></br>
-
-      <p>Set your board size:</p>
+      <p className="text-xl text-gray-800">Set your board size:</p>
 
       <button
         onClick={handleClickBoardSmall}
         disabled={!props.isHost}
-        className={buttonPerms(props.isHost)}
+        className={`${buttonPerms(props.isHost)}`}
       >
         4 x 4
       </button>
 
-      <br></br>
+      {/* <br></br> */}
 
       <button
         onClick={handleClickBoardLarge}
@@ -535,10 +562,10 @@ const Lobby = (props) => {
       >
         5 x 4
       </button>
-
+      <br></br>
       <p>tester button for lobby settings:</p>
 
-      <br></br>
+      {/* <br></br> */}
       <button onClick={handleTestEcho}>click for echo !</button>
     </div>
   );
