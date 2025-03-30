@@ -113,7 +113,7 @@ Some nice to have features:
 This diagram illustrates the navigation between all screens for the users to experience. Main features are accompanied by explanations.
 </br>
 </br>
-Figma: https://www.figma.com/design/VmG7uA7jlvptvLS0uReVXZ/cs100?node-id=0-1&t=XrUsxLECUcbLSxdd-1
+Figma: https://www.figma.com/design/eqw2T3zIBGqGwvEK0f80cc/UC-WheRe?node-id=0-1&t=XtihyO0kdxbbTLyR-1
 
 ## Class Diagram
 
