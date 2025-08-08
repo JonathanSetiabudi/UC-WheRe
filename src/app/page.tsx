@@ -142,6 +142,7 @@ export default function Home() {
     setIsHost(false);
     setShowLobby(false);
     setShowGame(false);
+    setLobbyIsFull(false);
     socket.emit("leave", room);
   };
 
