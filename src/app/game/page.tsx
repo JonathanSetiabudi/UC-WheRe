@@ -8,24 +8,12 @@ import Location from "../objects/Location";
 interface GameProps {
   room: string;
   gameBoard: Location[];
-  // gridSize: number;
-  // numGuesses: number;
+  gridSize: number;
+  numGuesses: number;
 }
 
-// const initialCards: Location[] = [];
-// // initialize gameCards
-// for (let i = 0; i < 20; i++) {
-//   const card = new Location(
-//     `Location ${i + 1}`,
-//     `Description ${i + 1}`,
-//     `image${i + 1}.jpg`,
-//     "Default",
-//   );
-//   initialCards.push(card);
-// }
-
-const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
-  const [numGuessesLeft, setNumGuessesLeft] = useState<number>(1); // num. guesses a player can make
+const Game: React.FC<GameProps> = ({ room, gameBoard, numGuesses }) => {
+  const [numGuessesLeft, setNumGuessesLeft] = useState<number>(numGuesses); // num. guesses a player can make
   const [gameCards, setGameCards] = useState<Location[]>(gameBoard);
   const [isSelectionMode, setIsSelectionMode] = useState<boolean>(true);
   const [isFlaggingMode, setIsFlaggingMode] = useState<boolean>(true); // flagging mode is true on default
@@ -115,7 +103,7 @@ const Game: React.FC<GameProps> = ({ room, gameBoard }) => {
 
   const toggleFlag = (index: number) => {
     const updatedCards = [...gameCards];
-    updatedCards[index].toggleFlag();
+    updatedCards[index].isFlagged = !updatedCards[index].isFlagged;
     setGameCards(updatedCards);
   };
 
